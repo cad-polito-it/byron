@@ -4,9 +4,9 @@ Byron can solve problems that require solutions with a complex structures, such 
 
 Candidate solutions are evaluated in parallel using a Python function, an external *makefile*, or a generic shell script that may, for instance, call proprietary tools.
 
-### Installation
+## Installation
 
-##### ⚠️ Byron is currently in [pre-alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Pre-alpha) and under active development
+**⚠️ Byron is currently in [pre-alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Pre-alpha) and under active development**
 
 ```
 pip install --upgrade byron
@@ -20,12 +20,12 @@ pip install --upgrade joblib
 pip install --upgrade psutil
 ```
 
-### Contacts
+## Contacts
 
-* [Alberto Tonda](https://github.com/albertotonda/) [<alberto.tonda@inra.fr>](mailto:alberto.tonda@inra.fr)
-* [Giovanni Squillero](https://github.com/squillero) [<giovanni.squillero@polito.it>](giovanni.squillero@polito.it)
+* Alberto Tonda: <alberto.tonda@inra.fr>
+* Giovanni Squillero: <giovanni.squillero@polito.it>
 
-### License
+## License
 
-**Copyright © 2023 [Giovanni Squillero](https://github.com/squillero) and [Alberto Tonda](https://github.com/albertotonda/)**  
+Copyright © 2023 [Giovanni Squillero](https://github.com/squillero) and [Alberto Tonda](https://github.com/albertotonda/)  
 byron is [free and open-source software](https://en.wikipedia.org/wiki/Free_and_open-source_software), and it is distributed under the permissive [Apache License 2.0](https://opensource.org/license/apache-2-0/).

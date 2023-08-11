@@ -4,7 +4,7 @@
 [![License: Apache 2.0](https://img.shields.io/badge/license-apache--2.0-green.svg)](https://opensource.org/licenses/Apache-2.0) 
 [![Status: Actrive](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/squillero/microgp3)
 ![Language: Python](https://img.shields.io/badge/language-python-blue.svg)
-![Version: 0.1.dev2](https://img.shields.io/badge/version-0.1.dev4-orange.svg)
+![Version: 0.1.dev2](https://img.shields.io/badge/version-0.1.dev8-orange.svg)
 ![Codename: Don Juan](https://img.shields.io/badge/codename-Don_Juan-pink.svg)
 [![Documentation Status](https://readthedocs.org/projects/byron/badge/?version=pre-alpha)](https://byron.readthedocs.io/en/pre-alpha/?badge=pre-alpha)
 
@@ -16,7 +16,7 @@ Candidate solutions are evaluated in parallel using a Python function, an extern
 
 ### Installation
 
-##### ⚠️ Byron is currently in [pre-alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Pre-alpha) and under active development
+**⚠️ Byron is currently in [pre-alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Pre-alpha) and under active development**
 
 ```
 pip install --upgrade byron
@@ -30,11 +30,9 @@ pip install --upgrade joblib
 pip install --upgrade psutil
 ```
 
-### Notez Bien
+### TL;DR
 
 This repo is only useful if you want to hack the code (see: [CONTRIBUTING](CONTRIBUTING.md)). 
-
-**TL;DR**
 
 * The default branch is always the more stable
 * Do not clone experimental branches `exp/*` unless you know what you are doing
