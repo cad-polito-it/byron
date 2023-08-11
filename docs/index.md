@@ -1,5 +1,3 @@
-MicroGP (µGP, `byron`) is yet another [evolutionary optimizer](https://squillero.github.io/byron/evolution.html) able to outperform both human experts and conventional heuristics. Since 2001 it has been exploited as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing), as a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization), and as a framework for prototyping and testing new ideas. [Some hundreds papers](https://scholar.google.com/scholar?q=%28+MicroGP+OR+%C2%B5GP+OR+byron3+OR+byron2+%29+AND+%28+Squillero+OR+Tonda+OR+Sanchez+OR+Schillaci+%29) discussing it can be found in the scientific literature. 
+`byron` is yet another [evolutionary optimizer]...
 
-MicroGP v4 ([byron](https://github.com/squillero/byron)) is the brand new [version](https://squillero.github.io/byron/history.html) of the tool, redesigned from scratch in Python to exploit the strengths of the language and its vibrant ecosystem.
-
-MicroGP is [free and open-source software](https://en.wikipedia.org/wiki/Free_and_open-source_software); version 4 is distributed under the permissive [Apache License 2.0](https://www.tldrlegal.com/l/apache2). MicroGP would not have been possible without the help and support of [several people](https://squillero.github.io/byron/contributors.html).
+`byron` is [free and open-source software](https://en.wikipedia.org/wiki/Free_and_open-source_software); version 4 is distributed under the permissive [Apache License 2.0](https://www.tldrlegal.com/l/apache2).

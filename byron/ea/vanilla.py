@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-#############################################################################
-#   __                          (`/\                                        #
-#  |  |--.--.--.----.-----.-----`=\/\   This file is part of byron v0.1     #
-#  |  _  |  |  |   _|  _  |     |`=\/\  An evolutionary optimizer & fuzzer  #
-#  |_____|___  |__| |_____|__|__| `=\/  https://github.com/squillero/byron  #
-#        |_____|                     \                                      #
-#############################################################################
-# Copyright 2022-23 Giovanni Squillero and Alberto Tonda
+#################################|###|#####################################
+#  __                            |   |                                    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
+# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+#       |_____|                   \|/                                     #
+################################## ' ######################################
+
+# Copyright 2023 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License.
@@ -50,8 +51,8 @@ def _elapsed(start):
 
 
 def _new_best(population: Population, evaluator: EvaluatorABC):
-    microgp_logger.info(
-        f"VanillaEA: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
+    logger.info(
+        f"vanilla_ea: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
     )
 
 
@@ -84,7 +85,7 @@ def vanilla_ea(
 
     """
     start = perf_counter_ns(), process_time_ns()
-    microgp_logger.info("VanillaEA: 🍦 OPTIMIZATION STARTED ┈ %s", _elapsed(start))
+    logger.info("vanilla_ea: 🍦 OPTIMIZATION STARTED ┈ %s", _elapsed(start))
 
     SElement.is_valid = SElement._is_valid_debug
     population = Population(top_frame, extra_parameters=population_extra_parameters, memory=True)
@@ -105,7 +106,7 @@ def vanilla_ea(
     best = population[0]
     _new_best(population, evaluator)
 
-    microgp_logger.info("VanillaEA: End of initialization ┈ %s", _elapsed(start))
+    logger.info("vanilla_ea: End of initialization ┈ %s", _elapsed(start))
 
     stopping_conditions = list()
     stopping_conditions.append(lambda: population.generation >= max_generation)
@@ -133,14 +134,14 @@ def vanilla_ea(
         if old_best != best:
             _new_best(population, evaluator)
 
-        microgp_logger.info("VanillaEA: End of generation %s ┈ %s", population.generation, _elapsed(start))
+        logger.info("vanilla_ea: End of generation %s ┈ %s", population.generation, _elapsed(start))
 
     end = process_time_ns()
 
-    microgp_logger.info("VanillaEA: 🍦 OPTIMIZATION COMPLETED ┈ %s", _elapsed(start))
-    microgp_logger.info("VanillaEA: %s", _elapsed(start))
-    microgp_logger.info(
-        f"VanillaEA: 🏆 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True)}"
+    logger.info("vanilla_ea: 🍦 OPTIMIZATION COMPLETED ┈ %s", _elapsed(start))
+    logger.info("vanilla_ea: %s", _elapsed(start))
+    logger.info(
+        f"vanilla_ea: 🏆 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True)}"
     )
 
     # for p in population._memory:

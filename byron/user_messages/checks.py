@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-#############################################################################
-#   __                          (`/\                                        #
-#  |  |--.--.--.----.-----.-----`=\/\   This file is part of byron v0.1     #
-#  |  _  |  |  |   _|  _  |     |`=\/\  An evolutionary optimizer & fuzzer  #
-#  |_____|___  |__| |_____|__|__| `=\/  https://github.com/squillero/byron  #
-#        |_____|                     \                                      #
-#############################################################################
-# Copyright 2022-23 Giovanni Squillero and Alberto Tonda
+#################################|###|#####################################
+#  __                            |   |                                    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
+# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+#       |_____|                   \|/                                     #
+################################## ' ######################################
+
+# Copyright 2023 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License.
@@ -29,7 +30,7 @@ __all__ = ["check_valid_type", "check_valid_types", "check_value_range", "check_
 from numbers import Number
 from collections.abc import Collection
 
-from .messaging import microgp_logger
+from .messaging import logger
 from .exception import *
 
 PARANOIA_TYPE_ERROR = "TypeError (paranoia check)"
@@ -48,7 +49,7 @@ def check_valid_type(obj, valid: type, subclass: bool = False) -> bool:
         hint = " — did you forget to instantiate the object?"
     else:
         hint = ""
-    microgp_logger.error(
+    logger.error(
         "TypeError: invalid type %s for %s: expected %s%s%s",
         type(obj),
         repr(obj),
@@ -66,7 +67,7 @@ def check_valid_types(obj, *valid_types: type, subclass: bool = False) -> bool:
             return True
         elif subclass and isinstance(obj, type) and issubclass(obj, valid):
             return True
-    microgp_logger.error(
+    logger.error(
         "TypeError: invalid type %s for %s: expected %s",
         type(obj),
         repr(obj),
@@ -78,10 +79,10 @@ def check_valid_types(obj, *valid_types: type, subclass: bool = False) -> bool:
 def check_value_range(val: Number, min_: Number | None = None, max_: Number | None = None) -> bool:
     """Checks that `val` is in the half-open range [min_, max_)."""
     if min_ is not None and val < min_:
-        microgp_logger.error("ValueError: %s < %s (min)", repr(val), repr(min_))
+        logger.error("ValueError: %s < %s (min)", repr(val), repr(min_))
         raise MicroGPError(PARANOIA_VALUE_ERROR)
     if max_ is not None and val >= max_:
-        microgp_logger.error("ValueError: %s >= %s (max)", repr(val), repr(max_))
+        logger.error("ValueError: %s >= %s (max)", repr(val), repr(max_))
         raise MicroGPError(PARANOIA_VALUE_ERROR)
     return True
 
@@ -89,11 +90,11 @@ def check_value_range(val: Number, min_: Number | None = None, max_: Number | No
 def check_valid_length(obj: Collection, min_length: int | None = None, max_length: int | None = None) -> bool:
     """Checks that `len(obj)` is in the half-open range [min_, max_)."""
     if min_length is not None and len(obj) < min_length:
-        microgp_logger.error("ValueError: incorrect length: len(%s) < %s", repr(obj), repr(min_length))
+        logger.error("ValueError: incorrect length: len(%s) < %s", repr(obj), repr(min_length))
         raise MicroGPError(PARANOIA_VALUE_ERROR)
         return False
     if max_length is not None and len(obj) >= max_length:
-        microgp_logger.error("ValueError: incorrect length: len(%s) >= %s", repr(obj), repr(max_length))
+        logger.error("ValueError: incorrect length: len(%s) >= %s", repr(obj), repr(max_length))
         raise MicroGPError(PARANOIA_VALUE_ERROR)
         return False
     return True
@@ -104,6 +105,6 @@ def check_no_duplicates(obj: Collection) -> bool:
     seq = list(obj)
     if any(i != seq.index(x) for i, x in enumerate(seq)):
         dups = set(x for i, x in enumerate(seq) if i != seq.index(x))
-        microgp_logger.error("ValueError: duplicated elements: %s", ", ".join(repr(_) for _ in sorted(dups)))
+        logger.error("ValueError: duplicated elements: %s", ", ".join(repr(_) for _ in sorted(dups)))
         raise MicroGPError(PARANOIA_VALUE_ERROR)
     return True

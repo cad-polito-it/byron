@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-#############################################################################
-#   __                          (`/\                                        #
-#  |  |--.--.--.----.-----.-----`=\/\   This file is part of byron v0.1     #
-#  |  _  |  |  |   _|  _  |     |`=\/\  An evolutionary optimizer & fuzzer  #
-#  |_____|___  |__| |_____|__|__| `=\/  https://github.com/squillero/byron  #
-#        |_____|                     \                                      #
-#############################################################################
-# Copyright 2022-23 Giovanni Squillero and Alberto Tonda
+#################################|###|#####################################
+#  __                            |   |                                    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
+# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+#       |_____|                   \|/                                     #
+################################## ' ######################################
+
+# Copyright 2023 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License.
@@ -29,7 +30,7 @@ __all__ = ["canonize_name", "uncanonize_name"]
 from collections import Counter
 from abc import ABCMeta
 
-from byron.user_messages import microgp_logger
+from byron.user_messages import logger
 from byron.global_symbols import *
 
 _name_counter = Counter()

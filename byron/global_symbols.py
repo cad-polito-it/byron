@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-#############################################################################
-#   __                          (`/\                                        #
-#  |  |--.--.--.----.-----.-----`=\/\   This file is part of byron v0.1     #
-#  |  _  |  |  |   _|  _  |     |`=\/\  An evolutionary optimizer & fuzzer  #
-#  |_____|___  |__| |_____|__|__| `=\/  https://github.com/squillero/byron  #
-#        |_____|                     \                                      #
-#############################################################################
-# Copyright 2022-23 Giovanni Squillero and Alberto Tonda
+#################################|###|#####################################
+#  __                            |   |                                    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
+# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+#       |_____|                   \|/                                     #
+################################## ' ######################################
+
+# Copyright 2023 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License.
@@ -25,10 +26,10 @@
 # v1 / April 2023 / Squillero (GX)
 
 __all__ = [
-    'version_info',
     '__version__',
     '__author__',
     '__copyright__',
+    '__codename__',
     'FRAMEWORK_DIRECTORY',
     'FRAMEWORK',
     'LINK',
@@ -57,24 +58,12 @@ import warnings
 import sys
 from collections import namedtuple
 import multiprocessing
+import re
 
-VersionInfo = namedtuple("VersionInfo", ["epoch", "major", "minor", "tag", "micro", "codename", "dev"])
-version_info = VersionInfo(4, 2, 0, "a", 0, "Meaning of Liff", 1)
-
-__version__ = (
-    f"{version_info.epoch}!"
-    + f"{version_info.major}.{version_info.minor}{version_info.tag}{version_info.micro}"
-    + f".dev{version_info.dev}"
-)
+__version__ = "0.1.dev2"
+__codename__ = 'Don Juan'
 __author__ = "Giovanni Squillero and Alberto Tonda"
-__copyright__ = """MicroGP v4: Copyright (c) 2022-23 Giovanni Squillero and Alberto Tonda
-Licensed under the Apache License, Version 2.0.
-MicroGP v3: Copyright (c) 2006-2016 Giovanni Squillero 
-Licensed under the GNU General Public License v3.0.
-MicroGP v2: Copyright (c) 2002-2006 Giovanni Squillero
-Licensed under the GNU General Public License v2.0.
-MicroGP v1: Internal (not released)
-"""
+__copyright__ = "Copyright (c) 2023 Giovanni Squillero and Alberto Tonda"
 
 #####################################################################################################################
 # Auto-detected "modes"

@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-#############################################################################
-#   __                          (`/\                                        #
-#  |  |--.--.--.----.-----.-----`=\/\   This file is part of byron v0.1     #
-#  |  _  |  |  |   _|  _  |     |`=\/\  An evolutionary optimizer & fuzzer  #
-#  |_____|___  |__| |_____|__|__| `=\/  https://github.com/squillero/byron  #
-#        |_____|                     \                                      #
-#############################################################################
-# Copyright 2022-23 Giovanni Squillero and Alberto Tonda
+#################################|###|#####################################
+#  __                            |   |                                    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
+# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+#       |_____|                   \|/                                     #
+################################## ' ######################################
+
+# Copyright 2023 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License.
@@ -27,7 +28,7 @@
 __all__ = ["safe_dump"]
 
 from collections import Counter
-from byron.user_messages import microgp_logger
+from byron.user_messages import logger
 
 _name_counter = Counter()
 _used_names = set()
@@ -41,10 +42,10 @@ def safe_dump(obj, **extra_parameters):
             dumped = obj.dump(**extra)
         except KeyError as k:
             if k.args[0] in extra:
-                microgp_logger.error(f"dump: Can't safely dump {obj!r}")
+                logger.error(f"dump: Can't safely dump {obj!r}")
                 raise k
             extra[k.args[0]] = "{" + k.args[0] + "}"
         except Exception as e:
-            microgp_logger.error(f"dump: Can't safely dump {obj!r}")
+            logger.error(f"dump: Can't safely dump {obj!r}")
             raise e
     return dumped

@@ -7,7 +7,7 @@
 //   /_/ --byron-- /_/      You don't need a big goal, be μ-ambitious!  //
 //                                                                         //
 /////////////////////////////////////////////////////////////////////////////
-// Copyright 2022-23 Giovanni Squillero and Alberto Tonda
+// Copyright 2023 Giovanni Squillero and Alberto Tonda
 // SPDX-License-Identifier: Apache-2.0
 
 unsigned long int one_max(void)

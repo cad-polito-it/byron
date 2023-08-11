@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-#############################################################################
-#   __                          (`/\                                        #
-#  |  |--.--.--.----.-----.-----`=\/\   This file is part of byron v0.1     #
-#  |  _  |  |  |   _|  _  |     |`=\/\  An evolutionary optimizer & fuzzer  #
-#  |_____|___  |__| |_____|__|__| `=\/  https://github.com/squillero/byron  #
-#        |_____|                     \                                      #
-#############################################################################
-# Copyright 2022-23 Giovanni Squillero and Alberto Tonda
+#################################|###|#####################################
+#  __                            |   |                                    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
+# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+#       |_____|                   \|/                                     #
+################################## ' ######################################
+
+# Copyright 2023 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License.
@@ -78,10 +79,10 @@ from byron import fitness_ as fit
 from byron.randy.randy import rrandom
 
 # noinspection PyUnresolvedReferences
-from byron.user_messages.messaging import microgp_logger
+from byron.user_messages.messaging import logger
 
 # noinspection PyUnresolvedReferences
-from byron.user_messages.messaging import microgp_logger as logger
+from byron.user_messages.messaging import logger as logger
 
 # noinspection PyUnresolvedReferences
 from byron.registry import *
@@ -109,8 +110,7 @@ del _patch_class_info
 # Welcome!
 
 __welcome__ = (
-    f'This is MicroGP v{__version__} "{version_info.codename}"\n'
-    + f"(c) 2022-23 G. Squillero & A. Tonda — Licensed under Apache-2.0"
+    f'This is byron v{__version__} "{__codename__}"\n' + f"(c) 2023 G. Squillero & A. Tonda — Licensed under Apache-2.0"
 )
 
 
@@ -119,8 +119,8 @@ def welcome(level=logging.DEBUG):
 
     stderr.flush()
     for m in __welcome__.split("\n"):
-        # stars: ⚝ ⭐
-        user_messages.microgp_logger.log(level, f"⭐: {m}")
+        # stars: ⚝ ⭐// feathers: 🖋
+        user_messages.logger.log(level, f"🖋: {m}")
     return True
 
 
@@ -139,7 +139,7 @@ if notebook_mode and logging.getLogger().level <= logging.WARNING and paranoia_m
         or not main_process
         or user_messages.performance(
             "Paranoia checks are enabled in this notebook: performances can be significantly impaired\n"
-            + "[see https://github.com/squillero/byron/blob/pre-alpha/PARANOIA.md for details]"
+            + "[see https://github.com/squillero/byron/blob/pre-alpha/docs/paranoia.md for details]"
         )
     )
 elif not notebook_mode:
@@ -148,7 +148,7 @@ elif not notebook_mode:
         or not main_process
         or user_messages.performance(
             "Paranoia checks are enabled: performances can be significantly impaired — consider using '-O'\n"
-            + "[see https://github.com/squillero/byron/blob/pre-alpha/PARANOIA.md for details]"
+            + "[see https://github.com/squillero/byron/blob/pre-alpha/docs/paranoia.md for details]"
         )
     )
 

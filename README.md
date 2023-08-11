@@ -1,26 +1,36 @@
-byron
-========
+`byron` 🖋
+==========
 
 [![License: Apache 2.0](https://img.shields.io/badge/license-apache--2.0-green.svg)](https://opensource.org/licenses/Apache-2.0) 
 [![Status: Actrive](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/squillero/microgp3)
 ![Language: Python](https://img.shields.io/badge/language-python-blue.svg)
-![Version: 4!2](https://img.shields.io/badge/version-4!2-orange.svg)
-![Codename: Meaning of Liff](https://img.shields.io/badge/codename-Meaning_of_Liff-orange.svg)
+![Version: 0.1](https://img.shields.io/badge/version-0.1α-orange.svg)
+![Codename: Don Juan](https://img.shields.io/badge/codename-Don_Juan-pink.svg)
 [![Documentation Status](https://readthedocs.org/projects/byron/badge/?version=pre-alpha)](https://byron.readthedocs.io/en/pre-alpha/?badge=pre-alpha)
 
+Byron is an [evolutionary tool](https://en.wikipedia.org/wiki/Evolutionary_algorithm): given a problem, it first creates a set of random solutions, then iteratively refines and enhances them using the result of their evaluations together with structural information. 
 
-MicroGP (µGP, `byron`)  is an [evolutionary tool](https://squillero.github.io/byron/evolution.html) created around 2001. Over the years it has been exploited as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing), as a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization), and as a framework for prototyping and testing new ideas. [Some hundreds documents](https://scholar.google.com/scholar?q=%28+MicroGP+OR+%C2%B5GP+OR+byron3+OR+byron2+%29+AND+%28+Squillero+OR+Tonda+OR+Sanchez+OR+Schillaci+%29) discussing it and possible application can be found in the scientific literature. [**[read more]**](https://byron.readthedocs.io/en/pre-alpha/summary.html)
+Byron is able to tackle problem those solutions are simple fixed-length bit strings, as well as to optimize realistic assembly programs including loops, interrupts and recursive sub routines. It can be exploited as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and as a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization), or as a framework for prototyping and testing new ideas.
 
-### ⚠️ byron v2.0 is currently in [pre-alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Pre-alpha) and under active development
+Candidate solutions can seamlessly be evaluated in parallel using external scripts, for instance calling proprietary tools. 
 
-## Installation
+### Installation
 
-byron is available in PyPi
+##### ⚠️ Byron is currently in [pre-alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Pre-alpha) and under active development
 
-```shell
-pip install -U psutils matplotlib joblib
-pip install -U byron
 ```
+pip install --upgrade byron
+```
+
+Optional dependencies which enhance *byron* , but are not strictly required:
+
+```
+pip install --upgrade matplotlib
+pip install --upgrade joblib
+pip install --upgrade psutil
+```
+
+### Notez Bien
 
 This repo is only useful if you want to hack the code (see: [CONTRIBUTING](CONTRIBUTING.md)). 
 
@@ -41,5 +51,5 @@ This repo is only useful if you want to hack the code (see: [CONTRIBUTING](CONTR
 * [Giovanni](https://github.com/squillero) [:email:](mailto:squillero@polito.it) [:house:](https://staff.polito.it/giovanni.squillero/)
 
 ### Licence
-Copyright © 2022-23 Giovanni Squillero and Alberto Tonda  
+Copyright © 2023 [Giovanni Squillero](https://github.com/squillero) and [Alberto Tonda](https://github.com/albertotonda/)  
 byron is [free and open-source software](https://en.wikipedia.org/wiki/Free_and_open-source_software), and it is distributed under the permissive [Apache License 2.0](https://opensource.org/license/apache-2-0/).

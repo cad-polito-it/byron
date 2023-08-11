@@ -1,12 +1,11 @@
 @echo off
-rem           __________
-rem    __  __/ ____/ __ \__ __   This file is part of MicroGP v4!2.0
-rem   / / / / / __/ /_/ / // /   A versatile evolutionary optimizer & fuzzer
-rem  / /_/ / /_/ / ____/ // /_   https://github.com/microgp/byron
-rem  \__  /\____/_/   /__  __/
-rem    /_/ --byron-- /_/      You don't need a big goal, be μ-ambitious!
+rem    __                          (`/\
+rem   |  |--.--.--.----.-----.-----`=\/\   This file is part of byron v0.1
+rem   |  _  |  |  |   _|  _  |     |`=\/\  An evolutionary optimizer & fuzzer
+rem   |_____|___  |__| |_____|__|__| `=\/  https://github.com/squillero/byron
+rem         |_____|                     \
 rem
-rem Copyright 2022-23 Giovanni Squillero and Alberto Tonda
+rem Copyright 2023 Giovanni Squillero and Alberto Tonda
 rem SPDX-License-Identifier: Apache-2.0
 
 for %%x in (%*) do (

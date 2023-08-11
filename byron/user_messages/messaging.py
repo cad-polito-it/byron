@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
-#############################################################################
-#   __                          (`/\                                        #
-#  |  |--.--.--.----.-----.-----`=\/\   This file is part of byron v0.1     #
-#  |  _  |  |  |   _|  _  |     |`=\/\  An evolutionary optimizer & fuzzer  #
-#  |_____|___  |__| |_____|__|__| `=\/  https://github.com/squillero/byron  #
-#        |_____|                     \                                      #
-#############################################################################
-# Copyright 2022-23 Giovanni Squillero and Alberto Tonda
+#################################|###|#####################################
+#  __                            |   |                                    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
+# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+#       |_____|                   \|/                                     #
+################################## ' ######################################
+
+# Copyright 2023 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
 # use this file except in compliance with the License.
@@ -25,7 +26,7 @@
 # v1 / April 2023 / Squillero (GX)
 
 __all__ = [
-    "microgp_logger",
+    "logger",
     "performance",
     "deprecation",
     "runtime_warning",
@@ -79,7 +80,7 @@ def deprecation_warning(message: str, stacklevel_offset: int = 0) -> bool:
 
 
 def syntax_warning_hint(message: str, stacklevel_offset: int = 0) -> bool:
-    if microgp_logger.level <= logging.INFO and not test_mode:
+    if logger.level <= logging.INFO and not test_mode:
         warnings.warn(
             f"Friendly suggestion:{_indent_msg(message)}", SyntaxWarning, stacklevel=BASE_STACKLEVEL + stacklevel_offset
         )
@@ -92,24 +93,24 @@ def syntax_warning_hint(message: str, stacklevel_offset: int = 0) -> bool:
 #############################################################################
 # CUSTOMIZATIONS
 
-assert "microgp_logger" not in globals(), f"SystemError (paranoia check): MicroGP logger already initialized"
+assert "microgp_logger" not in globals(), f"SystemError (paranoia check): byron logger already initialized"
 logging.basicConfig()  # Initialize logging
-microgp_logger = logging.getLogger("MicroGP")
-microgp_logger.propagate = False
-assert "microgp_logger" in globals(), f"SystemError (paranoia check): MicroGP logger not initialized"
+logger = logging.getLogger("byron")
+logger.propagate = False
+assert "logger" in globals(), f"SystemError (paranoia check): byron logger not initialized"
 
 if notebook_mode:
-    microgp_logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.DEBUG)
 elif __debug__:
-    microgp_logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.DEBUG)
 else:
-    microgp_logger.setLevel(logging.INFO)
+    logger.setLevel(logging.INFO)
 
 # Alternative symbols: ⍄ ┊
 console_formatter = logging.Formatter("%(asctime)s ▷ %(levelname)s ▷ %(name)s::%(message)s", datefmt="%H:%M:%S")
 console_handler = logging.StreamHandler()
 console_handler.setFormatter(console_formatter)
-microgp_logger.addHandler(console_handler)
+logger.addHandler(console_handler)
 
 # file_formatter = logging.Formatter('[%(asctime)s] %(levelname)s %(name)s::%(message)s', datefmt="%Y-%m-%d %H:%M:%S,uuu")
 # file_handler = logging.FileHandler('debug.log')

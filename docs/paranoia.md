@@ -3,9 +3,9 @@
 > Can you help me occupy my brain?  
 > Oh, yeah  
 
-In **production**, MicroGP is typically run from a non-interactive script, for example on a server with ssh access. In this context, performance is critical, while verbosity should be minimal. During the **setup**, on the other hand, the user needs to check the various parameters and the coherence of the constraints. Here, speed is not essential, while warnings and hints can be quite useful. 
+In **production**, `byron` is typically run from a non-interactive script, for example on a server with ssh access. In this context, performance is critical, while verbosity should be minimal. During the **setup**, on the other hand, the user needs to check the various parameters and the coherence of the constraints. Here, speed is not essential, while warnings and hints can be quite useful. 
 
-MicroGP's ***paranoia checks*** are computationally intensive routines  that thoroughly analyze and verify both the integrity of the internal data structures and the  parameter values, providing error messages and hints. *Paranoia checks* are supposed to be used only during the setup phase, and they are automatically removed when an optimization flag is used.
+Byron's ***paranoia checks*** are computationally intensive routines  that thoroughly analyze and verify both the integrity of the internal data structures and the  parameter values, providing error messages and hints. *Paranoia checks* are supposed to be used only during the setup phase, and they are automatically removed when an optimization flag is used.
 
 ## Terminal
 
@@ -33,7 +33,7 @@ $ PYTHONOPTIMIZE=1 python ./super-fuzzer.py
 
 ## Jupyter Notebooks
 
-By default, code run in IPython is not optimized. MicroGP should detect when it is executed within a Jupyter Notebook and show a warning:
+By default, code run in IPython is not optimized. Byron should detect when it is executed within a Jupyter Notebook and show a warning:
 
 > Paranoia checks are enabled in this notebook: performances can be significantly impaired
 
@@ -66,7 +66,7 @@ import byron
 
 * :+1: May be used in remote Notebooks (e.g., [Google's Colab](https://colab.research.google.com/))
 * :-1: All the code must be packed into one single cell
-* :-1: MicroGP will not detect Jupyter anymore
+* :-1: Byron will not detect Jupyter anymore
 
 ### Tamper with the bytecode cache
 

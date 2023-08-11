@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-#############################################################################
-#   __                          (`/\                                        #
-#  |  |--.--.--.----.-----.-----`=\/\   This file is part of byron v0.1     #
-#  |  _  |  |  |   _|  _  |     |`=\/\  An evolutionary optimizer & fuzzer  #
-#  |_____|___  |__| |_____|__|__| `=\/  https://github.com/squillero/byron  #
-#        |_____|                     \                                      #
-#############################################################################
+#################################|###|#####################################
+#  __                            |   |                                    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
+# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+#       |_____|                   \|/                                     #
+################################## ' ######################################
 # Copyright 2022-2023 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -58,8 +58,6 @@ class SElement:
         self.__last_check_result = True
         for f in self.__class__.NODE_CHECKS:
             if not f(node):
-                microgp_logger.info(
-                    f"NodeChecks: Failed check on genome 0x{id(node.genome):x}: {f.__qualname__}({node})"
-                )
+                logger.info(f"NodeChecks: Failed check on genome 0x{id(node.genome):x}: {f.__qualname__}({node})")
                 self.__last_check_result = False
         return self.__last_check_result
