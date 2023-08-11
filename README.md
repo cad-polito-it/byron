@@ -4,7 +4,7 @@
 [![License: Apache 2.0](https://img.shields.io/badge/license-apache--2.0-green.svg)](https://opensource.org/licenses/Apache-2.0) 
 [![Status: Actrive](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/squillero/byron)
 ![Language: Python](https://img.shields.io/badge/language-python-blue.svg)
-![Version: 0.1.dev2](https://img.shields.io/badge/version-0.1.dev9-orange.svg)
+![Version: 0.1.dev2](https://img.shields.io/badge/version-0.1.dev10-orange.svg)
 ![Codename: Don Juan](https://img.shields.io/badge/codename-Don_Juan-pink.svg)
 [![Documentation Status](https://readthedocs.org/projects/byron/badge/?version=pre-alpha)](https://byron.readthedocs.io/en/pre-alpha/?badge=pre-alpha)
 
@@ -12,7 +12,7 @@ Byron is an [evolutionary tool](https://en.wikipedia.org/wiki/Evolutionary_algor
 
 Byron can solve problems that require solutions with a complex structures, such as realistic assembly programs with loops, interrupts, and recursive subroutines. It may be used as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization), or as a framework for prototyping and testing new ideas.
 
-Candidate solutions are evaluated in parallel using a Python function, an external *makefile*, or a generic shell script that may, for instance, call proprietary tools.
+Candidate solutions are evaluated in parallel calling a user-defined Python function; creating temporary directories and using a [*makefile*](https://en.wikipedia.org/wiki/Make_(software)); or executing a generic shell script (that may, for instance, call proprietary tools).
 
 ### Installation
 

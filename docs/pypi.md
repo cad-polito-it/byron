@@ -2,7 +2,7 @@ Byron is an [evolutionary tool](https://en.wikipedia.org/wiki/Evolutionary_algor
 
 Byron can solve problems that require solutions with a complex structures, such as realistic assembly programs with loops, interrupts, and recursive subroutines. It may be used as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization), or as a framework for prototyping and testing new ideas.
 
-Candidate solutions are evaluated in parallel using a Python function, an external *makefile*, or a generic shell script that may, for instance, call proprietary tools.
+Candidate solutions are evaluated in parallel calling a user-defined Python function; creating temporary directories and using a [*makefile*](https://en.wikipedia.org/wiki/Make_(software)); or executing a generic shell script (that may, for instance, call proprietary tools).
 
 ## Installation
 
