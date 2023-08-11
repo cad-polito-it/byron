@@ -60,7 +60,7 @@ from collections import namedtuple
 import multiprocessing
 import re
 
-__version__ = "0.1.dev2"
+__version__ = "0.1.dev3"
 __codename__ = 'Don Juan'
 __author__ = "Giovanni Squillero and Alberto Tonda"
 __copyright__ = "Copyright (c) 2023 Giovanni Squillero and Alberto Tonda"

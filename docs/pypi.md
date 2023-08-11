@@ -1,6 +1,9 @@
-`byron` is an [evolutionary tool](https://squillero.github.io/byron/evolution.html): given a problem, it first creates a set of random solutions, then iteratively refines and enhances them using the result of their evaluations together with structural information, routinely outperforming both human experts and conventional heuristics. 
+Byron is an [evolutionary tool](https://en.wikipedia.org/wiki/Evolutionary_algorithm): given a problem, it first creates a set of random solutions, then iteratively refines and enhances them using the result of their evaluations together with structural information. 
 
-It is able to tackle problem those solutions are simple fixed-length bit strings, as well as to optimize realistic assembly programs including loops, interrupts and recursive sub routines; and candidate solutions can be evaluated using proprietary external tools. 
+Byron is able to tackle problem those solutions are simple fixed-length bit strings, as well as to optimize realistic assembly programs including loops, interrupts and recursive sub routines. It can be exploited as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and as a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization), or as a framework for prototyping and testing new ideas.
+
+Candidate solutions can seamlessly be evaluated in parallel using external scripts, for instance calling proprietary tools. 
+
 
 ### Installation
 
