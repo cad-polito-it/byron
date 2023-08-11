@@ -1,0 +1,20 @@
+#############################################################################
+#   __                          (`/\                                        #
+#  |  |--.--.--.----.-----.-----`=\/\   This file is part of byron v0.1     #
+#  |  _  |  |  |   _|  _  |     |`=\/\  An evolutionary optimizer & fuzzer  #
+#  |_____|___  |__| |_____|__|__| `=\/  https://github.com/squillero/byron  #
+#        |_____|                     \                                      #
+#############################################################################
+# Copyright 2022-23 Giovanni Squillero and Alberto Tonda
+# SPDX-License-Identifier: Apache-2.0
+
+dir=$PWD
+n=0
+while [[ ! -f "${dir}/byron/__init__.py" ]]; do
+  [[ "$(realpath "$dir")" == "/" ]] && break
+  dir="$(realpath "${dir}/..")"
+done
+[[ -f "${dir}/byron/__init__.py" ]] && export PYTHONPATH="${PYTHONPATH}:${dir}"
+
+echo "export PYTHONPATH=\"${PYTHONPATH}\""
+echo "#export PYTHONOPTIMIZE=1"

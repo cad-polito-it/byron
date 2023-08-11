@@ -1,0 +1,60 @@
+# !/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#############################################################################
+#           __________                                                      #
+#    __  __/ ____/ __ \__ __   This file is part of MicroGP4 v4!2.0         #
+#   / / / / / __/ /_/ / // /   A versatile evolutionary optimizer & fuzzer  #
+#  / /_/ / /_/ / ____/ // /_   https://github.com/microgp/byron          #
+#  \__  /\____/_/   /__  __/                                                #
+#    /_/ --MicroGP4-- /_/      You don't need a big goal, be μ-ambitious!   #
+#                                                                           #
+#############################################################################
+# Copyright 2022-2023 Giovanni Squillero and Alberto Tonda
+# SPDX-License-Identifier: Apache-2.0
+
+from logging import WARNING
+import byron as byron
+
+
+@byron.fitness_function
+def fitness(genotype: str):
+    """Vanilla 1-max"""
+    return sum(b == '1' for b in genotype)
+
+
+def test_onemax():
+    # byron.microgp_logger.setLevel(WARNING)
+    macro = byron.f.macro('{v}', v=byron.f.array_parameter('01', 50))
+    frame = byron.f.sequence([macro])
+
+    # sequential evaluator
+    evaluator = byron.evaluator.PythonEvaluator(fitness, strip_phenotypes=True)
+
+    # seed 42
+    byron.rrandom.seed(42)
+    reference_population = byron.ea.vanilla_ea(frame, evaluator, mu=10, max_generation=10)
+
+    # seed not 42 (result should be !=)
+    other_population = byron.ea.vanilla_ea(frame, evaluator, mu=10, max_generation=10)
+    assert any(r[1].fitness != o[1].fitness for r, o in zip(reference_population, other_population))
+
+    # seed 42 again (result should be ==)
+    byron.rrandom.seed(42)
+    other_population = byron.ea.vanilla_ea(frame, evaluator, mu=10, max_generation=10)
+    assert all(r[1].fitness == o[1].fitness for r, o in zip(reference_population, other_population))
+
+    # multi-thread parallel evaluator & seed 42 (result should be ==)
+    evaluator = byron.evaluator.PythonEvaluator(fitness, strip_phenotypes=True, max_workers=None, backend='thread_pool')
+    byron.rrandom.seed(42)
+    other_population = byron.ea.vanilla_ea(frame, evaluator, mu=10, max_generation=10)
+    assert all(r[1].fitness == o[1].fitness for r, o in zip(reference_population, other_population))
+
+    # multi-process parallel evaluator & seed 42 (result should be ==)
+    evaluator = byron.evaluator.PythonEvaluator(fitness, strip_phenotypes=True, max_workers=None, backend='joblib')
+    byron.rrandom.seed(42)
+    other_population = byron.ea.vanilla_ea(frame, evaluator, mu=10, max_generation=10)
+    assert all(r[1].fitness == o[1].fitness for r, o in zip(reference_population, other_population))
+
+
+if __name__ == '__main__':
+    test_onemax()

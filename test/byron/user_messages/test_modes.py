@@ -1,0 +1,26 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#############################################################################
+#   __                          (`/\                                        #
+#  |  |--.--.--.----.-----.-----`=\/\   This file is part of byron v0.1     #
+#  |  _  |  |  |   _|  _  |     |`=\/\  An evolutionary optimizer & fuzzer  #
+#  |_____|___  |__| |_____|__|__| `=\/  https://github.com/squillero/byron  #
+#        |_____|                     \                                      #
+#############################################################################
+# Copyright 2022-23 Giovanni Squillero and Alberto Tonda
+# SPDX-License-Identifier: Apache-2.0
+
+import sys
+import byron as byron
+
+
+def test_test_mode():
+    assert byron.test_mode == ("pytest" in sys.modules)
+
+
+def test_notebook_mode():
+    assert byron.notebook_mode == False
+
+
+def test_debug_mode():
+    assert byron.debug_mode == __debug__

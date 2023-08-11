@@ -1,0 +1,105 @@
+#############################################################################
+#   __                          (`/\                                        #
+#  |  |--.--.--.----.-----.-----`=\/\   This file is part of byron v0.1     #
+#  |  _  |  |  |   _|  _  |     |`=\/\  An evolutionary optimizer & fuzzer  #
+#  |_____|___  |__| |_____|__|__| `=\/  https://github.com/squillero/byron  #
+#        |_____|                     \                                      #
+#############################################################################
+# Copyright 2022-23 Giovanni Squillero and Alberto Tonda
+# SPDX-License-Identifier: Apache-2.0
+
+[tool.poetry]
+name = "byron"
+version = "0.0a1.dev2"
+description = "Multi-purpose extensible self-adaptive optimizer and fuzzer"
+authors = [
+    "Giovanni Squillero <giovanni.squillero@polito.it>",
+    "Alberto Tonda <alberto.tonda@inrae.fr>",
+]
+#maintainers = [
+#    "Giovanni Squillero <giovanni.squillero@polito.it>"
+#]
+license = "Apache-2.0"
+readme = "docs/pypi.md"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries",
+]
+homepage = "https://squillero.github.io/byron/"
+repository = "https://github.com/squillero/byron"
+keywords = [
+    "Aritificial Intelligence",
+    "Evolutionary Computation",
+    "Approximate Optimization",
+    "Fuzzer",
+]
+
+[tool.poetry.dependencies]
+arcade = { version = "^2.6.17", extras = ["plot"] }
+joblib = { version = "^1.3.2", extras = ["run"] }
+matplotlib = { version = "^3.7.2", extras = ["plot"] }
+networkx = "^3.1"
+numpy = "^1.25.0"
+psutil = { version = "^5.9.5", extras = ["info"] }
+python = ">=3.11,<3.13"
+scipy = "^1.11.1"
+tqdm = "^4.65.0"
+
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+black = { extras = ["jupyter"], version = "^23.3.0" }
+coverage = "^7.2.7"
+ipykernel = "^6.23.3"
+jupyter = "^1.0.0"
+mypy = "^1.4.1"
+pylint = "^2.17.4"
+pytest = "^7.4.0"
+yapf = "^0.40.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.yapf]
+based_on_style = "google"
+blank_line_before_module_docstring = true
+column_limit = 120
+
+[tool.yapfignore]
+ignore_patterns = [".*", "venv"]
+
+[tool.black]
+target-version = ['py311', 'py312']
+exclude = "(^\\.|^__pycache__|^venv)"
+include = '(\.ipynb$|\.py$)'
+line-length = 120
+skip-string-normalization = true
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+include = ['microgp4/*']
+omit = ['test/*', '.*/*', 'venv/*']
+
+[tool.mypy]
+modules = ['microgp4']
+
+[tool.pytype]
+inputs = ['microgp4']
+
+[tool.pylint]
+max-line-length = 120
+source-roots = ['src']
