@@ -1,9 +1,8 @@
-Byron is an [evolutionary tool](https://en.wikipedia.org/wiki/Evolutionary_algorithm): given a problem, it first creates a set of random solutions, then iteratively refines and enhances them using the result of their evaluations together with structural information. 
+Byron is an [evolutionary tool](https://en.wikipedia.org/wiki/Evolutionary_algorithm): given a problem, it first generates a set of random solutions, then iteratively refines and improves them using the results of their evaluations together with structural information.
 
-Byron is able to tackle problem those solutions are simple fixed-length bit strings, as well as to optimize realistic assembly programs including loops, interrupts and recursive sub routines. It can be exploited as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and as a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization), or as a framework for prototyping and testing new ideas.
+Byron can solve problems that require solutions with a complex structures, such as realistic assembly programs with loops, interrupts, and recursive subroutines. It may be used as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization), or as a framework for prototyping and testing new ideas.
 
-Candidate solutions can seamlessly be evaluated in parallel using external scripts, for instance calling proprietary tools. 
-
+Candidate solutions are evaluated in parallel using a Python function, an external *makefile*, or a generic shell script that may, for instance, call proprietary tools.
 
 ### Installation
 
