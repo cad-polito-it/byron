@@ -26,8 +26,6 @@ def fitness(genotype):
 
 
 def test_evaluators():
-    # byron.microgp_logger.setLevel(logging.WARNING)
-
     assert os.path.exists('runs') or os.path.exists('test/runs')
     if os.path.exists('test/runs'):
         os.chdir('test/runs')

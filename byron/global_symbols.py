@@ -36,7 +36,7 @@ __all__ = [
     'FRAME_NODE',
     'MACRO_NODE',
     'NODE_ZERO',
-    'byron4_TAG',
+    'BYRON_TAG',
     'GENETIC_OPERATOR',
     'FITNESS_FUNCTION',
     'test_mode',
@@ -131,7 +131,7 @@ ALTERNATIVE_FRAME = "alternative"
 MACRO_BUNCH_FRAME = "bunch"
 BNF_FRAME = "bunch"
 NODE_ZERO = 0
-byron4_TAG = "µGP⁴"
+BYRON_TAG = "To have joy, one must share it"
 GENETIC_OPERATOR = "genetic_operator"
 FITNESS_FUNCTION = "fitness_function"
 PARANOIA_TYPE_ERROR = "TypeError (paranoia check)"

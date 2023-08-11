@@ -57,7 +57,7 @@ def check_valid_type(obj, valid: type, subclass: bool = False) -> bool:
         valid,
         hint,
     )
-    raise MicroGPError(PARANOIA_TYPE_ERROR)
+    raise ByronError(PARANOIA_TYPE_ERROR)
 
 
 def check_valid_types(obj, *valid_types: type, subclass: bool = False) -> bool:
@@ -73,17 +73,17 @@ def check_valid_types(obj, *valid_types: type, subclass: bool = False) -> bool:
         repr(obj),
         " or ".join(repr(v) for v in valid_types),
     )
-    raise MicroGPError(PARANOIA_TYPE_ERROR)
+    raise ByronError(PARANOIA_TYPE_ERROR)
 
 
 def check_value_range(val: Number, min_: Number | None = None, max_: Number | None = None) -> bool:
     """Checks that `val` is in the half-open range [min_, max_)."""
     if min_ is not None and val < min_:
         logger.error("ValueError: %s < %s (min)", repr(val), repr(min_))
-        raise MicroGPError(PARANOIA_VALUE_ERROR)
+        raise ByronError(PARANOIA_VALUE_ERROR)
     if max_ is not None and val >= max_:
         logger.error("ValueError: %s >= %s (max)", repr(val), repr(max_))
-        raise MicroGPError(PARANOIA_VALUE_ERROR)
+        raise ByronError(PARANOIA_VALUE_ERROR)
     return True
 
 
@@ -91,11 +91,11 @@ def check_valid_length(obj: Collection, min_length: int | None = None, max_lengt
     """Checks that `len(obj)` is in the half-open range [min_, max_)."""
     if min_length is not None and len(obj) < min_length:
         logger.error("ValueError: incorrect length: len(%s) < %s", repr(obj), repr(min_length))
-        raise MicroGPError(PARANOIA_VALUE_ERROR)
+        raise ByronError(PARANOIA_VALUE_ERROR)
         return False
     if max_length is not None and len(obj) >= max_length:
         logger.error("ValueError: incorrect length: len(%s) >= %s", repr(obj), repr(max_length))
-        raise MicroGPError(PARANOIA_VALUE_ERROR)
+        raise ByronError(PARANOIA_VALUE_ERROR)
         return False
     return True
 
@@ -106,5 +106,5 @@ def check_no_duplicates(obj: Collection) -> bool:
     if any(i != seq.index(x) for i, x in enumerate(seq)):
         dups = set(x for i, x in enumerate(seq) if i != seq.index(x))
         logger.error("ValueError: duplicated elements: %s", ", ".join(repr(_) for _ in sorted(dups)))
-        raise MicroGPError(PARANOIA_VALUE_ERROR)
+        raise ByronError(PARANOIA_VALUE_ERROR)
     return True

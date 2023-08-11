@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 
-class MicroGPException(Exception):
+class ByronException(Exception):
     """Base class for exceptions in byron."""
 
     def __init__(self):
@@ -24,5 +24,5 @@ class MicroGPException(Exception):
         self.__bar += 1
 
 
-x = MicroGPException()
+x = ByronException()
 x.foo()

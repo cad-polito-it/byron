@@ -82,9 +82,6 @@ from byron.randy.randy import rrandom
 from byron.user_messages.messaging import logger
 
 # noinspection PyUnresolvedReferences
-from byron.user_messages.messaging import logger as logger
-
-# noinspection PyUnresolvedReferences
 from byron.registry import *
 
 # noinspection PyUnresolvedReferences

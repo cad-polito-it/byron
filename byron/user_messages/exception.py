@@ -25,14 +25,14 @@
 # =[ HISTORY ]===============================================================
 # v1 / May 2023 / Squillero (GX)
 
-__all__ = ["MicroGPException", "MicroGPError", "GeneticOperatorFail"]
+__all__ = ["ByronException", "ByronError", "GeneticOperatorFail"]
 
 
-class MicroGPException(Exception):
+class ByronException(Exception):
     """Base class for exceptions in byron."""
 
 
-class MicroGPError(MicroGPException):
+class ByronError(ByronException):
     """Exception for a serious error in byron."""
 
 
@@ -40,5 +40,5 @@ class MicroGPError(MicroGPException):
 #    """Exception when an individual is invalid."""
 
 
-class GeneticOperatorFail(MicroGPException):
+class GeneticOperatorFail(ByronException):
     """Exception when a Genetic Operator can't generate a valid individual."""

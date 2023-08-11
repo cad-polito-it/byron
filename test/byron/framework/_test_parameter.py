@@ -126,12 +126,12 @@ def test_array_parameter():
 
 
 def test_integer_parameter_range():
-    with pytest.raises(byron.user_messages.MicroGPError):
+    with pytest.raises(byron.user_messages.ByronError):
         byron.framework.integer_parameter(1, 2)
 
 
 def test_float_parameter_check_valid_type():
-    with pytest.raises(byron.user_messages.MicroGPError):
+    with pytest.raises(byron.user_messages.ByronError):
         byron.framework.float_parameter("invalid", 10.0)
 
 

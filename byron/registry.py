@@ -63,7 +63,7 @@ def _initializer_proto(top_frame) -> list[Individual] | None:
 
 
 def get_byron_type(object):
-    if not hasattr(object, "microgp") or object.microgp != byron4_TAG or not hasattr(object, "type"):
+    if not hasattr(object, '_byron_') or object._byron_ != BYRON_TAG or not hasattr(object, "type"):
         return None
     return object.type
 
@@ -111,7 +111,7 @@ def fitness_function(
         log += result
         return result
 
-    wrapper.microgp = byron4_TAG
+    wrapper._byron_ = BYRON_TAG
     wrapper.type = FITNESS_FUNCTION
 
     if func is None:
@@ -122,7 +122,7 @@ def fitness_function(
 
 
 def genetic_operator(*, num_parents: int = 1):
-    r"""Register a function as a "genetic operator" in MicroGP
+    r"""Register a function as a "genetic operator"
 
     A genetic operator creates individual. A genetic operators is given `num_parents` individual and produces a list
     of new individuals (the offspring). If the operator return an empty list or `None`, or if it raises a
@@ -185,7 +185,7 @@ def genetic_operator(*, num_parents: int = 1):
                 wrapper.stats.aborts += 1
             return offspring
 
-        wrapper.microgp = byron4_TAG
+        wrapper._byron_ = BYRON_TAG
         wrapper.type = GENETIC_OPERATOR
         wrapper.num_parents = num_parents
         wrapper.stats = Statistics()

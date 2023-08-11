@@ -80,7 +80,7 @@ class SysInfo:
         ops = dict()
         snapshot = inspect.currentframe().f_back.f_globals
         for k, v in snapshot.items():
-            if hasattr(v, "microgp") and v.type == GENETIC_OPERATOR:
+            if hasattr(v, '_byron_') and v.type == GENETIC_OPERATOR:
                 ops[k] = v
         return View(ops)
 
@@ -90,7 +90,7 @@ class SysInfo:
         ops = dict()
         snapshot = inspect.currentframe().f_back.f_globals
         for k, v in snapshot.items():
-            if hasattr(v, "microgp") and v.type == FITNESS_FUNCTION:
+            if hasattr(v, '_byron_') and v.type == FITNESS_FUNCTION:
                 ops[k] = v
         return View(ops)
 
@@ -102,7 +102,7 @@ class SysInfo:
                 raise KeyError(object)
             object = inspect.currentframe().f_back.f_globals[object]
 
-        if hasattr(object, "microgp") and object.type == GENETIC_OPERATOR:
+        if hasattr(object, '_byron_') and object.type == GENETIC_OPERATOR:
             print(f"Genetic operator: {object}")
             print(f"  {object.stats}")
         else:
@@ -112,7 +112,7 @@ class SysInfo:
 def get_operators():
     x = random_individual
     snapshot = inspect.currentframe().f_back.f_globals
-    return [o for o in snapshot.values() if hasattr(o, "microgp") and o.type == GENETIC_OPERATOR]
+    return [o for o in snapshot.values() if hasattr(o, '_byron_') and o.type == GENETIC_OPERATOR]
 
 
 assert "SYSINFO" not in globals(), f"SystemError (paranoia check): SYSINFO already initialized"

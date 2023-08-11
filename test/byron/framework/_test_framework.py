@@ -91,7 +91,7 @@ def test_sequence():
         assert type(t1) != type(e)
         assert type(e) == type(m1)
 
-    with pytest.raises(byron.user_messages.MicroGPError):
+    with pytest.raises(byron.user_messages.ByronError):
         byron.f.sequence(12)
 
 
@@ -119,5 +119,5 @@ def test_bunch():
     assert len(d.successors) == 1
     assert all(i in [m1, m2, m3] for i in e.successors)
 
-    with pytest.raises(byron.user_messages.MicroGPError):
+    with pytest.raises(byron.user_messages.ByronError):
         byron.f.bunch(p1)

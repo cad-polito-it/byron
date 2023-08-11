@@ -97,9 +97,6 @@ def vanilla_ea(
         o = rrandom.choice(ops0)
         gen0 += o(top_frame=top_frame)
 
-    for i in gen0:
-        i.as_lgp(f'ind_{i.id:08}.png')
-
     population += gen0
     evaluator(population)
     population.sort()

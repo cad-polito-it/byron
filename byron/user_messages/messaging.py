@@ -93,13 +93,15 @@ def syntax_warning_hint(message: str, stacklevel_offset: int = 0) -> bool:
 #############################################################################
 # CUSTOMIZATIONS
 
-assert "microgp_logger" not in globals(), f"SystemError (paranoia check): byron logger already initialized"
+assert "logger" not in globals(), f"SystemError (paranoia check): byron logger already initialized"
 logging.basicConfig()  # Initialize logging
 logger = logging.getLogger("byron")
 logger.propagate = False
 assert "logger" in globals(), f"SystemError (paranoia check): byron logger not initialized"
 
-if notebook_mode:
+if test_mode:
+    logger.setLevel(logging.WARNING)
+elif notebook_mode:
     logger.setLevel(logging.DEBUG)
 elif __debug__:
     logger.setLevel(logging.DEBUG)

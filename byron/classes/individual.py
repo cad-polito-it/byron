@@ -87,7 +87,7 @@ class Age:
 
 class Individual(Paranoid):
     """
-    MicroGP individual, that is, a genotype and its fitness
+    An individual, that is, a genotype and its fitness
 
     An Individual is a forest stored in a NetworkX MultiDiGraph, each tree representing a chunk of code,
     plus the framework definition to check its structural correctness.

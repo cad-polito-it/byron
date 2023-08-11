@@ -1,7 +1,7 @@
-Contribute to MicroGP
+Contribute to `byron`
 =====================
 
-First off all, thank you! :+1:
+First of all, thank you! :+1:
 
 * [Join the team](#join-the-team)
 * Use the tool and [report a success story](#report)
@@ -25,7 +25,7 @@ Please, contact Alberto or Giovanni directly:
 
 We use [GitHub's issues](https://github.com/squillero/byron/issues) for bug reporting. 
 
-If you have published a paper using any version of MicroGP, please let us know.
+If you have published a paper using any version of byron, please let us know.
 
 Anyhow, feel free to send us an email describing your story. 
 
@@ -46,8 +46,8 @@ Anyhow, feel free to send us an email describing your story.
 
 Thanks for trying, but we do not accept monetary donations:
 
-* Alberto and Giovanni are working on MicroGP as an integral part of their research activities. Therefore, they are already paid by their institutions, namely: *Politecnico di Torino* (Italy); *INRAE — AgroParisTech* (France) and *Institut des Systèmes Complexes de Paris Île-de-France* (France).
-* Students have worked, are working, and will work on MicroGP as part of their academic curricula, either for Master's theses or Ph.D. programs.
+* Alberto and Giovanni are working on byron as an integral part of their research activities. Therefore, they are already paid by their institutions, namely: *Politecnico di Torino* (Italy); *INRAE — AgroParisTech* (France) and *Institut des Systèmes Complexes de Paris Île-de-France* (France).
+* Students have worked, are working, and will work on byron as part of their academic curricula, either for Master's theses or Ph.D. programs.
 * A few volunteers did excellent work on specific topics, but as volunteers they did not ask for payment.
 
 So, why not donating [**time**](#join-the-team) instead of money?
