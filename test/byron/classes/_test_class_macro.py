@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -27,7 +27,7 @@ def macro():
 @pytest.fixture
 def parameter_abc():
     class TestParameterABC(byron.classes.ParameterABC):
-        def mutate(self, strength: float = 1.0, **kwargs) -> None:
+        def mutate(self, strength: float = 1.0) -> None:
             pass
 
     return TestParameterABC()

@@ -34,10 +34,12 @@ class Randy:
     __slots__ = ["_generator", "_calls", "_saved_state"]
 
     def __getstate__(self):
-        return self._generator, self._calls
+        return self._generator.__getstate__(), self._calls
 
     def __setstate__(self, state):
-        _generator, _calls = state
+        self._generator.__setstate__(state[0])
+        _calls = state[1]
+        assert self._save_state()
 
     def __init__(self, seed: Any | None = None) -> None:
         self._generator = np.random.default_rng(seed)
@@ -49,9 +51,6 @@ class Randy:
     def __str__(self) -> str:
         description = ", ".join(f"{a}={b!r}" for a, b in self._generator.__getstate__().items())
         return f"Randy @ {hex(id(self))} (calls={self._calls}, {description})"
-
-    # def __repr__(self) -> str:
-    #    return f"Randy_{hex(id(self))[2:]}"
 
     def __bool__(self):
         return self.boolean()
@@ -86,10 +85,21 @@ class Randy:
         return self._saved_state
 
     def _get_current_state(self) -> dict:
-        return self._generator.__getstate__()["state"]
+        return self._generator.bit_generator.state
+
+    @property
+    def state(self):
+        return self._generator.bit_generator.state
+
+    @state.setter
+    def state(self, state):
+        self._generator.bit_generator.state = state
+        assert self._save_state()
 
     def seed(self, seed: Any | None = None) -> None:
-        assert self._get_current_state() == self._get_saved_state(), "Generator has been modified"
+        assert (
+            self._get_current_state() == self._get_saved_state()
+        ), "Generator internal state has been modified externally"
         assert (
             seed is not None
             or notebook_mode
@@ -111,7 +121,9 @@ class Randy:
         ), "ValueError: loc and strength not specified together"
         assert loc is None or a <= loc <= b, "ValueError: loc not in [a, b]"
         assert strength is None or 0 <= strength <= 1, "ValueError: strength not in [0, 1]"
-        assert self._get_current_state() == self._get_saved_state(), "Generator has been modified"
+        assert (
+            self._get_current_state() == self._get_saved_state()
+        ), "Generator internal state has been modified externally"
         if strength is None or strength == 1:
             val = self._generator.random()
             val = val * (b - a) + a
@@ -132,7 +144,9 @@ class Randy:
         ), "ValueError: loc and scale not specified together"
         assert loc is None or a <= loc <= b, "ValueError: loc not in [a, b]"
         assert scale is None or scale >= 0, "ValueError: negative scale"
-        assert self._get_current_state() == self._get_saved_state(), "Generator has been modified"
+        assert (
+            self._get_current_state() == self._get_saved_state()
+        ), "Generator internal state has been modified externally"
         if scale is None:
             val = self._generator.random()
             val = val * (b - a) + a
@@ -146,7 +160,9 @@ class Randy:
 
     def random(self, a: float | None = 0, b: float | None = 1) -> float:
         """Returns a random value in [a, b], default is [0, 1]."""
-        assert self._get_current_state() == self._get_saved_state(), "Generator has been modified"
+        assert (
+            self._get_current_state() == self._get_saved_state()
+        ), "Generator internal state has been modified externally"
         r = self.sigma_random(a=a, b=b, loc=None, strength=None)
         assert self._save_state()
         return r
@@ -159,7 +175,9 @@ class Randy:
             strength == 1 or (loc is None and strength is None) or (loc is not None and strength is not None)
         ), "ValueError: loc and strength not specified together"
         assert loc is None or 0 <= loc < len(seq), "ValueError: invalid loc"
-        assert self._get_current_state() == self._get_saved_state(), "Generator has been modified"
+        assert (
+            self._get_current_state() == self._get_saved_state()
+        ), "Generator internal state has been modified externally"
         if strength == 1 or strength is None:
             r = self._generator.choice(seq)
         elif strength == 0:
@@ -174,14 +192,18 @@ class Randy:
         """Returns a random element from seq using the probabilities in p."""
         assert len(seq) == len(p), "ValueError: different number of elements in seq and weight"
         assert math.isclose(sum(p), 1), "ValueError: weights sum not 1"
-        assert self._get_current_state() == self._get_saved_state(), "Generator has been modified"
+        assert (
+            self._get_current_state() == self._get_saved_state()
+        ), "Generator internal state has been modified externally"
         r = self._generator.random()
         assert self._save_state()
         return next(val for val, cp in ((v, sum(p[0 : i + 1])) for i, v in enumerate(seq)) if cp >= r)
 
     def choice(self, seq: Iterable[Any]) -> Any:
         """Returns a random element from the pool."""
-        assert self._get_current_state() == self._get_saved_state(), "Generator has been modified"
+        assert (
+            self._get_current_state() == self._get_saved_state()
+        ), "Generator internal state has been modified externally"
         r = self._generator.choice(seq)
         assert self._save_state()
         return r
@@ -194,7 +216,9 @@ class Randy:
         assert (
             p_true is None or p_false is None or math.isclose(p_true + p_false, 1)
         ), "ValueError: p_true + p_false not equal to 1"
-        assert self._get_current_state() == self._get_saved_state(), "Generator has been modified"
+        assert (
+            self._get_current_state() == self._get_saved_state()
+        ), "Generator internal state has been modified externally"
         if p_true is None and p_false is None:
             p_true = 0.5
         elif p_true is None and p_false is not None:
@@ -206,7 +230,9 @@ class Randy:
     def randint(self, a, b) -> int:
         """Returns a random integer in [a, b]."""
         assert a <= b, "ValueError: a > b."
-        assert self._get_current_state() == self._get_saved_state(), "Generator has been modified"
+        assert (
+            self._get_current_state() == self._get_saved_state()
+        ), "Generator internal state has been modified externally"
         r = self._generator.random() * (b - a + 1) + a
         assert self._save_state()
         return int(r)
@@ -216,7 +242,9 @@ class Randy:
         assert (loc is None and strength is None) or (
             loc is not None and strength is not None
         ), "ValueError: loc and strength not specified together"
-        assert self._get_current_state() == self._get_saved_state(), "Generator has been modified"
+        assert (
+            self._get_current_state() == self._get_saved_state()
+        ), "Generator internal state has been modified externally"
         if strength == 0:
             r = int(loc)
         if strength is None or strength == 1:
@@ -228,13 +256,17 @@ class Randy:
 
     def shuffle(self, seq: Sequence) -> None:
         """Shuffle list x in place, and return None."""
-        assert self._get_current_state() == self._get_saved_state(), "Generator has been modified"
+        assert (
+            self._get_current_state() == self._get_saved_state()
+        ), "Generator internal state has been modified externally"
         self._generator.shuffle(seq)
         assert self._save_state()
 
     def shuffled(self, seq: Sequence) -> list:
         """Returns a shuffled list with the element of seq."""
-        assert self._get_current_state() == self._get_saved_state(), "Generator has been modified"
+        assert (
+            self._get_current_state() == self._get_saved_state()
+        ), "Generator internal state has been modified externally"
         y = list(seq)
         self.shuffle(y)
         return y

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -79,8 +79,6 @@ class NodeView:
             self.__dict__[item] = G
         elif item == "attributes":  # ValueBag with all node attributes
             self.__dict__[item] = ValueBag(G.nodes[id])
-        elif item == "macro":  # ValueBag with values of macro parameters
-            self.__dict__[item] = ValueBag({k: v.value for k, v in G.nodes[id]["_macro"].parameters.items()})
         elif item == "framework_tree":  # Framework tree from the full genome
             tree = nx.DiGraph()
             tree.add_edges_from((x, y) for x, y, _ in G.edges(data=FRAMEWORK, keys=False))

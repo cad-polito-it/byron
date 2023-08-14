@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -23,29 +23,9 @@
 # limitations under the License.
 
 # =[ HISTORY ]===============================================================
-# v1 / April 2023 / Squillero (GX)
-
-__all__ = ["safe_dump"]
-
-from collections import Counter
-from byron.user_messages import logger
-
-_name_counter = Counter()
-_used_names = set()
+# v1 / August 2023 / Squillero (GX)
 
 
-def safe_dump(obj, **extra_parameters):
-    extra = dict(extra_parameters)
-    dumped = None
-    while not dumped:
-        try:
-            dumped = obj.dump(**extra)
-        except KeyError as k:
-            if k.args[0] in extra:
-                logger.error(f"dump: Can't safely dump {obj!r}")
-                raise k
-            extra[k.args[0]] = "{" + k.args[0] + "}"
-        except Exception as e:
-            logger.error(f"dump: Can't safely dump {obj!r}")
-            raise e
-    return dumped
+from dataclasses import dataclass
+
+# @dataclass(frozen=True, slots=True)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -39,7 +39,7 @@ from byron.classes.paranoid import Paranoid
 from byron.classes.node_reference import NodeReference
 
 
-class ParameterABC(SElement, Paranoid, ABC):
+class ParameterABC(Paranoid, ABC):
     """Generic class for storing a Macro parameter"""
 
     __slots__ = ["target_variable"]  # Preventing the automatic creation of __dict__
@@ -77,7 +77,7 @@ class ParameterABC(SElement, Paranoid, ABC):
         self._value = new_value
 
     @abstractmethod
-    def mutate(self, strength: float = 1.0, **kwargs) -> None:
+    def mutate(self, strength: float = 1.0) -> None:
         pass
 
 
@@ -118,6 +118,9 @@ class ParameterStructuralABC(ParameterABC, ABC):
 
     @property
     def value(self):
+        assert (
+            self.is_fastened
+        ), f"{PARANOIA_VALUE_ERROR}: attempt to retrieve the value of an unfastened structural parameter"
         if self._node_reference is None:
             return None
         return next(

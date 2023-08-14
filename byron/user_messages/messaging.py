@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -95,9 +95,9 @@ def syntax_warning_hint(message: str, stacklevel_offset: int = 0) -> bool:
 
 assert "logger" not in globals(), f"SystemError (paranoia check): byron logger already initialized"
 logging.basicConfig()  # Initialize logging
-logger = logging.getLogger("byron")
+logger = logging.getLogger('byron')
 logger.propagate = False
-assert "logger" in globals(), f"SystemError (paranoia check): byron logger not initialized"
+assert 'logger' in globals(), f"SystemError (paranoia check): byron logger not initialized"
 
 if test_mode:
     logger.setLevel(logging.WARNING)

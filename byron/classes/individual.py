@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -31,7 +31,7 @@ __all__ = ['Individual', 'Lineage', 'Age']
 
 from typing import Any, Callable, Optional
 from itertools import chain, zip_longest
-from copy import deepcopy
+from copy import deepcopy, copy
 from dataclasses import dataclass
 import operator
 
@@ -45,6 +45,8 @@ if matplotlib_available:
     import matplotlib.pyplot as plt
 
 from byron.global_symbols import *
+from byron.classes.byron import Byron
+from byron.classes.dump import *
 from byron.classes.fitness import FitnessABC
 from byron.classes.paranoid import Paranoid
 from byron.classes.value_bag import ValueBag
@@ -111,6 +113,8 @@ class Individual(Paranoid):
     _lineage: Lineage | None
     _age: Age
     _str: str
+
+    BYRON: Byron = Byron()
 
     # A rainbow color mapping using matplotlib's tableau colors
     SHARP_COLORS_NUM = 7
@@ -219,7 +223,7 @@ class Individual(Paranoid):
             elif "_macro" in self._genome.nodes[n]:
                 if not self._genome.nodes[n]["_macro"].run_checks(NodeView(self._genome, n)):
                     return False
-                if not all(p.valid for p in self._genome.nodes[n]["_macro"].parameters.values()):
+                if not all(p.valid for p in self._genome.nodes[n]["_macro"].population_extra_parameters.values()):
                     return False
             elif "root" in self._genome.nodes[n] and self._genome.nodes[n]["root"] is True:
                 pass  # safe
@@ -348,6 +352,20 @@ class Individual(Paranoid):
             for p in self._genome.nodes[n].values()
             if isinstance(p, ParameterStructuralABC)
         ), f"{PARANOIA_VALUE_ERROR}: Incorrect node_reference in structural parameter"
+
+        structural_edges = [(u, v, k) for u, v, k, d in self._genome.edges(data='_type', keys=True) if d == LINK]
+        assert len(structural_edges) == len(set(k for u, v, k in structural_edges)), (
+            f"{PARANOIA_VALUE_ERROR}: found duplicated keys in structural edges: "
+            + f"{set(x for i, x in enumerate(list(k for u, v, k in structural_edges)) if i != list(k for u, v, k in structural_edges).index(x))}"
+        )
+        structural_parameters = [p for p in self.parameters if isinstance(p, ParameterStructuralABC)]
+        assert len(structural_edges) == len(structural_parameters), (
+            f"{PARANOIA_VALUE_ERROR}: inconsistent number of structural edges: "
+            + f"found {len(structural_edges)}, expecting {len(structural_parameters)}"
+        )
+        assert set(k for u, v, k in structural_edges) == set(
+            p._key for p in structural_parameters
+        ), f"{PARANOIA_VALUE_ERROR}: inconsistent keys in structural edges"
 
         return True
 
@@ -497,41 +515,107 @@ class Individual(Paranoid):
         self.G.remove_nodes_from(chain.from_iterable(ccomp[1:]))
 
     def dump(self, extra_parameters: dict) -> str:
-        self._str = ""
-        for n in self.dfs_nodes:
-            self._str += Individual.dump_node(NodeReference(self.genome, n), extra_parameters)
-        return self._str
+        self.discard_useless_components()
+
+        # =[Flatten the graph into a list of nodes]==========================
+        frame_list = Individual._recursive_flatten_frames(
+            NodeReference(self.genome, NODE_ZERO), self.structure_tree, extra_parameters, tuple(), list()
+        )
+
+        # =[Let's dump it]===================================================
+        phenotype = ''
+        for nr, path in frame_list:
+            local_parameters = copy(extra_parameters)
+            for p in path:
+                local_parameters |= p.EXTRA_PARAMETERS
+            local_parameters |= {'_node': NodeView(nr)}
+            local_parameters |= {'_byron': Individual.BYRON}
+            local_parameters |= nr.graph.nodes[nr.node]
+
+            # --[node]-------------------------------------------------------
+            bag = ValueBag(local_parameters)
+            node_str = "{_text_before_node}".format(**bag)
+            if nr.graph.in_degree(nr.node) > 1:
+                node_str += bag['_label'].format(**bag)
+            if nr.graph.nodes[nr.node]['_type'] == MACRO_NODE:
+                node_str += '{_text_before_macro}'.format(**bag)
+                node_str += nr.graph.nodes[nr.node]['_selement'].dump(bag)
+                if bag["$dump_node_info"]:
+                    node_str += "  {_comment} 🖋 {_node.pathname} ➜ {_node.name}".format(**bag)
+                node_str += "{_text_after_macro}".format(**bag)
+            elif nr.graph.nodes[nr.node]["_type"] == FRAME_NODE:
+                node_str += "{_text_before_frame}".format(**bag)
+                if bag["$dump_node_info"]:
+                    node_str += "{_comment} 🖋 {_node.pathname} ➜ {_node.name}{_text_after_macro}".format(**bag)
+                node_str += "{_text_after_frame}".format(**bag)
+            node_str += "{_text_after_node}".format(**bag)
+            # ---------------------------------------------------------------
+
+            phenotype += node_str
+        # ===================================================================
+
+        return phenotype
 
     @staticmethod
-    def dump_node(nr: NodeReference, parameters) -> str:
-        local_parameters = parameters | nr.graph.nodes[nr.node] | {"_node": NodeView(nr)}
-        # local_parameters |= nr.graph.nodes[nr.node]['_selement'].parameters
-        if hasattr(nr.graph.nodes[nr.node]["_selement"], "extra_parameters"):
-            local_parameters |= nr.graph.nodes[nr.node]["_selement"].extra_parameters
+    def _recursive_flatten_frames(
+        nr: NodeReference, T: nx.DiGraph, extra_parameters: dict, path: tuple, dump: list
+    ) -> list:
+        local_parameters = copy(extra_parameters)
+        local_parameters |= nr.graph.nodes[nr.node]['_selement'].EXTRA_PARAMETERS
+
+        path = tuple(list(path) + [nr.graph.nodes[nr.node]['_selement']])
+        dump.append((NodeReference(nr.graph, nr.node), path))
+        for n in [v for u, v in T.out_edges(nr.node)]:
+            Individual._recursive_flatten_frames(NodeReference(nr.graph, n), T, local_parameters, path, dump)
+
+        return dump
+
+    @staticmethod
+    def _dump_node_recursive(nr: NodeReference, T: nx.DiGraph, extra_parameters: dict, dump: str):
+        local_parameters = extra_parameters | nr.graph.nodes[nr.node]
+        local_parameters |= {'_node': NodeView(nr)}
+        local_parameters |= {'_byron': Individual.BYRON}
+        local_parameters |= nr.graph.nodes[nr.node]['_selement'].EXTRA_PARAMETERS
+
+        # ==[NODE]============================================================
         bag = ValueBag(local_parameters)
-
-        # GENERAL NODE HEADER
-        str = "{_text_before_node}".format(**bag)
-
+        node_str = "{_text_before_node}".format(**bag)
         if nr.graph.in_degree(nr.node) > 1:
-            str += bag["_label"].format(**bag)
-
-        if nr.graph.nodes[nr.node]["_type"] == MACRO_NODE:
-            str += "{_text_before_macro}".format(**bag)
-            str += nr.graph.nodes[nr.node]["_selement"].dump(bag)
+            node_str += bag['_label'].format(**bag)
+        if nr.graph.nodes[nr.node]['_type'] == MACRO_NODE:
+            node_str += '{_text_before_macro}'.format(**bag)
+            node_str += nr.graph.nodes[nr.node]['_selement'].dump(bag)
             if bag["$dump_node_info"]:
-                str += "  {_comment} [µGP⁴] {_node.pathname} ➜ {_node.name}".format(**bag)
-            str += "{_text_after_macro}".format(**bag)
+                node_str += "  {_comment} 🖋 {_node.pathname} ➜ {_node.name}".format(**bag)
+            node_str += "{_text_after_macro}".format(**bag)
         elif nr.graph.nodes[nr.node]["_type"] == FRAME_NODE:
-            str += "{_text_before_frame}".format(**bag)
+            node_str += "{_text_before_frame}".format(**bag)
             if bag["$dump_node_info"]:
-                str += "{_comment} [µGP⁴] {_node.pathname} ➜ {_node.name}{_text_after_macro}".format(**bag)
-            str += "{_text_after_frame}".format(**bag)
+                node_str += "{_comment} 🖋 {_node.pathname} ➜ {_node.name}{_text_after_macro}".format(**bag)
+            node_str += "{_text_after_frame}".format(**bag)
+        node_str += "{_text_after_node}".format(**bag)
+        # ====================================================================
 
-        # GENERAL NODE FOOTER
-        str += "{_text_after_node}".format(**bag)
+        dump += node_str
+        for n in [v for u, v in T.out_edges(nr.node)]:
+            dump = Individual._dump_node_recursive(NodeReference(nr.graph, n), T, local_parameters, dump)
+        return dump
 
-        return str
+    @staticmethod
+    def node_to_str(nr: NodeReference) -> str:
+        extra_parameters = DEFAULT_EXTRA_PARAMETERS | nr.graph.nodes[nr.node]
+        extra_parameters |= {'_node': NodeView(nr)}
+        dumped = None
+        while not dumped:
+            try:
+                dumped = nr.graph.nodes[nr.node]['_selement'].dump(ValueBag(extra_parameters))
+            except KeyError as k:
+                if k.args[0] in extra_parameters:
+                    return '?'
+                extra_parameters[k.args[0]] = "{" + k.args[0] + "}"
+            except Exception as e:
+                return f'{e}'
+        return dumped
 
     def _draw_forest(self, zoom) -> None:
         """Draw individual using multipartite_layout"""
@@ -663,10 +747,9 @@ class Individual(Paranoid):
         )
 
         labels = dict()
-        param = {k: '' for k in DEFAULT_EXTRA_PARAMETERS}
         for n in (_ for _ in pos if self.genome.nodes[n]['_type'] == MACRO_NODE):
             pos[n] = (pos[n][0], pos[n][1])
-            d = Individual.dump_node(NodeReference(self.genome, n), param)
+            d = Individual.node_to_str(NodeReference(self.genome, n))
             labels[n] = '     ' + d.split('\n')[0].strip() + (' …' if '\n' in d else '')
         nx.draw_networkx_labels(G, pos, horizontalalignment='left', labels=labels)
 

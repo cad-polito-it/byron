@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -29,6 +29,7 @@ __all__ = ["Macro"]
 
 from collections import defaultdict
 from typing import Any
+from copy import copy
 
 from byron.user_messages import *
 
@@ -48,7 +49,7 @@ class Macro(SElement, Paranoid):
     EXTRA_PARAMETERS: dict[str, Any]
 
     def __init__(self):
-        self._dont_use_this_parameters = dict()
+        super().__init__()
 
     def __eq__(self, other: "Macro") -> bool:
         if type(self) != type(other):
@@ -69,10 +70,6 @@ class Macro(SElement, Paranoid):
     @property
     def text(self) -> str:
         return self.TEXT
-
-    @property
-    def extra_parameters(self) -> None:
-        return self.EXTRA_PARAMETERS
 
     @property
     def parameter_types(self) -> dict[str, type[ParameterABC]]:

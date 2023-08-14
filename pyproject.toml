@@ -1,6 +1,6 @@
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -32,7 +32,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
     "Topic :: Software Development :: Libraries",
 ]
-homepage = "https://squillero.github.io/byron/"
+# homepage = "https://squillero.github.io/byron/"
 repository = "https://github.com/squillero/byron"
 keywords = [
     "Aritificial Intelligence",
@@ -65,14 +65,6 @@ bumpver = "^2023.1126"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.yapf]
-based_on_style = "google"
-blank_line_before_module_docstring = true
-column_limit = 120
-
-[tool.yapfignore]
-ignore_patterns = [".*", "venv"]
 
 [tool.black]
 target-version = ['py311', 'py312']
@@ -113,5 +105,4 @@ version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
 "README.md" = [
     "\\[Version: {pep440_version}\\]",
     "version-{pep440_version}-orange"
-
 ]

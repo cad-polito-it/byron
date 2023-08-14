@@ -34,10 +34,14 @@ MicroGP3 brought a complete change of paradigm: the focus goes from the problem 
 
 The development of the third version started in 2006 (release: *Noodle Soup*) with the intent to provide a clean implementation able to replicate the behavior of the previous version. The subsequent releases were *Bluebell* (2010), discribed in the book *Evolutionary Optimization: the µGP toolkit* (DOI: [10.1007/978-0-387-09426-7](https://www.doi.org/10.1007/978-0-387-09426-7)); *Mistletoe* (2012); *PalmTree* (2014); and *Camellia* (2015). The coding of *Thuban* was eventually discontinued in 2016.
 
-## byron
+## MicroGP4
+
+> Copyright © 2022-2023 Giovanni Squillero and Alberto Tonda; distributed under [Apache-2.0](https://www.tldrlegal.com/l/apache2); available on [GitHub](https://github.com/squillero/microgp4).
+
+The development of the fourth version started in 2022 was discontinued in 2023.
+
+## Byron
 
 > Copyright © 2022-2023 Giovanni Squillero and Alberto Tonda; distributed under [Apache-2.0](https://www.tldrlegal.com/l/apache2); available on [GitHub](https://github.com/squillero/byron).
 
-byron has been re-designed in Python to take advantage of the peculiar features of the language and of its huge standard library. It further increases usability thanks to state-of-the-art cooperative platforms: the tool is available as a [PyPi package](https://en.wikipedia.org/wiki/Python_Package_Index), and the full documentation is going to be hosted on [Read the Docs](https://en.wikipedia.org/wiki/Read_the_Docs). 
-
-**Notez Bien**: byron is an active project and it is currently in [pre-alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Pre-alpha).
+Byron has been re-designed in Python to take advantage of the peculiar features of the language and of its huge standard library. It further increases usability thanks to state-of-the-art cooperative platforms: the tool is available as a [PyPi package](https://en.wikipedia.org/wiki/Python_Package_Index), and the full documentation is going to be hosted on [Read the Docs](https://en.wikipedia.org/wiki/Read_the_Docs). 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -25,7 +25,7 @@
 # =[ HISTORY ]===============================================================
 # v1 / May 2023 / Squillero (GX)
 
-__all__ = ["ByronException", "ByronError", "GeneticOperatorFail"]
+__all__ = ["ByronException", "ByronError", "ByronOperatorFailure"]
 
 
 class ByronException(Exception):
@@ -40,5 +40,5 @@ class ByronError(ByronException):
 #    """Exception when an individual is invalid."""
 
 
-class GeneticOperatorFail(ByronException):
+class ByronOperatorFailure(ByronException):
     """Exception when a Genetic Operator can't generate a valid individual."""

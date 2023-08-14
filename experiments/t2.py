@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -80,7 +80,7 @@ I0.as_lgp(filename="code.png", figsize=(25, 15), bbox_inches="tight")
 
 byron.rrandom.seed()
 print(I0 == I1)
-I1.G.dfs_nodes[19]["_macro"].parameters["target"].mutate(1)
+I1.G.dfs_nodes[19]["_macro"].population_extra_parameters["target"].mutate(1)
 print(I0 == I1)
 
 with open("p0.s", "w") as F:

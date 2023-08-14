@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -22,7 +22,8 @@ def define_frame():
     int8 = byron.f.integer_parameter(0, 2**8)
     int16 = byron.f.integer_parameter(0, 2**16)
 
-    operations_rrr = byron.f.choice_parameter(['add', 'sub', 'and', 'eon', 'eor'])
+    # operations_rrr = byron.f.choice_parameter(['add', 'sub', 'and', 'eon', 'eor'])
+    operations_rrr = byron.f.choice_parameter(['add', 'sub'])
     operations_rri = byron.f.choice_parameter(['add', 'sub'])
     op_rrr = byron.f.macro('{op} {r1}, {r2}, {r3}', op=operations_rrr, r1=register, r2=register, r3=register)
     op_rri = byron.f.macro('{op} {r1}, {r2}, #{imm:#x}', op=operations_rri, r1=register, r2=register, imm=int8)
@@ -47,6 +48,7 @@ mov x0, #{init}
 mov x1, #{init}
 mov x2, #{init}
 mov x3, #{init}
+add x0, x0, #0
 ; [end-prologue_main]""",
         init=byron.f.integer_parameter(-15, 16),
     )

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -32,7 +32,7 @@ from typing import Sequence
 
 from byron.global_symbols import *
 from byron.user_messages import *
-from byron.tools.names import canonize_name, _patch_class_info
+from byron.tools.names import canonize_name, _patch_class_info, FRAMEWORK_DIRECTORY
 from byron.classes.selement import SElement
 from byron.classes.frame import *
 from byron.classes.macro import Macro
@@ -42,7 +42,7 @@ from byron.randy import rrandom
 
 
 def alternative(
-    alternatives: abc.Collection[type[SElement]], *, name: str | None = None, extra_parameters: dict = None
+    alternatives: abc.Collection[type[SElement]], *, name: str | None = None, extra_parameters: dict = None, **kwargs
 ) -> type[FrameABC]:
     r"""Creates the class for a frame that can have alternative forms.
 
@@ -98,9 +98,10 @@ def alternative(
 
     class T(FrameAlternative, FrameABC):
         ALTERNATIVES = tuple(alternatives)
+        EXTRA_PARAMETERS = dict(extra_parameters) if extra_parameters else dict()
 
         def __init__(self):
-            super().__init__(extra_parameters)
+            super().__init__()
 
         @property
         def successors(self):
@@ -116,15 +117,16 @@ def alternative(
 
 
 def sequence(
-    seq: abc.Sequence[type[SElement] | str], *, name: str | None = None, extra_parameters: dict = None
+    seq: abc.Sequence[type[SElement] | str], *, name: str | None = None, extra_parameters: dict = None, **kwargs
 ) -> type[FrameABC]:
     cooked_seq = cook_sequence(seq)
 
     class T(FrameSequence, FrameABC):
         SEQUENCE = tuple(cooked_seq)
+        EXTRA_PARAMETERS = dict(extra_parameters) if extra_parameters else dict()
 
         def __init__(self):
-            super().__init__(extra_parameters)
+            super().__init__()
 
         @property
         def successors(self):
@@ -146,11 +148,12 @@ def bunch(
     name: str | None = None,
     weights: Sequence[int] | None = None,
     extra_parameters: dict = None,
+    **kwargs,
 ) -> type[FrameABC]:
     def _debug_hints():
-        if not isinstance(size, int) and size[0] + 1 == size[1]:
+        if not isinstance(original_size, int) and size[0] + 1 == size[1]:
             syntax_warning_hint(
-                f"Ranges are half open: the size of this macro bunch is always {size[0]} — did you mean 'size=({size[0]}, {size[1]+1})'?",
+                f"Ranges are half open: the size of this macro bunch is always {size[0]} — did you mean 'size={size[0]}'?",
                 stacklevel_offset=1,
             )
         if len(pool) > len(set(pool)):
@@ -170,12 +173,13 @@ def bunch(
         pool = [pool]
     assert check_valid_length(pool, 1)
 
+    original_size = size
     if isinstance(size, int):
         size = (size, size + 1)
     else:
         size = tuple(size)
         assert len(size) == 2, f"{PARANOIA_VALUE_ERROR}: Not a half open range [min, max)"
-    assert 0 < size[0] <= size[1] - 1, f"{PARANOIA_VALUE_ERROR}: min size is {size[0]} and max size is {size[1]-1}"
+    assert 0 <= size[0] < size[1], f"{PARANOIA_VALUE_ERROR}: min size is {size[0]} and max size is {size[1]-1}"
 
     assert _debug_hints()
 
@@ -185,11 +189,12 @@ def bunch(
     class T(FrameMacroBunch, FrameABC):
         SIZE = size
         POOL = tuple(sum(([m] * w for m, w in zip(pool, weights)), start=list()))
+        EXTRA_PARAMETERS = dict(extra_parameters) if extra_parameters else dict()
 
         __slots__ = []  # Preventing the automatic creation of __dict__
 
         def __init__(self):
-            super().__init__(extra_parameters)
+            super().__init__()
 
         @property
         def successors(self):

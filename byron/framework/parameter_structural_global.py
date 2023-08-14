@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -37,8 +37,8 @@ from byron.global_symbols import *
 
 from byron.classes.parameter import ParameterStructuralABC
 from byron.operators.unroll import *
-from byron.classes.node_reference import NodeReference
-from byron.classes.frame import FrameABC
+from byron.classes.selement import SElement
+from byron.tools.names import *
 
 from byron.tools.graph import *
 from byron.tools.names import canonize_name, _patch_class_info
@@ -50,7 +50,7 @@ __all__ = ["global_reference"]
 def _global_reference(
     *,
     target_name: str | None = None,
-    target_frame: type[FrameABC] | None = None,
+    target_frame: type[SElement] | None = None,
     first_macro: bool = True,
     creative_zeal: Number = 0,
 ) -> type[ParameterStructuralABC]:
@@ -71,28 +71,23 @@ def _global_reference(
                     canonize_name(target_name, tag="Frame", user=True, warn_duplicates=False)
                 ]
 
-        def get_potential_targets(self, suitable_frames: list | None = None):
+        def get_potential_targets(self, add_none=True):
             G = self._node_reference.graph
-            if suitable_frames:
-                suitable_frames_ = suitable_frames
-            else:
-                suitable_frames_ = [
-                    n
-                    for n in nx.dfs_preorder_nodes(G)
-                    if G.nodes[n]["_type"] == FRAME_NODE and isinstance(G.nodes[n]["_selement"], self._target_frame)
-                ]
+            suitable_frames = [
+                n for n in nx.dfs_preorder_nodes(G) if isinstance(G.nodes[n]["_selement"], self._target_frame)
+            ]
             if first_macro:
                 targets = list(
                     chain.from_iterable(
-                        get_all_macros(G, root=f, data=False, node_id=True)[:1] for f in suitable_frames_
+                        get_all_macros(G, root=f, data=False, node_id=True)[:1] for f in suitable_frames
                     )
                 )
             else:
                 targets = list(
-                    chain.from_iterable(get_all_macros(G, root=f, data=False, node_id=True) for f in suitable_frames_)
+                    chain.from_iterable(get_all_macros(G, root=f, data=False, node_id=True) for f in suitable_frames)
                 )
 
-            if suitable_frames:
+            if not add_none:
                 pass
             elif not targets and creative_zeal > 0:
                 targets = [None]
@@ -104,41 +99,51 @@ def _global_reference(
                 targets = [None]
 
             if not targets:
-                raise GeneticOperatorFail
+                raise ByronOperatorFailure
             return targets
 
-        def mutate(self, strength: float = 1.0, node_reference: NodeReference | None = None, *args, **kwargs) -> None:
-            if node_reference is not None:
-                self.fasten(node_reference)
+        def mutate(self, strength: float = 1.0) -> None:
+            assert self.is_fastened, f"{PARANOIA_VALUE_ERROR}: node is unfastened"
 
             # first try
+            potential_targets = self.get_potential_targets()
             if strength == 1.0:
-                target = rrandom.sigma_choice(self.get_potential_targets())
+                target = rrandom.sigma_choice(potential_targets)
             else:
-                target = rrandom.sigma_choice(self.get_potential_targets(), self.value, strength)
+                target = rrandom.sigma_choice(potential_targets, self.value, strength)
             if target is None:
                 new_node_reference = unroll_selement(self._target_frame, self._node_reference.graph)
-                self._node_reference.graph.add_edge(NODE_ZERO, new_node_reference.node, _type=FRAMEWORK)
+
+                if not self._target_frame.DEFAULT_PARENT:
+                    parent = NODE_ZERO
+                else:
+                    parent = next(
+                        n
+                        for n, f in self.graph.nodes(data='_selement')
+                        if f.__class__ == self._target_frame.DEFAULT_PARENT
+                    )
+                self._node_reference.graph.add_edge(parent, new_node_reference.node, _type=FRAMEWORK)
                 initialize_subtree(new_node_reference)
 
                 # second and last try
                 if strength == 1.0:
-                    target = rrandom.sigma_choice(self.get_potential_targets([new_node_reference.node]))
+                    target = rrandom.sigma_choice(self.get_potential_targets(add_none=False))
                 else:
-                    target = rrandom.sigma_choice(
-                        self.get_potential_targets([new_node_reference.node]), self.value, strength
-                    )
+                    target = rrandom.sigma_choice(self.get_potential_targets(add_none=False), self.value, strength)
 
             if not target:
-                raise GeneticOperatorFail
-            self._node_reference.graph.add_edge(self._node_reference.node, target, key=self.key, _type=LINK)
+                raise ByronOperatorFailure
+            self.value = target
+            for ccomp in list(nx.weakly_connected_components(self.graph)):
+                if NODE_ZERO not in ccomp:
+                    self.self.graph.remove_nodes_from(ccomp)
 
     _patch_class_info(T, f"GlobalReference[{target_frame.__name__}]", tag="parameter")
     return T
 
 
 def global_reference(
-    target_frame: str | type[FrameABC], *, creative_zeal=0, first_macro: bool = False
+    target_frame: str | type[SElement], *, creative_zeal=0, first_macro: bool = False
 ) -> type[ParameterStructuralABC]:
     assert (
         isinstance(creative_zeal, int) or 0 < creative_zeal < 1

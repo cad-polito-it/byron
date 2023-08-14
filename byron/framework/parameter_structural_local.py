@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -76,12 +76,12 @@ def _local_reference(
                 r += siblings[i + 1 :]
             return r
 
-        def mutate(self, strength: float = 1.0, node_reference: NodeReference | None = None, *args, **kwargs) -> None:
-            if node_reference is not None:
-                self.fasten(node_reference)
+        def mutate(self, strength: float = 1.0) -> None:
+            assert self.is_fastened, f"{PARANOIA_VALUE_ERROR}: node is unfastened"
+
             pt = self.potential_targets
             if not pt:
-                raise GeneticOperatorFail
+                raise ByronOperatorFailure
 
             if strength == 1 or self.value is None:
                 self.value = rrandom.sigma_choice(pt, None, 1)

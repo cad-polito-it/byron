@@ -42,7 +42,7 @@ MicroGP would not have been possible without the help and support of several peo
 * Ernesto Sanchez: Test & verification engineering; Case studies management
 * Massimiliano Schillaci: Evolutionary core; Test & verification engineering; Coding (MicroGP3); Case study (PowerPC)
 * Matteo Sonza Reorda: Test & verification engineering
-* Giovanni Squillero: Design; Project management; Coding (MicroGP2 & byron)
+* Giovanni Squillero: Design; Project management; Coding (MicroGP2 & Byron)
 * Luca Sterpone: FPGA accelerator
 * Antonio Tomasiello: Case study (i8051)
 * Alberto Tonda: Design; Coding (MicroGP3)

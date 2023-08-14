@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -27,28 +27,20 @@
 
 __all__ = ["FrameABC", "FrameAlternative", "FrameSequence", "FrameMacroBunch"]
 
-from types import NoneType
+from typing import Sequence
 from abc import abstractmethod
-from copy import copy
 
-from byron.user_messages.checks import *
-
-from byron.classes.macro import Macro
 from byron.global_symbols import *
 from byron.classes.selement import SElement
 from byron.classes.paranoid import Paranoid
-from byron.classes.value_bag import ValueBag
 
 
 class FrameABC(SElement, Paranoid):
     _registered_names = set()
 
-    def __init__(self, extra_parameters: dict | None = None) -> None:
-        assert check_valid_types(extra_parameters, dict, NoneType)
+    def __init__(self):
         super().__init__()
         self._checks = list()
-        self._extra_parameters = extra_parameters if extra_parameters is not None else dict()
-        # self._values = list()
 
     @property
     def valid(self) -> bool:
@@ -56,17 +48,9 @@ class FrameABC(SElement, Paranoid):
         return True
 
     @property
-    def extra_parameters(self):
-        return copy(self._extra_parameters)
-
-    @property
     @abstractmethod
     def successors(self) -> list[type["SElement"]]:
         pass
-
-    def dump(self, extra_parameters: ValueBag) -> str:
-        check_valid_type(extra_parameters, ValueBag)
-        return ""
 
     def run_paranoia_checks(self) -> bool:
         return super().run_paranoia_checks()

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -60,7 +60,7 @@ def _numeric(*, type_, min_, max_):
 
         if type_ == int:
 
-            def mutate(self, strength: float = 1.0, **kwargs) -> None:
+            def mutate(self, strength: float = 1.0) -> None:
                 if strength == 1.0:
                     self.value = rrandom.sigma_randint(min_, max_)
                 else:
@@ -68,7 +68,7 @@ def _numeric(*, type_, min_, max_):
 
         elif type_ == float:
 
-            def mutate(self, strength: float = 1.0, **kwargs) -> None:
+            def mutate(self, strength: float = 1.0) -> None:
                 if strength == 1.0:
                     self.value = rrandom.sigma_random(min_, max_)
                 else:
@@ -100,16 +100,16 @@ def integer_parameter(min_: int, max_: int) -> type[ParameterABC]:
             )
         elif any(max_ - min_ == 2**n - 1 for n in range(6, 128 + 1)):
             p = next(n for n in range(128 + 1) if max_ - min_ == 2**n - 1)
-            if min_ == 0:
-                syntax_warning_hint(
-                    f"Parameter ranges are half-open: the maximum value is {max_ - 1:,} (ie. a range of 2**{p}-1 possible values) — did you mean '({min_}, 2**{p})'?",
-                    stacklevel_offset=1,
-                )
-            else:
-                syntax_warning_hint(
-                    f"Parameter ranges are half-open: the maximum value is {max_ - 1:,} (ie. a range of 2**{p}-1 possible values) — did you mean '({min_}, 2**{p}+{min_})'?",
-                    stacklevel_offset=1,
-                )
+            syntax_warning_hint(
+                f"Parameter ranges are half-open: the maximum value is {max_ - 1:,} (ie. a range of 2**{p}-1 possible values)",
+                stacklevel_offset=1,
+            )
+        elif any(max_ - min_ == 2**n + 1 for n in range(6, 128 + 1)):
+            p = next(n for n in range(128 + 1) if max_ - min_ == 2**n + 1)
+            syntax_warning_hint(
+                f"Parameter ranges are half-open: the maximum value is {max_ - 1:,} (ie. a range of 2**{p}+1 possible values)",
+                stacklevel_offset=1,
+            )
         return True
 
     assert check_valid_type(min_, int)
@@ -144,7 +144,7 @@ def _choice_parameter(alternatives: tuple[Hashable]) -> type[ParameterABC]:
             assert self.is_correct(self.value), f"ValueError: {self.value} not in alternative list: {alternatives}"
             return super().run_paranoia_checks()
 
-        def mutate(self, strength: float = 1.0, **kwargs) -> None:
+        def mutate(self, strength: float = 1.0) -> None:
             if strength == 1.0:
                 self.value = rrandom.sigma_choice(alternatives)
             else:
@@ -203,7 +203,7 @@ def _array_parameter(symbols: tuple[str], length: int) -> type[ParameterABC]:
             assert self.is_correct(self.value), f"ValueError: {self.value} not a valid array"
             return super().run_paranoia_checks()
 
-        def mutate(self, strength: float = 1.0, **kwargs) -> None:
+        def mutate(self, strength: float = 1.0) -> None:
             if strength == 1:
                 new_value = [rrandom.choice(symbols) for _ in range(length)]
             else:

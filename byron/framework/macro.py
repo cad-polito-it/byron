@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -30,28 +30,28 @@ __all__ = ["macro"]
 from functools import cache
 from typing import Any
 
-from byron.global_symbols import FRAMEWORK, FRAMEWORK_DIRECTORY
+from byron.global_symbols import FRAMEWORK
 from byron.user_messages import *
-from byron.tools.names import canonize_name, _patch_class_info
+from byron.tools.names import canonize_name, _patch_class_info, FRAMEWORK_DIRECTORY
 from byron.classes.macro import Macro
 from byron.classes.parameter import ParameterABC
 
 
 @cache
 def _macro(
-    text: str, macro_parameters: tuple[tuple[str, type[ParameterABC]]], macro_extra_parameters: tuple[tuple[str, Any]]
+    text: str, macro_parameters: tuple[tuple[str, type[ParameterABC]]], extra_parameters: tuple[tuple[str, Any]]
 ) -> type[Macro]:
     class M(Macro):
         TEXT = text
         PARAMETERS = dict(macro_parameters)
-        EXTRA_PARAMETERS = dict(macro_extra_parameters)
+        EXTRA_PARAMETERS = dict(extra_parameters) if extra_parameters else dict()
 
         __slots__ = []  # Preventing the automatic creation of __dict__
 
     if not macro_parameters:
-        _patch_class_info(M, canonize_name("UserText", "Macro"), tag=FRAMEWORK)
+        _patch_class_info(M, canonize_name('Text', 'Macro'), tag=FRAMEWORK)
     else:
-        _patch_class_info(M, canonize_name("User", "Macro"), tag=FRAMEWORK)
+        _patch_class_info(M, canonize_name('User', 'Macro'), tag=FRAMEWORK)
 
     FRAMEWORK_DIRECTORY[M.__name__] = M
     return M
@@ -92,13 +92,13 @@ def macro(text: str, **parameters: type[ParameterABC] | str) -> type[Macro]:
     """
     assert check_valid_type(text, str)
     macro_parameters = list()
-    macro_extra_parameters = list()
+    extra_parameters = list()
     for n, p in parameters.items():
         if n[0] != "_":
             assert Macro.is_name_valid(n), f"ValueError: invalid parameter name: {n!r}"
             assert check_valid_type(p, ParameterABC, subclass=True)
             macro_parameters.append((n, p))
         else:
-            macro_extra_parameters.append((n, p))
+            extra_parameters.append((n, p))
 
-    return _macro(text, tuple(sorted(macro_parameters)), tuple(sorted(macro_extra_parameters)))
+    return _macro(text, tuple(sorted(macro_parameters)), tuple(sorted(extra_parameters)))

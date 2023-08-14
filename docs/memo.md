@@ -1,0 +1,9 @@
+# MEMO
+
+## Publish
+
+```shell
+bumpver update
+poetry build
+poetry publish
+```

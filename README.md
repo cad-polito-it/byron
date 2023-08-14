@@ -22,7 +22,7 @@ Candidate solutions are evaluated in parallel calling a user-defined Python func
 pip install --upgrade byron
 ```
 
-Few optional dependencies can enhance byron, but are not strictly required:
+Few optional dependencies can enhance Byron, but are not strictly required:
 
 ```
 pip install --upgrade matplotlib
@@ -45,9 +45,9 @@ This repo is only useful if you want to hack the code (see: [CONTRIBUTING](CONTR
 
 ### Contacts
 
-* [Alberto](https://github.com/albertotonda/) [:email:](mailto:alberto.tonda@inra.fr) [:house:](https://www.researchgate.net/profile/Alberto_Tonda)
-* [Giovanni](https://github.com/squillero) [:email:](mailto:squillero@polito.it) [:house:](https://staff.polito.it/giovanni.squillero/)
+* [Giovanni Squillero](https://github.com/squillero) [:email:](mailto:squillero@polito.it) [:house:](https://staff.polito.it/giovanni.squillero/)
+* [Alberto Tonda](https://github.com/albertotonda/) [:email:](mailto:alberto.tonda@inra.fr) [:house:](https://www.researchgate.net/profile/Alberto_Tonda)
 
 ### Licence
 Copyright © 2023 [Giovanni Squillero](https://github.com/squillero) and [Alberto Tonda](https://github.com/albertotonda/)  
-byron is [free and open-source software](https://en.wikipedia.org/wiki/Free_and_open-source_software), and it is distributed under the permissive [Apache License 2.0](https://opensource.org/license/apache-2-0/).
+Byron is [free and open-source software](https://en.wikipedia.org/wiki/Free_and_open-source_software), and it is distributed under the permissive [Apache License 2.0](https://opensource.org/license/apache-2-0/).

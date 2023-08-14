@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -16,12 +16,12 @@ import byron as byron
 
 
 class ConcreteParameter(byron.classes.ParameterABC):
-    def mutate(self, strength: float = 1.0, **kwargs) -> None:
+    def mutate(self, strength: float = 1.0) -> None:
         self.value = self.value + strength
 
 
 class ConcreteStructuralParameter(byron.classes.ParameterStructuralABC):
-    def mutate(self, strength: float = 1.0, **kwargs) -> None:
+    def mutate(self, strength: float = 1.0) -> None:
         if self.is_fastened:
             self._node_reference.node += strength
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -46,7 +46,7 @@ def _elapsed(start):
     e = str(timedelta(microseconds=(perf_counter_ns() - start[0]) // 1e3)) + '.0000000000'
     s1 = e[: e.index('.') + 3] + ' [t]'
     e = str(timedelta(microseconds=(process_time_ns() - start[1]) // 1e3)) + '.0000000000'
-    s2 = e[: e.index('.') + 3] + ' [µGP⁴]'
+    s2 = e[: e.index('.') + 3] + ' [byron]'
     return '⏱ ' + s1 + ' / ' + s2
 
 
@@ -121,6 +121,7 @@ def vanilla_ea(
                 parents.append(tournament_selection(population, 1))
             new_individuals += op(*parents)
 
+        assert new_individuals, f"{PARANOIA_VALUE_ERROR}: empty offspring (no new individuals)"
         population += new_individuals
 
         old_best = best

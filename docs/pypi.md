@@ -12,7 +12,7 @@ Candidate solutions are evaluated in parallel calling a user-defined Python func
 pip install --upgrade byron
 ```
 
-Few optional dependencies can enhance byron, but are not strictly required:
+Few optional dependencies can enhance Byron, but are not strictly required:
 
 ```
 pip install --upgrade matplotlib
@@ -22,10 +22,10 @@ pip install --upgrade psutil
 
 ## Contacts
 
-* Alberto Tonda: <alberto.tonda@inra.fr>
-* Giovanni Squillero: <giovanni.squillero@polito.it>
+* Giovanni Squillero — <giovanni.squillero@polito.it>
+* Alberto Tonda — <alberto.tonda@inra.fr>
 
 ## License
 
 Copyright © 2023 [Giovanni Squillero](https://github.com/squillero) and [Alberto Tonda](https://github.com/albertotonda/)  
-byron is [free and open-source software](https://en.wikipedia.org/wiki/Free_and_open-source_software), and it is distributed under the permissive [Apache License 2.0](https://opensource.org/license/apache-2-0/).
+Byron is [free and open-source software](https://en.wikipedia.org/wiki/Free_and_open-source_software), and it is distributed under the permissive [Apache License 2.0](https://opensource.org/license/apache-2-0/).

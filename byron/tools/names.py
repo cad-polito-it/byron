@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -25,7 +25,7 @@
 # =[ HISTORY ]===============================================================
 # v1 / April 2023 / Squillero (GX)
 
-__all__ = ["canonize_name", "uncanonize_name"]
+__all__ = ["canonize_name", "uncanonize_name", "FRAMEWORK_DIRECTORY"]
 
 from collections import Counter
 from abc import ABCMeta
@@ -59,15 +59,21 @@ def canonize_name(
         # NOTE[GX]: These "fancy" brackets are difficult to enter ;-)
         canonic_name = f"{tag}❬{name}❭"
 
-    assert (
-        not warn_duplicates or canonic_name not in _used_names
-    ), f"{PARANOIA_VALUE_ERROR}: Name {canonic_name} has already been used"
-    _used_names.add(canonic_name)
+    if user_space:
+        assert (
+            not warn_duplicates or name not in _used_names
+        ), f"{PARANOIA_VALUE_ERROR}: User name '{name}' has already been used"
+        _used_names.add(name)
+    else:
+        assert (
+            not warn_duplicates or canonic_name not in _used_names
+        ), f"{PARANOIA_VALUE_ERROR}: Name '{canonic_name}' has already been used"
+        _used_names.add(canonic_name)
 
     return canonic_name
 
 
-def uncanonize_name(name: str, keep_number: bool = False, user: bool = False) -> str:
+def uncanonize_name(name: str, keep_number: bool = False, user: bool | None = None) -> str:
     if user is None:
         user = "❬" not in name and "❭" not in name
     if user and "<" in name:
@@ -75,7 +81,7 @@ def uncanonize_name(name: str, keep_number: bool = False, user: bool = False) ->
     elif not user and "❬" in name:
         tag = name[0 : name.index("❬")]
     else:
-        return ""
+        return name
 
     tlen = len(tag)
     assert (name[tlen] == "❬" and name[-1] == "❭") or (
@@ -95,3 +101,25 @@ def _patch_class_info(obj: type, name: str | None, tag: str | None = None) -> No
 
     if tag is not None:
         obj.__module__ += f".{tag}"
+
+
+class SElementsDirectory:
+    _data: dict
+
+    def __init__(self):
+        self._data = dict()
+
+    def __len__(self):
+        return len(self._data)
+
+    def __setitem__(self, key, value):
+        assert key not in self._data, f"{PARANOIA_VALUE_ERROR}: duplicate name {key}"
+        self._data[key] = value
+
+    def __getitem__(self, key):
+        return self._data[key]
+
+
+assert "FRAMEWORK_DIRECTORY" not in globals(), f"SystemError (paranoia check): FRAMEWORK_DIRECTORY already initialized"
+FRAMEWORK_DIRECTORY: SElementsDirectory = SElementsDirectory()
+assert "FRAMEWORK_DIRECTORY" in globals(), f"SystemError (paranoia check): FRAMEWORK_DIRECTORY not initialized"

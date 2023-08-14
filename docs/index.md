@@ -1,3 +1,3 @@
 `byron` is yet another [evolutionary optimizer]...
 
-`byron` is [free and open-source software](https://en.wikipedia.org/wiki/Free_and_open-source_software); version 4 is distributed under the permissive [Apache License 2.0](https://www.tldrlegal.com/l/apache2).
+Byron is [free and open-source software](https://en.wikipedia.org/wiki/Free_and_open-source_software); version 4 is distributed under the permissive [Apache License 2.0](https://www.tldrlegal.com/l/apache2).

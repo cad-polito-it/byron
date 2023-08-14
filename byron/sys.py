@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -35,7 +35,7 @@ import inspect
 from pprint import pformat
 from copy import copy
 
-from byron.global_symbols import *
+from byron.tools.names import *
 from byron.operators import *
 
 
@@ -78,7 +78,7 @@ class SysInfo:
     def genetic_operators(self):
         """Shows all genetic operators available in the current namespace"""
         ops = dict()
-        snapshot = inspect.currentframe().f_back.f_globals
+        snapshot = inspect.currentframe().f_globals
         for k, v in snapshot.items():
             if hasattr(v, '_byron_') and v.type == GENETIC_OPERATOR:
                 ops[k] = v
@@ -88,7 +88,7 @@ class SysInfo:
     def fitness_functions(self):
         """Shows all fitness functions available in the current namespace"""
         ops = dict()
-        snapshot = inspect.currentframe().f_back.f_globals
+        snapshot = inspect.currentframe().f_globals
         for k, v in snapshot.items():
             if hasattr(v, '_byron_') and v.type == FITNESS_FUNCTION:
                 ops[k] = v
@@ -98,9 +98,9 @@ class SysInfo:
         """Gives some information about a byron object. The name (string) can be used"""
 
         if isinstance(object, str):
-            if object not in inspect.currentframe().f_back.f_globals:
+            if object not in inspect.currentframe().f_globals:
                 raise KeyError(object)
-            object = inspect.currentframe().f_back.f_globals[object]
+            object = inspect.currentframe().f_globals[object]
 
         if hasattr(object, '_byron_') and object.type == GENETIC_OPERATOR:
             print(f"Genetic operator: {object}")
@@ -110,8 +110,7 @@ class SysInfo:
 
 
 def get_operators():
-    x = random_individual
-    snapshot = inspect.currentframe().f_back.f_globals
+    snapshot = inspect.currentframe().f_globals
     return [o for o in snapshot.values() if hasattr(o, '_byron_') and o.type == GENETIC_OPERATOR]
 
 

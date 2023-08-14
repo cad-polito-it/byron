@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -25,6 +25,8 @@
 # =[ HISTORY ]===============================================================
 # v1 / May 2023 / Squillero (GX)
 
+from .byron import *
+from .dump import *
 from .fitness import *
 from .frame import *
 from .identifiable import *
@@ -36,7 +38,7 @@ from .node_view import *
 from .parameter import *
 from .paranoid import *
 from .population import *
-from .selement import SElement
+from .selement import *
 from .shared import *
 from .value_bag import *
 

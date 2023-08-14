@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -40,7 +40,10 @@ from networkx import dfs_preorder_nodes
 @genetic_operator(num_parents=1)
 def single_parameter_mutation(parent: Individual, strength=1.0) -> list["Individual"]:
     offspring = parent.clone
-    param = rrandom.choice(offspring.parameters)
+    candidates = offspring.parameters
+    if not candidates:
+        raise ByronOperatorFailure
+    param = rrandom.choice(candidates)
     mutate(param, strength=strength)
     return [offspring]
 
@@ -56,7 +59,7 @@ def add_macro_to_bunch(parent: Individual, strength=1.0) -> list["Individual"]:
         and G.out_degree[n] < G.nodes[n]["_selement"].SIZE[1] - 1
     ]
     if not candidates:
-        raise GeneticOperatorFail
+        raise ByronOperatorFailure
     node = rrandom.choice(candidates)
     successors = get_successors(NodeReference(G, node))
     new_macro_type = rrandom.choice(G.nodes[node]["_selement"].POOL)
@@ -78,7 +81,7 @@ def remove_macro_from_bunch(parent: Individual, strength=1.0) -> list["Individua
         if isinstance(G.nodes[n]["_selement"], FrameMacroBunch) and G.out_degree[n] > G.nodes[n]["_selement"].SIZE[0]
     ]
     if not frame_candidates:
-        raise GeneticOperatorFail
+        raise ByronOperatorFailure
     frame_node = rrandom.choice(frame_candidates)
     candidates = [
         n
@@ -87,7 +90,7 @@ def remove_macro_from_bunch(parent: Individual, strength=1.0) -> list["Individua
     ]
 
     if not candidates:
-        raise GeneticOperatorFail
+        raise ByronOperatorFailure
     node = rrandom.choice(candidates)
     G.remove_node(node)
     return [offspring]

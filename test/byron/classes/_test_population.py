@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -50,7 +50,7 @@ def test_individuals_property(population):
 
 
 def test_parameters_property(population):
-    assert isinstance(population.parameters, dict)
+    assert isinstance(population.population_extra_parameters, dict)
 
 
 def test_evaluate(population, mock_individual):

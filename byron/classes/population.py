@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -33,6 +33,7 @@ from typing import Callable, Any
 from copy import copy
 
 from byron.global_symbols import *
+from byron.classes.selement import SElement
 from byron.classes.fitness import FitnessABC
 from byron.classes.individual import Individual
 from byron.classes.frame import FrameABC
@@ -40,18 +41,18 @@ from byron.user_messages import *
 
 
 class Population:
-    _top_frame: type[FrameABC]
+    _top_frame: type[SElement]
     _fitness_function: Callable[[Any], FitnessABC]
     _individuals: list[Individual]
     _memory: set | None
 
-    def __init__(self, top_frame: type[FrameABC], extra_parameters: dict | None = None, *, memory: bool = False):
+    def __init__(self, top_frame: type[SElement], extra_parameters: dict | None = None, *, memory: bool = False):
         assert check_valid_types(top_frame, FrameABC, subclass=True)
         assert extra_parameters is None or check_valid_type(extra_parameters, dict)
         self._top_frame = top_frame
         if extra_parameters is None:
             extra_parameters = dict()
-        self._extra_parameters = DEFAULT_EXTRA_PARAMETERS | DEFAULT_OPTIONS | extra_parameters
+        self._population_extra_parameters = DEFAULT_EXTRA_PARAMETERS | DEFAULT_OPTIONS | extra_parameters
         self._individuals = list()
         self._generation = -1
         if memory:
@@ -72,8 +73,8 @@ class Population:
         return self._individuals
 
     @property
-    def parameters(self) -> dict:
-        return copy(self._extra_parameters)
+    def population_extra_parameters(self) -> dict:
+        return copy(self._population_extra_parameters)
 
     @property
     def generation(self):
@@ -137,7 +138,7 @@ class Population:
         if extra_parameters is None:
             extra_parameters = dict()
         assert extra_parameters is None or check_valid_type(extra_parameters, dict)
-        return ind.dump(self.parameters | extra_parameters)
+        return ind.dump(self.population_extra_parameters | extra_parameters)
 
     def evaluate(self):
         whole_pop = [self.dump_individual(i) for i in self.individuals]

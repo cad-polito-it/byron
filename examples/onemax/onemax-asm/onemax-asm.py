@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -28,8 +28,8 @@ SCRIPT_NAME = {"Linux": "./evaluate-all.sh", "Darwin": "./evaluate-all.sh", "Win
 def main():
     top_frame = library.define_frame()
 
-    # evaluator = byron.evaluator.ScriptEvaluator(SCRIPT_NAME[platform.system()], filename_format="ind{i:06}.s")
-    evaluator = byron.evaluator.MakefileEvaluator('onemax.s', required_files=['main.o'], timeout=5)
+    evaluator = byron.evaluator.ScriptEvaluator(SCRIPT_NAME[platform.system()], filename_format="ind{i:06}.s")
+    # evaluator = byron.evaluator.MakefileEvaluator('onemax.s', required_files=['main.o'], timeout=5)
     final_population = byron.ea.vanilla_ea(
         top_frame,
         evaluator,

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -30,7 +30,6 @@ __all__ = [
     '__author__',
     '__copyright__',
     '__codename__',
-    'FRAMEWORK_DIRECTORY',
     'FRAMEWORK',
     'LINK',
     'FRAME_NODE',
@@ -153,7 +152,3 @@ DEFAULT_EXTRA_PARAMETERS = {
 }
 
 #####################################################################################################################
-
-assert "FRAMEWORK_DIRECTORY" not in globals(), f"SystemError (paranoia check): FRAMEWORK_DIRECTORY already initialized"
-FRAMEWORK_DIRECTORY: dict[str, "FrameABC"] = dict()
-assert "FRAMEWORK_DIRECTORY" in globals(), f"SystemError (paranoia check): FRAMEWORK_DIRECTORY not initialized"

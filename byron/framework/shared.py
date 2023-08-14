@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -55,9 +55,9 @@ def make_shared_parameter(parameter: type[ParameterABC]) -> type[ParameterABC]:
             if self._owner:
                 parameter_instance.value = new_value
 
-        def mutate(self, strength: float = 1.0, **kwargs) -> None:
+        def mutate(self, strength: float = 1.0) -> None:
             if self._owner:
-                parameter_instance.mutate(strength, **kwargs)
+                parameter_instance.mutate(strength)
 
         def is_correct(self, obj: Any) -> bool:
             return parameter_instance.is_correct(obj)

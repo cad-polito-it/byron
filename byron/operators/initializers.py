@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -42,6 +42,6 @@ def random_individual(top_frame) -> list[Individual]:
         new_individual = Individual(top_frame)
         try:
             new_root = unroll_individual(new_individual, top_frame)
-        except GeneticOperatorFail:
+        except ByronOperatorFailure:
             new_root = None
     return [new_individual]

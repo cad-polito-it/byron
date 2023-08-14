@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -90,9 +90,13 @@ from byron.fitness_log import *
 # noinspection PyUnresolvedReferences
 from byron.sys import SYSINFO as sysinfo
 
+# noinspection PyUnresolvedReferences
+from byron.tools.create_test_individual import *
+
 #############################################################################
 # Patch names to ease debugging and visualization
 
+# noinspection PyUnresolvedReferences
 from byron.tools.names import _patch_class_info
 
 for name in sorted(dir()):
@@ -107,7 +111,7 @@ del _patch_class_info
 # Welcome!
 
 __welcome__ = (
-    f'This is byron v{__version__} "{__codename__}"\n' + f"(c) 2023 G. Squillero & A. Tonda — Licensed under Apache-2.0"
+    f'This is Byron v{__version__} "{__codename__}"\n' + f"(c) 2023 G. Squillero & A. Tonda — Licensed under Apache-2.0"
 )
 
 
@@ -149,9 +153,9 @@ elif not notebook_mode:
         )
     )
 
-    if not matplotlib_available:
-        user_messages.runtime_warning("No 'matplotlib': plotting of individuals will not be available.")
-    if not joblib_available:
-        user_messages.runtime_warning("No 'joblib': process-based parallel evaluators will not be available.")
-    if not psutil_available:
-        user_messages.runtime_warning("No 'psutil': comprehensive machine information will not be available.")
+if not matplotlib_available:
+    user_messages.runtime_warning("No 'matplotlib': plotting of individuals will not be available.")
+if not joblib_available:
+    user_messages.runtime_warning("No 'joblib': process-based parallel evaluators will not be available.")
+if not psutil_available:
+    user_messages.runtime_warning("No 'psutil': comprehensive machine information will not be available.")

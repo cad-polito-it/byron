@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
@@ -27,8 +27,8 @@
 
 __all__ = ["bnf"]
 
-from byron.global_symbols import FRAMEWORK, FRAMEWORK_DIRECTORY
-from byron.tools.names import _patch_class_info
+from byron.global_symbols import FRAMEWORK
+from byron.tools.names import _patch_class_info, FRAMEWORK_DIRECTORY
 from byron.classes.frame import FrameABC
 from byron.classes.macro import Macro
 from byron.classes.readymade_frames import SELF
