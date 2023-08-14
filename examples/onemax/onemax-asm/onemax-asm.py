@@ -28,7 +28,7 @@ SCRIPT_NAME = {"Linux": "./evaluate-all.sh", "Darwin": "./evaluate-all.sh", "Win
 def main():
     top_frame = library.define_frame()
 
-    evaluator = byron.evaluator.ScriptEvaluator(SCRIPT_NAME[platform.system()], filename_format="ind{i:06}.s")
+    evaluator = byron.evaluator.ScriptEvaluator(SCRIPT_NAME[platform.system()], filename_format="individual{i:06}.s")
     # evaluator = byron.evaluator.MakefileEvaluator('onemax.s', required_files=['main.o'], timeout=5)
     final_population = byron.ea.vanilla_ea(
         top_frame,

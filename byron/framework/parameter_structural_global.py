@@ -122,6 +122,8 @@ def _global_reference(
                         for n, f in self.graph.nodes(data='_selement')
                         if f.__class__ == self._target_frame.DEFAULT_PARENT
                     )
+                    parent = NODE_ZERO
+
                 self._node_reference.graph.add_edge(parent, new_node_reference.node, _type=FRAMEWORK)
                 initialize_subtree(new_node_reference)
 
@@ -146,8 +148,8 @@ def global_reference(
     target_frame: str | type[SElement], *, creative_zeal=0, first_macro: bool = False
 ) -> type[ParameterStructuralABC]:
     assert (
-        isinstance(creative_zeal, int) or 0 < creative_zeal < 1
-    ), f"ValueError: creative zeal is integer or 0 <= float < 1: found {creative_zeal}"
+        isinstance(creative_zeal, int) or 0.0 <= creative_zeal <= 1.0
+    ), f"ValueError: creative zeal is integer or 0 <= float <= 1: found {creative_zeal}"
     if isinstance(target_frame, str):
         return _global_reference(target_name=target_frame, first_macro=bool(first_macro), creative_zeal=creative_zeal)
     else:

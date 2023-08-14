@@ -518,8 +518,20 @@ class Individual(Paranoid):
         self.discard_useless_components()
 
         # =[Flatten the graph into a list of nodes]==========================
+        tree = nx.DiGraph()
+        tree.add_nodes_from(self._genome.nodes)
+        tree.add_edges_from((u, v) for u, v, k in self._genome.edges(data="_type") if k == FRAMEWORK)
+
+        for node in list(
+            v for _, v in tree.edges(NODE_ZERO) if self.genome.nodes[v]['_selement'].__class__.DEFAULT_PARENT
+        ):
+            target = self.genome.nodes[node]['_selement'].__class__.DEFAULT_PARENT
+            tree.remove_edge(NODE_ZERO, node)
+            parent = next(n for n, f in self.genome.nodes(data='_selement') if f.__class__ == target)
+            tree.add_edge(parent, node)
+
         frame_list = Individual._recursive_flatten_frames(
-            NodeReference(self.genome, NODE_ZERO), self.structure_tree, extra_parameters, tuple(), list()
+            NodeReference(self.genome, NODE_ZERO), tree, extra_parameters, tuple(), list()
         )
 
         # =[Let's dump it]===================================================
@@ -670,7 +682,7 @@ class Individual(Paranoid):
             edge_color=[
                 Individual.SHARP_COLORS_PALETTE[n % Individual.SHARP_COLORS_NUM] for n in range(T.number_of_edges())
             ],
-            connectionstyle="arc3,rad=-.3",
+            connectionstyle="arc3,rad=-0.3",
             arrowstyle="-|>,head_length=1,head_width=0.6",
             ax=ax,
         )
@@ -695,6 +707,7 @@ class Individual(Paranoid):
             edge_color=[
                 Individual.SHARP_COLORS_PALETTE[n % Individual.SHARP_COLORS_NUM] for n in range(T.number_of_edges())
             ],
+            connectionstyle="arc3,rad=-0.2",
             arrowstyle="-|>,head_length=1,head_width=0.6",
             ax=ax,
         )

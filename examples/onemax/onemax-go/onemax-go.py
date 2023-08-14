@@ -25,33 +25,33 @@ def define_library():
     # 'version', 'system', 'machine', 'python', and 'networkx'
     # To get all information use the macro 'byron.f.Info'
 
+    int64 = byron.f.integer_parameter(0, 2**64)
+    variable = byron.f.macro('var {_node} uint64', _label='')
+    variable.DEFAULT_PARENT = 'prologue'
+
     # standard
     main_prologue = byron.f.macro('package main\nfunc evolved_function() uint64 {{')
-    main_epilogue = 'return result\n}}'
-
-    int64 = byron.f.integer_parameter(0, 2**64)
+    main_prologue.ID = 'prologue'
+    initialization = byron.f.macro(
+        '{var} = uint64({num})', var=byron.f.global_reference(variable, creative_zeal=1.0), num=int64
+    )
     imath = byron.f.macro(
-        'result {op}= {num}',
+        '{var} {op}= {num}',
         op=byron.f.choice_parameter(['+', '-', '*', '/', '&', '^', '|']),
+        var=byron.f.global_reference(variable),
         num=int64,
     )
+    vars = byron.f.bunch([initialization], size=5)
+    code = byron.f.bunch([imath], size=10)
+    main_epilogue = byron.f.macro('return {var}\n}}', var=byron.f.global_reference(variable))
 
-    var_declaration = byron.f.macro('var {_node} uint64', _label='')
-    initialization = byron.f.macro(
-        '{v} += uint64({n})', v=byron.f.global_reference(var_declaration, creative_zeal=1), n=int64
-    )
-    var_declaration.DEFAULT_PARENT = main_prologue
-    code = byron.f.bunch([initialization], size=5, name='code')
-
-    go_main = byron.f.sequence((main_prologue, code, main_epilogue))
-    return go_main
-    # return byron.f.sequence([main_prologue, declarations, byron.f.bunch([imath, ext], size=(1, 20 + 1)), main_epilogue])
+    return byron.f.sequence((main_prologue, vars, code, main_epilogue))
 
 
 def main():
     top_frame = define_library()
 
-    evaluator = byron.evaluator.ScriptEvaluator('./evaluate-all.sh', filename_format="ind{i:06}.go")
+    evaluator = byron.evaluator.ScriptEvaluator('./evaluate-all.sh', filename_format="individual{i:06}.go")
     # evaluator = byron.evaluator.ParallelScriptEvaluator(
     #    'go', 'onemax.go', other_required_files=('main.go',), flags=('run',), timeout=5
     # )

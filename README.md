@@ -8,11 +8,11 @@
 ![Codename: Don Juan](https://img.shields.io/badge/codename-Don_Juan-pink.svg)
 [![Documentation Status](https://readthedocs.org/projects/byron/badge/?version=pre-alpha)](https://byron.readthedocs.io/en/pre-alpha/?badge=pre-alpha)
 
-Byron is an [evolutionary tool](https://en.wikipedia.org/wiki/Evolutionary_algorithm): given a problem, it first generates a set of random solutions, then iteratively refines and improves them using the results of their evaluations together with structural information.
+Byron is an [evolutionary tool](https://en.wikipedia.org/wiki/Evolutionary_algorithm): given a problem, it first generates a set of random solutions, then iteratively refines and improves them using the results of their evaluations together with structural information. It may be used as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization).
 
-Byron can solve problems that require solutions with a complex structures, such as realistic assembly programs with loops, interrupts, and recursive subroutines. It may be used as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization), or as a framework for prototyping and testing new ideas.
+Byron encodes candidate solutions as [directed](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Directed_graph) [multigraphs](https://en.wikipedia.org/wiki/Multigraph) and can produce quite complex, highly structured results, such as a realistic program with loops, interrupts, and recursive subroutines. 
 
-Candidate solutions are evaluated in parallel calling a user-defined Python function; creating temporary directories and using a [*makefile*](https://en.wikipedia.org/wiki/Make_(software)); or executing a generic shell script (that may, for instance, call proprietary tools).
+Candidate solutions are evaluated by calling a user-defined Python function or a generic shell script, that, for instance, may use proprietary tools. Different types of parallelization are supported, from simple multithreading to the creation of multiple temporary directories where different subprocesses are started.
 
 ### Installation
 
