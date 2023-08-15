@@ -28,9 +28,8 @@
 __all__ = ["canonize_name", "uncanonize_name", "FRAMEWORK_DIRECTORY"]
 
 from collections import Counter
-from abc import ABCMeta
+import re
 
-from byron.user_messages import logger
 from byron.global_symbols import *
 
 _name_counter = Counter()
@@ -45,7 +44,9 @@ def canonize_name(
     user_space: bool = False,
     warn_duplicates: bool = True,
 ) -> str:
-    assert any(s not in name for s in "<❬#❭>"), f"{PARANOIA_VALUE_ERROR}: Illegal character in name: {name}"
+    assert re.fullmatch(
+        r'[a-z_][a-z_0-9]*', name, re.IGNORECASE
+    ), f"{PARANOIA_VALUE_ERROR}: Illegal character in name: {name}"
 
     if user is True:
         user_space = True
@@ -117,6 +118,7 @@ class SElementsDirectory:
         self._data[key] = value
 
     def __getitem__(self, key):
+        assert key in self._data, f"{PARANOIA_VALUE_ERROR}: unknown frame '{self._target_frame}'"
         return self._data[key]
 
 

@@ -23,7 +23,7 @@ pip install --upgrade psutil
 ## Contacts
 
 * Giovanni Squillero — <giovanni.squillero@polito.it>
-* Alberto Tonda — <alberto.tonda@inra.fr>
+* Alberto Tonda — <alberto.tonda@inrae.fr>
 
 ## License
 

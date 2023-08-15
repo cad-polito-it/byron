@@ -37,7 +37,7 @@ class SElementMeta(type):
     def __new__(cls, name, *args, **kwargs):
         new_cls = super(SElementMeta, cls).__new__(cls, name, *args, **kwargs)
         new_cls.ID = f'{name}${generate_uuid()}'
-        new_cls.DEFAULT_PARENT = None
+        new_cls.FORCED_PARENT = None
         return new_cls
 
     def __hash__(self):
@@ -55,6 +55,13 @@ class SElementMeta(type):
             return False
         else:
             return self.ID == other.ID
+
+    @property
+    def forced_parent(cls):
+        return cls.FORCED_PARENT
+
+    def force_parent(cls, parent):
+        cls.FORCED_PARENT = parent
 
 
 class SElement(metaclass=SElementMeta):

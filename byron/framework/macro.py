@@ -53,7 +53,7 @@ def _macro(
     else:
         _patch_class_info(M, canonize_name('User', 'Macro'), tag=FRAMEWORK)
 
-    FRAMEWORK_DIRECTORY[M.__name__] = M
+    FRAMEWORK_DIRECTORY[M.ID] = M
     return M
 
 

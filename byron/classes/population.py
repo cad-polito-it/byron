@@ -47,7 +47,7 @@ class Population:
     _memory: set | None
 
     def __init__(self, top_frame: type[SElement], extra_parameters: dict | None = None, *, memory: bool = False):
-        assert check_valid_types(top_frame, FrameABC, subclass=True)
+        assert check_valid_types(top_frame, SElement, subclass=True)
         assert extra_parameters is None or check_valid_type(extra_parameters, dict)
         self._top_frame = top_frame
         if extra_parameters is None:

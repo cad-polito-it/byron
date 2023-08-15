@@ -28,7 +28,7 @@ SEED = 59
 byron.rrandom.seed(SEED)
 P = byron.classes.Population(top_frame=bnf, fitness_function=None)
 P.add_random_individual()
-print(P.dump_individual(len(P.individuals) - 1, extra_parameters={"$omit_banner": True}))
+print(P.dump_individual(len(P.individuals) - 1))
 
 exit()
 

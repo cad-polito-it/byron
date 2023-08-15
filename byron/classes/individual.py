@@ -523,9 +523,9 @@ class Individual(Paranoid):
         tree.add_edges_from((u, v) for u, v, k in self._genome.edges(data="_type") if k == FRAMEWORK)
 
         for node in list(
-            v for _, v in tree.edges(NODE_ZERO) if self.genome.nodes[v]['_selement'].__class__.DEFAULT_PARENT
+            v for _, v in tree.edges(NODE_ZERO) if self.genome.nodes[v]['_selement'].__class__.FORCED_PARENT
         ):
-            target = self.genome.nodes[node]['_selement'].__class__.DEFAULT_PARENT
+            target = self.genome.nodes[node]['_selement'].__class__.FORCED_PARENT
             tree.remove_edge(NODE_ZERO, node)
             parent = next(n for n, f in self.genome.nodes(data='_selement') if f.__class__ == target)
             tree.add_edge(parent, node)
@@ -563,7 +563,8 @@ class Individual(Paranoid):
             node_str += "{_text_after_node}".format(**bag)
             # ---------------------------------------------------------------
 
-            phenotype += node_str
+            if not bag['$omit_from_dump']:
+                phenotype += node_str
         # ===================================================================
 
         return phenotype
@@ -712,7 +713,7 @@ class Individual(Paranoid):
             ax=ax,
         )
 
-        plt.title(f'{self}')
+        # plt.title(f'{self}')
         plt.box(False)
 
         return fig
@@ -803,7 +804,7 @@ class Individual(Paranoid):
             ax=ax,
         )
 
-        plt.title(f'Individual: {self}')
+        # plt.title(f'Individual: {self}')
         plt.tight_layout()
 
         return fig

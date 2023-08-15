@@ -30,6 +30,10 @@ __all__ = [
     '__author__',
     '__copyright__',
     '__codename__',
+    'DEBUG',
+    'INFO',
+    'WARNING',
+    'ERROR',
     'FRAMEWORK',
     'LINK',
     'FRAME_NODE',
@@ -53,6 +57,7 @@ __all__ = [
     'DEFAULT_OPTIONS',
 ]
 
+import logging
 import warnings
 import sys
 from collections import namedtuple
@@ -120,6 +125,11 @@ assert _check_assert() or True
 
 #####################################################################################################################
 # "Global" constants
+
+DEBUG = logging.DEBUG
+INFO = logging.INFO
+WARNING = logging.WARNING
+ERROR = logging.ERROR
 
 FRAMEWORK = "framework"
 LINK = "link"

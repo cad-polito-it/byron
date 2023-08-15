@@ -25,9 +25,11 @@
 # =[ HISTORY ]===============================================================
 # v1 / May 2023 / Squillero (GX)
 
-__all__ = ["cook_sequence"]
+__all__ = ["cook_selement_list"]
 
+from typing import Sequence
 from collections import abc
+
 from byron.user_messages import *
 from byron.classes.selement import SElement
 from byron.classes.frame import FrameABC
@@ -36,27 +38,16 @@ from byron.classes.macro import Macro
 from byron.framework.macro import macro
 
 
-def cook_sequence(raw_sequence: list[type[SElement] | type[ParameterABC] | str]) -> list[type[SElement]]:
-    assert check_valid_type(raw_sequence, abc.Sequence)
+def cook_selement_list(raw_se_list: Sequence[type[SElement] | type[ParameterABC] | str]) -> list[type[SElement]]:
+    assert check_valid_type(raw_se_list, abc.Sequence)
 
-    cooked_seq = list()
-    for e in raw_sequence:
-        if isinstance(e, str):
-            cooked_seq.append(macro(e))
-        elif isinstance(e, abc.Sequence):
-            assert check_valid_length(e, 2, 2 + 1)
-            cooked_seq.extend([e[0]] * e[1])
-        else:
-            cooked_seq.append(e)
-    raw_sequence = cooked_seq
-    cooked_seq = list()
-
-    for e in raw_sequence:
+    cooked_se_list = list()
+    for e in raw_se_list:
         assert isinstance(e, str) or check_valid_types(e, FrameABC, Macro, ParameterABC, subclass=True)
         if isinstance(e, str):
             e = macro(e)
         elif issubclass(e, ParameterABC):
             e = macro("{p}", p=e)
-        cooked_seq.append(e)
+        cooked_se_list.append(e)
 
-    return cooked_seq
+    return cooked_se_list

@@ -57,24 +57,22 @@ def _global_reference(
     class T(ParameterStructuralABC):
         __slots__ = ["_target_frame"]  # Preventing the automatic creation of __dict__
 
-        if target_frame:
+        if isinstance(target_frame, str):
 
             def __init__(self):
                 super().__init__()
-                self._target_frame = target_frame
+                self._target_frame = FRAMEWORK_DIRECTORY[target_frame]
 
         else:
 
             def __init__(self):
                 super().__init__()
-                self._target_frame = FRAMEWORK_DIRECTORY[
-                    canonize_name(target_name, tag="Frame", user=True, warn_duplicates=False)
-                ]
+                self._target_frame = target_frame
 
         def get_potential_targets(self, add_none=True):
             G = self._node_reference.graph
             suitable_frames = [
-                n for n in nx.dfs_preorder_nodes(G) if isinstance(G.nodes[n]["_selement"], self._target_frame)
+                n for n in nx.dfs_preorder_nodes(G) if G.nodes[n]['_selement'].__class__ == self._target_frame
             ]
             if first_macro:
                 targets = list(
@@ -114,15 +112,7 @@ def _global_reference(
             if target is None:
                 new_node_reference = unroll_selement(self._target_frame, self._node_reference.graph)
 
-                if not self._target_frame.DEFAULT_PARENT:
-                    parent = NODE_ZERO
-                else:
-                    parent = next(
-                        n
-                        for n, f in self.graph.nodes(data='_selement')
-                        if f.__class__ == self._target_frame.DEFAULT_PARENT
-                    )
-                    parent = NODE_ZERO
+                parent = NODE_ZERO
 
                 self._node_reference.graph.add_edge(parent, new_node_reference.node, _type=FRAMEWORK)
                 initialize_subtree(new_node_reference)
@@ -140,7 +130,10 @@ def _global_reference(
                 if NODE_ZERO not in ccomp:
                     self.self.graph.remove_nodes_from(ccomp)
 
-    _patch_class_info(T, f"GlobalReference[{target_frame.__name__}]", tag="parameter")
+    if isinstance(target_frame, str):
+        _patch_class_info(T, f"GlobalReference['{target_frame}']", tag="parameter")
+    else:
+        _patch_class_info(T, f"GlobalReference[{target_frame.__name__}]", tag="parameter")
     return T
 
 
@@ -150,7 +143,4 @@ def global_reference(
     assert (
         isinstance(creative_zeal, int) or 0.0 <= creative_zeal <= 1.0
     ), f"ValueError: creative zeal is integer or 0 <= float <= 1: found {creative_zeal}"
-    if isinstance(target_frame, str):
-        return _global_reference(target_name=target_frame, first_macro=bool(first_macro), creative_zeal=creative_zeal)
-    else:
-        return _global_reference(target_frame=target_frame, first_macro=bool(first_macro), creative_zeal=creative_zeal)
+    return _global_reference(target_frame=target_frame, first_macro=bool(first_macro), creative_zeal=creative_zeal)

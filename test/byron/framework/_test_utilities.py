@@ -62,7 +62,7 @@ class MyMacro(byron.classes.Macro):
 
 def test_cook_sequence():
     expected_output = [byron.classes.FrameABC, MyFrame, byron.classes.Macro, MyMacro]
-    cooked = byron.f.utilities.cook_sequence([byron.classes.FrameABC, MyFrame, byron.classes.Macro, MyMacro])
+    cooked = byron.f.utilities.cook_selement_list([byron.classes.FrameABC, MyFrame, byron.classes.Macro, MyMacro])
     assert cooked == expected_output
 
     # somelist = [FrameABC, FrameABC]

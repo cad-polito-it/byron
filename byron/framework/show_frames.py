@@ -25,21 +25,22 @@
 # =[ HISTORY ]===============================================================
 # v1 / April 2023 / Squillero (GX)
 
-__all__ = ["dump_test_individual"]
+__all__ = ["show"]
 
-from byron import rrandom
+from byron.randy import rrandom
 from byron.sys import *
 from byron.global_symbols import *
 from byron.classes.selement import SElement
 from byron.classes.population import Population
+from byron.classes.readymade_macros import MacroZero
 
 
-def dump_test_individual(
-    top_frame: type[SElement],
+def show(
+    frame: type[SElement],
     *,
     seed: int | None = 42,
     node_info: bool = True,
-    population_extra_parameters: dict | None = None,
+    extra_parameters: dict | None = None,
     as_lgp: bool = False,
     as_forest: bool = False,
 ):
@@ -48,14 +49,14 @@ def dump_test_individual(
     population_parameters = dict()
     if node_info:
         population_parameters |= {'$dump_node_info': True}
-    if population_extra_parameters:
-        population_parameters |= population_extra_parameters
-    population = Population(top_frame=top_frame, extra_parameters=population_parameters)
+    if extra_parameters:
+        population_parameters |= extra_parameters
+    population = Population(top_frame=frame, extra_parameters=population_parameters)
 
     generators = [op for op in get_operators() if op.num_parents is None]
     random_individuals = list()
     while not random_individuals:
-        random_individuals = rrandom.choice(generators)(top_frame=top_frame)
+        random_individuals = rrandom.choice(generators)(top_frame=frame)
     population += random_individuals
 
     rrandom.state = rrandom_state
@@ -70,4 +71,6 @@ def dump_test_individual(
         else:
             return population[0].as_forest('test_individual_forest.svg')
     else:
-        return population.dump_individual(0)
+        population[0].genome.nodes[NODE_ZERO]['$omit_from_dump'] = True
+        print(population.dump_individual(0)[:-1])
+        return None

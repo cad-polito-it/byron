@@ -120,5 +120,5 @@ def bnf(
         if SELF in derivation.SEQUENCE:
             derivation.SEQUENCE = tuple(f if f != SELF else root for f in derivation.SEQUENCE)
 
-    FRAMEWORK_DIRECTORY[root.__name__] = root
+    FRAMEWORK_DIRECTORY[root.ID] = root
     return root

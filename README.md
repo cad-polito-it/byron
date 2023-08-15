@@ -4,7 +4,7 @@
 [![License: Apache 2.0](https://img.shields.io/badge/license-apache--2.0-green.svg)](https://opensource.org/licenses/Apache-2.0) 
 [![Status: Actrive](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/squillero/byron)
 ![Language: Python](https://img.shields.io/badge/language-python-blue.svg)
-![Version: 0.1.dev2](https://img.shields.io/badge/version-0.1.dev11-orange.svg)
+![Version: 0.1.dev2](https://img.shields.io/badge/version-0.1.dev12-orange.svg)
 ![Codename: Don Juan](https://img.shields.io/badge/codename-Don_Juan-pink.svg)
 [![Documentation Status](https://readthedocs.org/projects/byron/badge/?version=pre-alpha)](https://byron.readthedocs.io/en/pre-alpha/?badge=pre-alpha)
 
@@ -46,7 +46,7 @@ This repo is only useful if you want to hack the code (see: [CONTRIBUTING](CONTR
 ### Contacts
 
 * [Giovanni Squillero](https://github.com/squillero) [:email:](mailto:squillero@polito.it) [:house:](https://staff.polito.it/giovanni.squillero/)
-* [Alberto Tonda](https://github.com/albertotonda/) [:email:](mailto:alberto.tonda@inra.fr) [:house:](https://www.researchgate.net/profile/Alberto_Tonda)
+* [Alberto Tonda](https://github.com/albertotonda/) [:email:](mailto:alberto.tonda@inrae.fr) [:house:](https://www.researchgate.net/profile/Alberto_Tonda)
 
 ### Licence
 Copyright © 2023 [Giovanni Squillero](https://github.com/squillero) and [Alberto Tonda](https://github.com/albertotonda/)  

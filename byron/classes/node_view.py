@@ -111,7 +111,7 @@ class NodeView:
             path.append(node)
             self.__dict__[item] = tuple(reversed(path))
         elif item == "pathname":
-            return ".".join(f"n{_}" for _ in self.path)
+            return ".".join(f"n{_}" for _ in self.path[1:])
         elif item == "out_degree":
             # Global out degree (fanout)
             self.__dict__[item] = len(G.out_edges(id, data="_type"))

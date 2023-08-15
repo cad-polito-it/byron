@@ -42,6 +42,7 @@ from .parameter import *
 from .parameter_structural_local import *
 from .parameter_structural_global import *
 from .shared import *
+from .show_frames import *
 
 from byron.classes.readymade_macros import *
 from byron.classes.readymade_frames import *

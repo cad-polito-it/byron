@@ -37,7 +37,7 @@ from byron.classes.selement import SElement
 from byron.classes.frame import *
 from byron.classes.macro import Macro
 from byron.framework.macro import macro
-from byron.framework.utilities import cook_sequence
+from byron.framework.utilities import cook_selement_list
 from byron.randy import rrandom
 
 
@@ -92,12 +92,13 @@ def alternative(
     ----------
     .. [1] https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_form
     """
-    assert check_valid_type(alternatives, abc.Collection)
-    assert all(check_valid_types(a, FrameABC, Macro, subclass=True) for a in alternatives)
-    assert check_valid_length(alternatives, 1)
+    cooked_alternatives = cook_selement_list(alternatives)
+    assert check_valid_type(cooked_alternatives, abc.Collection)
+    assert all(check_valid_types(a, FrameABC, Macro, subclass=True) for a in cooked_alternatives)
+    assert check_valid_length(cooked_alternatives, 1)
 
     class T(FrameAlternative, FrameABC):
-        ALTERNATIVES = tuple(alternatives)
+        ALTERNATIVES = tuple(cooked_alternatives)
         EXTRA_PARAMETERS = dict(extra_parameters) if extra_parameters else dict()
 
         def __init__(self):
@@ -109,17 +110,18 @@ def alternative(
 
     if name:
         _patch_class_info(T, canonize_name(name, "Frame", user=True), tag=FRAMEWORK)
+        T.ID = name
     else:
         _patch_class_info(T, canonize_name("FrameAlternative", "Frame"), tag=FRAMEWORK)
 
-    FRAMEWORK_DIRECTORY[T.__name__] = T
+    FRAMEWORK_DIRECTORY[T.ID] = T
     return T
 
 
 def sequence(
     seq: abc.Sequence[type[SElement] | str], *, name: str | None = None, extra_parameters: dict = None, **kwargs
 ) -> type[FrameABC]:
-    cooked_seq = cook_sequence(seq)
+    cooked_seq = cook_selement_list(seq)
 
     class T(FrameSequence, FrameABC):
         SEQUENCE = tuple(cooked_seq)
@@ -134,10 +136,11 @@ def sequence(
 
     if name:
         _patch_class_info(T, canonize_name(name, "Frame", user=True), tag=FRAMEWORK)
+        T.ID = name
     else:
         _patch_class_info(T, canonize_name("FrameSequence", "Frame"), tag=FRAMEWORK)
 
-    FRAMEWORK_DIRECTORY[T.__name__] = T
+    FRAMEWORK_DIRECTORY[T.ID] = T
     return T
 
 
@@ -185,6 +188,8 @@ def bunch(
 
     if weights is None:
         weights = [1] * len(pool)
+    else:
+        assert len(weights) == len(pool), f"{PARANOIA_VALUE_ERROR}: number of weights non coherent with pool size"
 
     class T(FrameMacroBunch, FrameABC):
         SIZE = size
@@ -209,6 +214,7 @@ def bunch(
     # White parentheses: ⦅ ⦆  (U+2985, U+2986)
     if name:
         canonic_name = canonize_name(name, "Frame", user=True)
+        T.ID = name
     elif size == (1, 2):
         canonic_name = canonize_name("SingleMacro", "Frame")
     elif size[1] - size[0] == 1:
@@ -217,5 +223,5 @@ def bunch(
         canonic_name = canonize_name("MacroBunch", "Frame")
     _patch_class_info(T, canonic_name, tag=FRAMEWORK)
 
-    FRAMEWORK_DIRECTORY[T.__name__] = T
+    FRAMEWORK_DIRECTORY[T.ID] = T
     return T

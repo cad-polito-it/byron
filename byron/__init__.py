@@ -90,9 +90,6 @@ from byron.fitness_log import *
 # noinspection PyUnresolvedReferences
 from byron.sys import SYSINFO as sysinfo
 
-# noinspection PyUnresolvedReferences
-from byron.tools.create_test_individual import *
-
 #############################################################################
 # Patch names to ease debugging and visualization
 
