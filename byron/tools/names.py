@@ -45,7 +45,7 @@ def canonize_name(
     warn_duplicates: bool = True,
 ) -> str:
     assert re.fullmatch(
-        r'[a-z_][a-z_0-9]*', name, re.IGNORECASE
+        r'[a-z_0-9:@\$]*', name, re.IGNORECASE
     ), f"{PARANOIA_VALUE_ERROR}: Illegal character in name: {name}."
 
     if user is True:

@@ -30,6 +30,7 @@ __all__ = ["bnf"]
 from byron.global_symbols import FRAMEWORK
 from byron.tools.names import _patch_class_info, FRAMEWORK_DIRECTORY
 from byron.classes.frame import FrameABC
+from byron.classes.selement import SElement
 from byron.classes.macro import Macro
 from byron.classes.readymade_frames import SELF
 from byron.tools.names import canonize_name, uncanonize_name
@@ -39,7 +40,7 @@ from .framework import *
 
 
 def bnf(
-    production: list[list[FrameABC | Macro | str]], name: str | None = None, extra_parameters: dict = None
+    production: list[list[type[SElement] | type[Macro] | str]], name: str | None = None, extra_parameters: dict = None
 ) -> FrameABC:
     r"""Creates the class for a frame specifying a BNF derivation rule.
 
@@ -120,5 +121,4 @@ def bnf(
         if SELF in derivation.SEQUENCE:
             derivation.SEQUENCE = tuple(f if f != SELF else root for f in derivation.SEQUENCE)
 
-    FRAMEWORK_DIRECTORY[root.ID] = root
     return root
