@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -135,18 +135,18 @@ if notebook_mode and logging.getLogger().level <= logging.WARNING and paranoia_m
     assert (
         test_mode
         or not main_process
-        or user_messages.performance(
+        or user_messages.performance_warning(
             "Paranoia checks are enabled in this notebook: performances can be significantly impaired\n"
-            + "[see https://github.com/squillero/byron/blob/pre-alpha/docs/paranoia.md for details]"
+            + "[see https://github.com/cad-polito-it/byron/blob/pre-alpha/docs/paranoia.md for details]"
         )
     )
 elif not notebook_mode:
     assert (
         test_mode
         or not main_process
-        or user_messages.performance(
+        or user_messages.performance_warning(
             "Paranoia checks are enabled: performances can be significantly impaired — consider using '-O'\n"
-            + "[see https://github.com/squillero/byron/blob/pre-alpha/docs/paranoia.md for details]"
+            + "[see https://github.com/cad-polito-it/byron/blob/pre-alpha/docs/paranoia.md for details]"
         )
     )
 

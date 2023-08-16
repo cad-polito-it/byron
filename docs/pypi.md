@@ -20,6 +20,10 @@ pip install --upgrade joblib
 pip install --upgrade psutil
 ```
 
+## Documentation
+
+Some HOWTO's and examples are available as Jupyter notebooks in the [examples directory](https://github.com/cad-polito-it/byron/tree/pre-alpha/examples/notebooks).
+
 ## Contacts
 
 * Giovanni Squillero — <giovanni.squillero@polito.it>

@@ -23,7 +23,7 @@ Please, contact Alberto or Giovanni directly:
 
 ### Reports
 
-We use [GitHub's issues](https://github.com/squillero/byron/issues) for bug reporting. 
+We use [GitHub's issues](https://github.com/cad-polito-it/byron/issues) for bug reporting. 
 
 If you have published a paper using any version of byron, please let us know.
 

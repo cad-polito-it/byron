@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -101,12 +101,13 @@ class Population:
     def __len__(self):
         return len(self._individuals)
 
-    def __iadd__(self, individual):
+    def __iadd__(self, individual: Sequence[Individual]):
         assert check_valid_types(individual, Sequence)
         assert all(check_valid_types(i, Individual) for i in individual)
         assert all(i.run_paranoia_checks() for i in individual)
         self._generation += 1
         for i in individual:
+            i.discard_useless_components()
             i.age.birth = self._generation
             i.age.apparent_age = 0
             self._individuals.append(i)

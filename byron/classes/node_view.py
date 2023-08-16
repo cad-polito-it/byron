@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -75,7 +75,9 @@ class NodeView:
     def __getattr__(self, item):
         id, G = self._node_id, self._genome
         if item == "G":  # Networkx MultiDiGraph (deprecated)
-            deprecation("Direct access to the internal Networkx MultiDiGraph is generally considered a bad idea")
+            deprecation_warning(
+                "Direct access to the internal Networkx MultiDiGraph is generally considered a bad idea"
+            )
             self.__dict__[item] = G
         elif item == "attributes":  # ValueBag with all node attributes
             self.__dict__[item] = ValueBag(G.nodes[id])

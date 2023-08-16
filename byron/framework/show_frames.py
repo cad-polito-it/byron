@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -25,7 +25,7 @@
 # =[ HISTORY ]===============================================================
 # v1 / April 2023 / Squillero (GX)
 
-__all__ = ["show"]
+__all__ = ['as_text', 'as_lgp', 'as_forest']
 
 from byron.randy import rrandom
 from byron.sys import *
@@ -35,14 +35,12 @@ from byron.classes.population import Population
 from byron.classes.readymade_macros import MacroZero
 
 
-def show(
+def _prepare_test_population(
     frame: type[SElement],
     *,
     seed: int | None = 42,
     node_info: bool = True,
     extra_parameters: dict | None = None,
-    as_lgp: bool = False,
-    as_forest: bool = False,
 ):
     rrandom_state = rrandom.state
     rrandom.seed(seed)
@@ -57,20 +55,53 @@ def show(
     random_individuals = list()
     while not random_individuals:
         random_individuals = rrandom.choice(generators)(top_frame=frame)
+    for ind in random_individuals:
+        ind.genome.nodes[NODE_ZERO]['$omit_from_dump'] = True
     population += random_individuals
 
     rrandom.state = rrandom_state
-    if as_lgp:
-        if notebook_mode:
-            return population[0].as_lgp()
-        else:
-            return population[0].as_lgp('test_individual_lgp.svg')
-    elif as_forest:
-        if notebook_mode:
-            return population[0].as_forest()
-        else:
-            return population[0].as_forest('test_individual_forest.svg')
-    else:
-        population[0].genome.nodes[NODE_ZERO]['$omit_from_dump'] = True
-        print(population.dump_individual(0)[:-1])
+    return population
+
+
+def as_text(
+    frame: type[SElement],
+    *,
+    seed: int | None = 42,
+    node_info: bool = True,
+    extra_parameters: dict | None = None,
+):
+    population = _prepare_test_population(frame, seed=seed, node_info=node_info, extra_parameters=extra_parameters)
+    dump = population.dump_individual(0)
+    if notebook_mode:
+        print(dump)
         return None
+    else:
+        return dump
+
+
+def as_lgp(
+    frame: type[SElement],
+    *,
+    seed: int | None = 42,
+    node_info: bool = True,
+    extra_parameters: dict | None = None,
+):
+    population = _prepare_test_population(frame, seed=seed, extra_parameters=extra_parameters)
+    if notebook_mode:
+        return population[0].as_lgp()
+    else:
+        return population[0].as_lgp('byron_lgp.svg')
+
+
+def as_forest(
+    frame: type[SElement],
+    *,
+    seed: int | None = 42,
+    node_info: bool = True,
+    extra_parameters: dict | None = None,
+):
+    population = _prepare_test_population(frame, seed=seed, extra_parameters=extra_parameters)
+    if notebook_mode:
+        return population[0].as_forest()
+    else:
+        return population[0].as_forest('byron_forest.svg')

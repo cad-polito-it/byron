@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -107,7 +107,7 @@ def integer_parameter(min_: int, max_: int) -> type[ParameterABC]:
         elif any(max_ - min_ == 2**n + 1 for n in range(6, 128 + 1)):
             p = next(n for n in range(128 + 1) if max_ - min_ == 2**n + 1)
             syntax_warning_hint(
-                f"Parameter ranges are half-open: the maximum value is {max_ - 1:,} (ie. a range of 2**{p}+1 possible values)",
+                f"Parameter ranges are half-open: the maximum value is {max_:,} (ie. a range of 2**{p}+1 possible values)",
                 stacklevel_offset=1,
             )
         return True

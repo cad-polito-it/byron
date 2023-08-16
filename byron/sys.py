@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -114,6 +114,6 @@ def get_operators():
     return [o for o in snapshot.values() if hasattr(o, '_byron_') and o.type == GENETIC_OPERATOR]
 
 
-assert "SYSINFO" not in globals(), f"SystemError (paranoia check): SYSINFO already initialized"
+assert "SYSINFO" not in globals(), f"SystemError (paranoia check): SYSINFO already initialized."
 SYSINFO = SysInfo()
-assert "SYSINFO" in globals(), f"SystemError (paranoia check): FRAMEWORK_DIRECTORY not initialized"
+assert "SYSINFO" in globals(), f"SystemError (paranoia check): FRAMEWORK_DIRECTORY not initialized."

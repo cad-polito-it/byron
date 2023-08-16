@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -121,7 +121,7 @@ def vanilla_ea(
                 parents.append(tournament_selection(population, 1))
             new_individuals += op(*parents)
 
-        assert new_individuals, f"{PARANOIA_VALUE_ERROR}: empty offspring (no new individuals)"
+        assert new_individuals, f"{PARANOIA_VALUE_ERROR}: empty offspring (no new individuals)."
         population += new_individuals
 
         old_best = best

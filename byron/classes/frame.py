@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -62,7 +62,7 @@ class FrameABC(SElement, Paranoid):
 
     @staticmethod
     def register_name(name: str) -> bool:
-        assert name not in FrameABC._registered_names, f"{PARANOIA_VALUE_ERROR}: Frame name {name!r} already exists"
+        assert name not in FrameABC._registered_names, f"{PARANOIA_VALUE_ERROR}: Frame name {name!r} already exists."
         FrameABC._registered_names.add(name)
         return True
 

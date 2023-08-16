@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -76,7 +76,7 @@ def get_siblings(ref: NodeReference) -> list[int]:
         A list of node indexes
     """
 
-    assert ref.node != NODE_ZERO, f"ValueError: NODE_ZERO has ho siblings!"
+    assert ref.node != NODE_ZERO, f"ValueError: NODE_ZERO has ho siblings."
     return get_successors(NodeReference(ref.graph, get_predecessor(ref)))
 
 
@@ -84,10 +84,10 @@ def set_successors_order(ref: NodeReference, new_order: Sequence[int]) -> None:
     assert check_valid_type(new_order, Sequence)
     G = ref.graph
     current = list((u, v, k) for u, v, k, d in G.out_edges(ref.node, keys=True, data="_type") if d == FRAMEWORK)
-    assert all(k == 0 for u, v, k in current), f"ValueError: Found a FRAMEWORK edge with key != 0"
+    assert all(k == 0 for u, v, k in current), f"ValueError: Found a FRAMEWORK edge with key != 0."
     assert {v for u, v, k in current} == set(
         new_order
-    ), f"{PARANOIA_VALUE_ERROR}: mismatching new order: {[v for u, v, k in current]} vs. {new_order}"
+    ), f"{PARANOIA_VALUE_ERROR}: mismatching new order: {[v for u, v, k in current]} vs. {new_order}."
 
     attributes = dict()
     for u, v, k in current:

@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -35,7 +35,7 @@ __all__ = ["failure_rate"]
 from collections import Counter
 from functools import wraps
 
-from byron.user_messages import performance
+from byron.user_messages import performance_warning
 
 _STAT = Counter()
 
@@ -64,7 +64,7 @@ def failure_rate(func):
             successes = _STAT[(func, True)]
             total = failures + successes
             if failures / total > 0.9 and any(total == 10**n for n in range(2, 10)):
-                performance(
+                performance_warning(
                     f"The failure rate of '{func.__qualname__}' is {100 * failures / total:g}% "
                     + f"({successes:,} success{'es' if successes != 1 else ''} out of {total:,} calls)"
                 )

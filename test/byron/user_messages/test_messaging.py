@@ -4,7 +4,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 # Copyright 2023 Giovanni Squillero and Alberto Tonda
@@ -19,13 +19,13 @@ import byron as byron
 
 def test_messaging():
     with pytest.deprecated_call():
-        byron.user_messages.deprecation("This feature is deprecated.")
+        byron.user_messages.deprecation_warning("This feature is deprecated.")
 
     with pytest.warns(UserWarning):
         byron.user_messages.user_warning("This code may have unexpected behavior for end users.")
 
     with pytest.warns(RuntimeWarning):
-        byron.user_messages.performance("This code may be slow.")
+        byron.user_messages.performance_warning("This code may be slow.")
 
     with pytest.warns(RuntimeWarning):
         byron.user_messages.runtime_warning("This code may have unexpected behavior.")

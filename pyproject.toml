@@ -2,7 +2,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 # Copyright 2023 Giovanni Squillero and Alberto Tonda
@@ -33,8 +33,8 @@ classifiers = [
     "Topic :: Software Development :: Libraries",
 ]
 # homepage = "https://squillero.github.io/byron/"
-repository = "https://github.com/squillero/byron"
-documentation = "https://github.com/squillero/byron/tree/pre-alpha/examples/notebooks"
+repository = "https://github.com/cad-polito-it/byron"
+documentation = "https://github.com/cad-polito-it/byron/tree/pre-alpha/examples/notebooks"
 keywords = [
     "Aritificial Intelligence",
     "Evolutionary Computation",
@@ -69,7 +69,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.black]
 target-version = ['py311', 'py312']
-exclude = "(^\\.|^__pycache__|^venv)"
+extend-exclude = "^venv$"
 include = '(\.ipynb$|\.py$)'
 line-length = 120
 skip-string-normalization = true

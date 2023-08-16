@@ -2,7 +2,7 @@
 ==========
 
 [![License: Apache 2.0](https://img.shields.io/badge/license-apache--2.0-green.svg)](https://opensource.org/licenses/Apache-2.0) 
-[![Status: Actrive](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/squillero/byron)
+[![Status: Actrive](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/cad-polito-it/byron)
 ![Language: Python](https://img.shields.io/badge/language-python-blue.svg)
 ![Version: 0.1.dev2](https://img.shields.io/badge/version-0.1.dev12-orange.svg)
 ![Codename: Don Juan](https://img.shields.io/badge/codename-Don_Juan-pink.svg)
@@ -14,34 +14,18 @@ Byron internally encodes candidate solutions as [directed](https://en.wikipedia.
 
 Candidate solutions are evaluated by calling a user Python function or a shell script, that, for instance, may use proprietary tools. Different types of parallelization are supported out of the box, from simple multithreading to the creation of temporary directories where multiple subprocesses are concurrently [spawned](https://en.wikipedia.org/wiki/Spawn_(computing)).
 
-### Installation
-
-**⚠️ Byron is currently in [pre-alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Pre-alpha) and under active development**
-
-```
-pip install --upgrade byron
-```
-
-Few optional dependencies can enhance Byron, but are not strictly required:
-
-```
-pip install --upgrade matplotlib
-pip install --upgrade joblib
-pip install --upgrade psutil
-```
+**Note:** Byron is available on [PyPi](https://en.wikipedia.org/wiki/Python_Package_Index), this repo is only useful if you want to hack the code. Refer to [`https://pypi.org/project/byron/`](https://pypi.org/project/byron/) for installation instruction and documentation.
 
 ### TL;DR
-
-This repo is only useful if you want to hack the code (see: [CONTRIBUTING](CONTRIBUTING.md)). 
 
 * The default branch is always the more stable
 * Do not clone experimental branches `exp/*` unless you know what you are doing
 * Follow this [style guide](https://github.com/squillero/style/blob/master/python.md) and keep the code formatted with [Black](https://black.readthedocs.io/en/stable/)
-* Write as few lines of code and as many lines of comments as possible (ie. use builtins, exploit generators and list comprehension)
+* Write as few lines of code and as many lines of comments as possible (i.e., use builtins, exploit generators and list comprehension)
 * Use [pytest](https://docs.pytest.org/) and [Coverage.py](https://coverage.readthedocs.io/) for unit testing (ie. `coverage run -m pytest`)
 * Use [pylint](https://mypy-lang.org/) for basic linting and [mypy](https://mypy-lang.org/) for additional type checking
 * Be [paranoid](./PARANOIA.md) (cit. *"I need someone to show me the things"*)
-* It may be wise to contact Alberto or Giovanni before trying to change anything
+* It may be wise to contact Giovanni before trying to change anything
 
 ### Contacts
 

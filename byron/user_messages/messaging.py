@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -27,8 +27,7 @@
 
 __all__ = [
     "logger",
-    "performance",
-    "deprecation",
+    "performance_warning",
     "runtime_warning",
     "user_warning",
     "syntax_warning",
@@ -45,17 +44,20 @@ from byron.global_symbols import *
 BASE_STACKLEVEL = 3
 
 
+class ByronPerformanceWarning(RuntimeWarning):
+    pass
+
+
+class ByronFriendlyWarning(SyntaxWarning):
+    pass
+
+
 def _indent_msg(message):
     return "\n  " + message.replace("\n", "\n  ")
 
 
-def deprecation(message: str, stacklevel_offset: int = 0) -> bool:
-    warnings.warn(f"{_indent_msg(message)}", DeprecationWarning, stacklevel=BASE_STACKLEVEL + stacklevel_offset)
-    return True
-
-
-def performance(message: str, stacklevel_offset: int = 0) -> bool:
-    warnings.warn(f"{_indent_msg(message)}", RuntimeWarning, stacklevel=BASE_STACKLEVEL + stacklevel_offset)
+def performance_warning(message: str, stacklevel_offset: int = 0) -> bool:
+    warnings.warn(f"{_indent_msg(message)}", ByronPerformanceWarning, stacklevel=BASE_STACKLEVEL + stacklevel_offset)
     return True
 
 
@@ -82,11 +84,15 @@ def deprecation_warning(message: str, stacklevel_offset: int = 0) -> bool:
 def syntax_warning_hint(message: str, stacklevel_offset: int = 0) -> bool:
     if logger.level <= logging.INFO and not test_mode:
         warnings.warn(
-            f"Friendly suggestion:{_indent_msg(message)}", SyntaxWarning, stacklevel=BASE_STACKLEVEL + stacklevel_offset
+            f"{_indent_msg(message)}",
+            ByronFriendlyWarning,
+            stacklevel=BASE_STACKLEVEL + stacklevel_offset,
         )
-        DEBUG_FRIENDLY_SUGGESTIONS = "Friendly suggestion:\n  Friendly suggestions are only shown if code is not optimized and logging level is DEBUG"
+        DEBUG_FRIENDLY_SUGGESTIONS = (
+            "\n  Friendly suggestions are only shown if code is not optimized and logging level is DEBUG"
+        )
         if not notebook_mode:
-            warnings.warn(DEBUG_FRIENDLY_SUGGESTIONS, SyntaxWarning)
+            warnings.warn(DEBUG_FRIENDLY_SUGGESTIONS, ByronFriendlyWarning)
     return True
 
 
@@ -121,5 +127,7 @@ logger.addHandler(console_handler)
 # logger.addHandler(file_handler)
 
 # Avoid excessive warnings...
-if not sys.warnoptions and not test_mode:
-    warnings.filterwarnings("once")
+if not sys.warnoptions:
+    warnings.filterwarnings('once', category=ByronPerformanceWarning, module='byron')
+    warnings.filterwarnings('once', category=ByronFriendlyWarning, module='byron')
+    # warnings.filterwarnings('once', category=SyntaxWarning, module='byron')

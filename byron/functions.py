@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 # Copyright 2022-2023 Giovanni Squillero and Alberto Tonda
@@ -57,7 +57,7 @@ def mutate(parameter: ParameterABC, /, strength: float) -> None:
         parameter.value != old_value
         or counter < 100
         or strength < 0.01
-        or performance(
+        or performance_warning(
             f"Failed to mutate {parameter.__class__.__name__} with strength {strength} ({counter:,} failed attempts)",
             stacklevel_offset=2,
         )

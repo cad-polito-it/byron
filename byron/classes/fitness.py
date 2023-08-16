@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -78,7 +78,7 @@ class FitnessABC(ABC):
     def check_comparable(self, other: "FitnessABC"):
         assert (
             self.__class__ == other.__class__
-        ), f"{PARANOIA_TYPE_ERROR}: different Fitness types: {self.__class__} and {other.__class__}"
+        ), f"{PARANOIA_TYPE_ERROR}: different Fitness types: {self.__class__} and {other.__class__}."
         return True
 
     def _decorate(self) -> str:

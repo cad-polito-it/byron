@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -46,7 +46,7 @@ def canonize_name(
 ) -> str:
     assert re.fullmatch(
         r'[a-z_][a-z_0-9]*', name, re.IGNORECASE
-    ), f"{PARANOIA_VALUE_ERROR}: Illegal character in name: {name}"
+    ), f"{PARANOIA_VALUE_ERROR}: Illegal character in name: {name}."
 
     if user is True:
         user_space = True
@@ -63,12 +63,12 @@ def canonize_name(
     if user_space:
         assert (
             not warn_duplicates or name not in _used_names
-        ), f"{PARANOIA_VALUE_ERROR}: User name '{name}' has already been used"
+        ), f"{PARANOIA_VALUE_ERROR}: User name '{name}' has already been used."
         _used_names.add(name)
     else:
         assert (
             not warn_duplicates or canonic_name not in _used_names
-        ), f"{PARANOIA_VALUE_ERROR}: Name '{canonic_name}' has already been used"
+        ), f"{PARANOIA_VALUE_ERROR}: Name '{canonic_name}' has already been used."
         _used_names.add(canonic_name)
 
     return canonic_name
@@ -87,7 +87,7 @@ def uncanonize_name(name: str, keep_number: bool = False, user: bool | None = No
     tlen = len(tag)
     assert (name[tlen] == "❬" and name[-1] == "❭") or (
         name[tlen] == "<" and name[-1] == ">"
-    ), f"{PARANOIA_VALUE_ERROR}: not a canonic name: {name}"
+    ), f"{PARANOIA_VALUE_ERROR}: not a canonic name: '{name}'."
     stripped = name[tlen + 1 : -1]
     if "#" in stripped and not keep_number:
         stripped, num = stripped.split("#")
@@ -114,14 +114,14 @@ class SElementsDirectory:
         return len(self._data)
 
     def __setitem__(self, key, value):
-        assert key not in self._data, f"{PARANOIA_VALUE_ERROR}: duplicate name {key}"
+        assert key not in self._data, f"{PARANOIA_VALUE_ERROR}: duplicate name '{key}'."
         self._data[key] = value
 
     def __getitem__(self, key):
-        assert key in self._data, f"{PARANOIA_VALUE_ERROR}: unknown frame '{self._target_frame}'"
+        assert key in self._data, f"{PARANOIA_VALUE_ERROR}: unknown frame '{self._target_frame}'."
         return self._data[key]
 
 
-assert "FRAMEWORK_DIRECTORY" not in globals(), f"SystemError (paranoia check): FRAMEWORK_DIRECTORY already initialized"
+assert "FRAMEWORK_DIRECTORY" not in globals(), f"SystemError (paranoia check): FRAMEWORK_DIRECTORY already initialized."
 FRAMEWORK_DIRECTORY: SElementsDirectory = SElementsDirectory()
-assert "FRAMEWORK_DIRECTORY" in globals(), f"SystemError (paranoia check): FRAMEWORK_DIRECTORY not initialized"
+assert "FRAMEWORK_DIRECTORY" in globals(), f"SystemError (paranoia check): FRAMEWORK_DIRECTORY not initialized."

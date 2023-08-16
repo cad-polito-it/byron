@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -138,7 +138,6 @@ class Individual(Paranoid):
         self._genome.add_node(NODE_ZERO, _selement=MacroZero(), _type=MACRO_NODE)
         self._fitness = None
         self._str = ""
-        self._structure_tree = None
         self._lineage = None
         self._age = Age()
 
@@ -247,18 +246,12 @@ class Individual(Paranoid):
     def structure_tree(self) -> nx.classes.DiGraph:
         """A tree with the structure tree of the individual (ie. only edges of `kind=FRAMEWORK`)."""
 
-        if self._structure_tree:
-            return self._structure_tree
-
         tree = nx.DiGraph()
         tree.add_nodes_from(self._genome.nodes)
         tree.add_edges_from((u, v) for u, v, k in self._genome.edges(data="_type") if k == FRAMEWORK)
         assert nx.is_branching(tree) and nx.is_weakly_connected(
             tree
         ), f"{PARANOIA_VALUE_ERROR}: Structure of {self!r} is not a valid tree"
-
-        if self.is_finalized:
-            self._structure_tree = tree
         return tree
 
     @property
@@ -508,15 +501,14 @@ class Individual(Paranoid):
     def discard_useless_components(self):
         G = nx.MultiDiGraph()
         G.add_edges_from(self.G.edges)
-        T = self.structure_tree
-        for v in list(T.successors(0))[1:]:
-            G.remove_edge(0, v)
-        ccomp = list(nx.weakly_connected_components(G))
-        self.G.remove_nodes_from(chain.from_iterable(ccomp[1:]))
+        G.remove_node(NODE_ZERO)
+        u, v = next((u, v) for u, v in self.G.edges(0))
+        G.add_edge(u, v)
+        for ccomp in list(nx.weakly_connected_components(G)):
+            if NODE_ZERO not in ccomp:
+                self.G.remove_nodes_from(ccomp)
 
     def dump(self, extra_parameters: dict) -> str:
-        self.discard_useless_components()
-
         # =[Flatten the graph into a list of nodes]==========================
         tree = nx.DiGraph()
         tree.add_nodes_from(self._genome.nodes)
@@ -553,7 +545,9 @@ class Individual(Paranoid):
                 node_str += '{_text_before_macro}'.format(**bag)
                 node_str += nr.graph.nodes[nr.node]['_selement'].dump(bag)
                 if bag["$dump_node_info"]:
-                    node_str += "  {_comment} 🖋 {_node.pathname} ➜ {_node.name}".format(**bag)
+                    if node_str:
+                        node_str += '  '
+                    node_str += '{_comment} 🖋 {_node.pathname} ➜ {_node.name}'.format(**bag)
                 node_str += "{_text_after_macro}".format(**bag)
             elif nr.graph.nodes[nr.node]["_type"] == FRAME_NODE:
                 node_str += "{_text_before_frame}".format(**bag)
@@ -619,7 +613,7 @@ class Individual(Paranoid):
         extra_parameters = DEFAULT_EXTRA_PARAMETERS | nr.graph.nodes[nr.node]
         extra_parameters |= {'_node': NodeView(nr)}
         dumped = None
-        while not dumped:
+        while dumped is None:
             try:
                 dumped = nr.graph.nodes[nr.node]['_selement'].dump(ValueBag(extra_parameters))
             except KeyError as k:
@@ -761,7 +755,7 @@ class Individual(Paranoid):
         )
 
         labels = dict()
-        for n in (_ for _ in pos if self.genome.nodes[n]['_type'] == MACRO_NODE):
+        for n in [_ for _ in pos if self.genome.nodes[n]['_type'] == MACRO_NODE]:
             pos[n] = (pos[n][0], pos[n][1])
             d = Individual.node_to_str(NodeReference(self.genome, n))
             labels[n] = '     ' + d.split('\n')[0].strip() + (' …' if '\n' in d else '')

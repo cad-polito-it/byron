@@ -4,7 +4,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 # Copyright 2023 Giovanni Squillero and Alberto Tonda
@@ -19,7 +19,7 @@ def test_evaluator_abstract_methods():
     except TypeError:
         pass
     else:
-        assert False, "EvaluatorABC should not be instantiable"
+        assert False, "EvaluatorABC should not be instantiable."
 
     class MyEvaluator(byron.classes.evaluator.EvaluatorABC):
         def evaluate(self, individuals):
