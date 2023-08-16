@@ -14,7 +14,7 @@ Byron internally encodes candidate solutions as [directed](https://en.wikipedia.
 
 Candidate solutions are evaluated by calling a user Python function or a shell script, that, for instance, may use proprietary tools. Different types of parallelization are supported out of the box, from simple multithreading to the creation of temporary directories where multiple subprocesses are concurrently [spawned](https://en.wikipedia.org/wiki/Spawn_(computing)).
 
-**Note:** Byron is available on [PyPi](https://en.wikipedia.org/wiki/Python_Package_Index), this repo is only useful if you want to hack the code. Refer to [`https://pypi.org/project/byron/`](https://pypi.org/project/byron/) for installation instruction and documentation.
+**Note:** Byron is available on [PyPi](https://en.wikipedia.org/wiki/Python_Package_Index), this repo is only useful if you want to hack the code. Refer to [`https://pypi.org/project/byron/`](https://pypi.org/project/byron/) for installation instructions and documentation.
 
 ### TL;DR
 
