@@ -101,12 +101,22 @@ class Population:
     def __len__(self):
         return len(self._individuals)
 
+    @staticmethod
+    def _count_components(i):
+        import networkx as nx
+
+        G = nx.MultiDiGraph()
+        G.add_edges_from(i.G.edges)
+        G.remove_node(NODE_ZERO)
+        return sum(1 for _ in nx.weakly_connected_components(G))
+
     def __iadd__(self, individual: Sequence[Individual]):
         assert check_valid_types(individual, Sequence)
         assert all(check_valid_types(i, Individual) for i in individual)
         assert all(i.run_paranoia_checks() for i in individual)
         self._generation += 1
         for i in individual:
+            assert Population._count_components(i) == 1, f"???"
             i.discard_useless_components()
             i.age.birth = self._generation
             i.age.apparent_age = 0

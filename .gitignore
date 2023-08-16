@@ -1,12 +1,12 @@
-#############################################################################
-#          __________                                                       #
-#   __  __/ ____/ __ \__ __   This file is part of byron v1.0.a1 "Kiwi"  #
-#  / / / / / __/ /_/ / // /   (!) by Giovanni Squillero and Alberto Tonda   #
-# / /_/ / /_/ / ____/ // /_   https://github.com/cad-polito-it/byron         #
-# \__  /\____/_/   /__  __/                                                 #
-#   /_/ --byron-- /_/      "You don't need a big goal, be μ-ambitious!!" #
-#                                                                           #
-#############################################################################
+#################################|###|#####################################
+#  __                            |   |                                    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
+#       |_____|                   \|/                                     #
+################################## ' ######################################
+# Copyright 2023 Giovanni Squillero and Alberto Tonda
+# SPDX-License-Identifier: Apache-2.0
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
