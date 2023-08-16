@@ -12,7 +12,7 @@ Byron is an [evolutionary tool](https://en.wikipedia.org/wiki/Evolutionary_algor
 
 Byron internally encodes candidate solutions as [directed](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Directed_graph) [multigraphs](https://en.wikipedia.org/wiki/Multigraph) and can tackle problems with complex, structured constraints. For instance, it may be used to create realistic programs with loops, interrupts, and recursive subroutines. 
 
-Candidate solutions are evaluated by calling a user Python function or a shell script, that, for instance, may use proprietary tools. Different types of parallelization are supported out of the box, from simple multithreading to the creation of temporary directories where multiple subprocesses are concurrently [spawned](https://en.wikipedia.org/wiki/Spawn_(computing)).
+Candidate solutions are evaluated by calling a user-defined Python function or a shell script that may invoke external proprietary tools. Different types of parallelization are supported out of the box, from simple multithreading to the creation of temporary directories where multiple subprocesses are concurrently [spawned](https://en.wikipedia.org/wiki/Spawn_(computing)).
 
 :package: Byron is available on [PyPi](https://en.wikipedia.org/wiki/Python_Package_Index): check out [`https://pypi.org/project/byron/`](https://pypi.org/project/byron/) for installation and documentation. This repo is only useful if you want to hack the code.
 

@@ -514,10 +514,8 @@ class Individual(Paranoid):
         tree.add_nodes_from(self._genome.nodes)
         tree.add_edges_from((u, v) for u, v, k in self._genome.edges(data="_type") if k == FRAMEWORK)
 
-        for node in list(
-            v for _, v in tree.edges(NODE_ZERO) if self.genome.nodes[v]['_selement'].__class__.FORCED_PARENT
-        ):
-            target = self.genome.nodes[node]['_selement'].__class__.FORCED_PARENT
+        for node in list(v for _, v in tree.edges(NODE_ZERO) if self.genome.nodes[v]['_selement'].FORCED_PARENT):
+            target = self.genome.nodes[node]['_selement'].FORCED_PARENT
             tree.remove_edge(NODE_ZERO, node)
             parent = next(n for n, f in self.genome.nodes(data='_selement') if f.__class__ == target)
             tree.add_edge(parent, node)
@@ -628,6 +626,16 @@ class Individual(Paranoid):
         """Draw individual using multipartite_layout"""
 
         T = self.structure_tree.copy()
+
+        # for node in list(v for _, v in T.edges(NODE_ZERO) if self.genome.nodes[v]['_selement'].FORCED_PARENT):
+        #    T.remove_edge(NODE_ZERO, node)
+        #    parent = next(
+        #        n
+        #        for n in self.genome
+        #        if self.genome.nodes[n]['_selement'].__class__ == self.genome.nodes[node]['_selement'].FORCED_PARENT
+        #    )
+        #    T.add_edge(parent, node)
+
         for n in T:
             T.nodes[n]["depth"] = len(nx.shortest_path(T, 0, n))
         height = max(T.nodes[n]["depth"] for n in T.nodes)
@@ -681,16 +689,6 @@ class Individual(Paranoid):
             arrowstyle="-|>,head_length=1,head_width=0.6",
             ax=ax,
         )
-        T.add_edges_from((u, v) for u, v, k in self.G.edges(data="_type") if u == v and k == LINK)
-        nx.draw_networkx_edges(
-            T,
-            pos,
-            edge_color=[
-                Individual.SHARP_COLORS_PALETTE[n % Individual.SHARP_COLORS_NUM] for n in range(T.number_of_edges())
-            ],
-            arrowstyle="-",
-            ax=ax,
-        )
 
         T.remove_edges_from(list(T.edges))
         T.add_edges_from(
@@ -702,7 +700,6 @@ class Individual(Paranoid):
             edge_color=[
                 Individual.SHARP_COLORS_PALETTE[n % Individual.SHARP_COLORS_NUM] for n in range(T.number_of_edges())
             ],
-            connectionstyle="arc3,rad=-0.2",
             arrowstyle="-|>,head_length=1,head_width=0.6",
             ax=ax,
         )

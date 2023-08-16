@@ -21,7 +21,7 @@ macro_call = byron.f.macro('CALL {ref}', ref=byron.f.global_reference(subroutine
 main_frame = byron.f.sequence(
     [placeholder, byron.f.bunch([macro_foo, macro_bar, macro_call], weights=(1, 1, 1), size=6)]
 )
-subroutines.force_parent('placeholder')
+subroutines.force_parent(placeholder)
 
 byron.f.as_text(main_frame)
 byron.f.as_forest(main_frame)
