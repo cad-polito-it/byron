@@ -27,8 +27,7 @@ def define_library():
 
     int64 = byron.f.integer_parameter(0, 2**64)
     variable = byron.f.macro('var {_node} uint64', _label='')
-    byron.f.show(variable)
-    variable.FORCED_PARENT = 'prologue'
+    variable.force_parent('prologue')
 
     # standard
     main_prologue = byron.f.macro('package main\nfunc evolved_function() uint64 {{')

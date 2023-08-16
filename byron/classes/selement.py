@@ -56,10 +56,6 @@ class SElementMeta(type):
         else:
             return self.ID == other.ID
 
-    @property
-    def forced_parent(cls):
-        return cls.FORCED_PARENT
-
     def force_parent(cls, parent):
         cls.FORCED_PARENT = parent
 
