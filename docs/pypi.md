@@ -1,8 +1,8 @@
 Byron is an [evolutionary tool](https://en.wikipedia.org/wiki/Evolutionary_algorithm): given a problem, it first generates a set of random solutions, then iteratively refines and improves them using the results of their evaluations together with structural information. It may be used as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization).
 
-Byron encodes candidate solutions as [directed](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Directed_graph) [multigraphs](https://en.wikipedia.org/wiki/Multigraph) and can produce quite complex, highly structured results, such as a realistic program with loops, interrupts, and recursive subroutines. 
+Byron internally encodes candidate solutions as [directed](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Directed_graph) [multigraphs](https://en.wikipedia.org/wiki/Multigraph) and can tackle problems with complex, structured constraints. For instance, it may be used to create realistic programs with loops, interrupts, and recursive subroutines. Gory details: solutions are [forests](https://en.wikipedia.org/wiki/Tree_(graph_theory)#Forest), with additional edges connecting leaves to generic nodes, possibly not in the same tree.
 
-Candidate solutions are evaluated by calling a user-defined Python function or a shell script that may invoke external proprietary tools. Different types of parallelization are supported out of the box, from simple multithreading to the creation of temporary directories where multiple subprocesses are concurrently [spawned](https://en.wikipedia.org/wiki/Spawn_(computing)).
+Candidate solutions are evaluated by calling a user-defined Python function or invoking a shell script that may use external proprietary tools. Different types of parallelization are supported out of the box, from simple multithreading to the creation of temporary directories where multiple subprocesses are concurrently [spawned](https://en.wikipedia.org/wiki/Spawn_(computing)).
 
 ## Installation
 
