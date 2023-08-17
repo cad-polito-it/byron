@@ -35,6 +35,48 @@ from byron.classes.population import Population
 from byron.classes.readymade_macros import MacroZero
 
 
+def as_text(
+    frame: type[SElement],
+    *,
+    seed: int | None = 42,
+    node_info: bool = True,
+    extra_parameters: dict | None = None,
+):
+    population = _prepare_test_population(frame, seed=seed, node_info=node_info, extra_parameters=extra_parameters)
+    dump = population.dump_individual(0)
+    if notebook_mode:
+        print(dump)
+        return None
+    else:
+        return dump
+
+
+def as_lgp(
+    frame: type[SElement],
+    *,
+    seed: int | None = 42,
+    extra_parameters: dict | None = None,
+):
+    population = _prepare_test_population(frame, seed=seed, extra_parameters=extra_parameters)
+    if notebook_mode:
+        return population[0].as_lgp()
+    else:
+        return population[0].as_lgp('byron_lgp.svg')
+
+
+def as_forest(
+    frame: type[SElement],
+    *,
+    seed: int | None = 42,
+    extra_parameters: dict | None = None,
+):
+    population = _prepare_test_population(frame, seed=seed, extra_parameters=extra_parameters)
+    if notebook_mode:
+        return population[0].as_forest()
+    else:
+        return population[0].as_forest('byron_forest.svg')
+
+
 def _prepare_test_population(
     frame: type[SElement],
     *,
@@ -61,47 +103,3 @@ def _prepare_test_population(
 
     rrandom.state = rrandom_state
     return population
-
-
-def as_text(
-    frame: type[SElement],
-    *,
-    seed: int | None = 42,
-    node_info: bool = True,
-    extra_parameters: dict | None = None,
-):
-    population = _prepare_test_population(frame, seed=seed, node_info=node_info, extra_parameters=extra_parameters)
-    dump = population.dump_individual(0)
-    if notebook_mode:
-        print(dump)
-        return None
-    else:
-        return dump
-
-
-def as_lgp(
-    frame: type[SElement],
-    *,
-    seed: int | None = 42,
-    node_info: bool = True,
-    extra_parameters: dict | None = None,
-):
-    population = _prepare_test_population(frame, seed=seed, extra_parameters=extra_parameters)
-    if notebook_mode:
-        return population[0].as_lgp()
-    else:
-        return population[0].as_lgp('byron_lgp.svg')
-
-
-def as_forest(
-    frame: type[SElement],
-    *,
-    seed: int | None = 42,
-    node_info: bool = True,
-    extra_parameters: dict | None = None,
-):
-    population = _prepare_test_population(frame, seed=seed, extra_parameters=extra_parameters)
-    if notebook_mode:
-        return population[0].as_forest()
-    else:
-        return population[0].as_forest('byron_forest.svg')

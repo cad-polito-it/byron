@@ -33,11 +33,10 @@ from typing import Callable, Any
 from copy import copy
 
 from byron.global_symbols import *
+from byron.user_messages import *
 from byron.classes.selement import SElement
 from byron.classes.fitness import FitnessABC
 from byron.classes.individual import Individual
-from byron.classes.frame import FrameABC
-from byron.user_messages import *
 
 
 class Population:

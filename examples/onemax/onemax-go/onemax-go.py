@@ -58,7 +58,7 @@ def main():
     final_population = byron.ea.vanilla_ea(
         top_frame,
         evaluator,
-        max_generation=0,
+        max_generation=10,
         max_fitness=byron.fitness.make_fitness(64.0),
         population_extra_parameters={'$dump_node_info': True},
     )
@@ -73,7 +73,13 @@ def main():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '-v', '--verbose', action='store_const', dest='verbose', const=2, help='use verbose logging (debug messages)'
+        '-v',
+        '--verbose',
+        action='store_const',
+        dest='verbose',
+        const=2,
+        default=1,
+        help='use verbose logging (debug messages)',
     )
     parser.add_argument(
         '-q', '--quiet', action='store_const', dest='verbose', const=0, help='be quiet (only log warning messages)'

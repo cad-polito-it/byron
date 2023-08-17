@@ -13,6 +13,7 @@
 import logging
 import itertools
 import argparse
+import rich
 
 import byron
 
@@ -36,27 +37,34 @@ def main():
     # evaluators.append(byron.evaluator.MakefileEvaluator('genome.dat', required_files=['onemax-shell.sh']))
 
     byron.logger.info("main: Using %s", evaluator)
-    population = byron.ea.vanilla_ea(top_frame, evaluator, max_generation=5, lambda_=20, mu=30)
-    population[0].as_lgp('best-lgp.png')
-    population[0].as_forest('best-forest.png')
+    population = byron.ea.vanilla_ea(
+        top_frame, evaluator, max_generation=1_000, lambda_=20, mu=30, max_fitness=NUM_BITS
+    )
+    # population[0].as_lgp('best-lgp.png')
+    # population[0].as_forest('best-forest.png')
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('-v', '--verbose', action='count', default=0, help='increase log verbosity')
     parser.add_argument(
-        '-d', '--debug', action='store_const', dest='verbose', const=2, help='log debug messages (same as -vv)'
+        '-v',
+        '--verbose',
+        action='store_const',
+        dest='verbose',
+        const=2,
+        default=1,
+        help='use verbose logging (debug messages)',
+    )
+    parser.add_argument(
+        '-q', '--quiet', action='store_const', dest='verbose', const=0, help='be quiet (only log warning messages)'
     )
     args = parser.parse_args()
 
     if args.verbose == 0:
-        logging.getLogger().setLevel(level=logging.WARNING)
         byron.logger.setLevel(level=logging.WARNING)
     elif args.verbose == 1:
-        logging.getLogger().setLevel(level=logging.INFO)
         byron.logger.setLevel(level=logging.INFO)
     elif args.verbose == 2:
-        logging.getLogger().setLevel(level=logging.DEBUG)
         byron.logger.setLevel(level=logging.DEBUG)
 
     main()

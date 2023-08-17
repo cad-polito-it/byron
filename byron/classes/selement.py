@@ -28,7 +28,6 @@ from typing import Optional, Callable, Any, Sequence
 from uuid import uuid1 as generate_uuid
 
 from byron.user_messages import *
-from byron.tools.names import canonize_name, uncanonize_name
 
 
 class SElementMeta(type):

@@ -33,9 +33,6 @@ __all__ = ["get_operators"]
 
 import inspect
 from pprint import pformat
-from copy import copy
-
-from byron.tools.names import *
 from byron.operators import *
 
 

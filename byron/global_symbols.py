@@ -30,10 +30,10 @@ __all__ = [
     '__author__',
     '__copyright__',
     '__codename__',
-    'DEBUG',
-    'INFO',
-    'WARNING',
-    'ERROR',
+    'LOGGING_DEBUG',
+    'LOGGING_INFO',
+    'LOGGING_WARNING',
+    'LOGGING_ERROR',
     'FRAMEWORK',
     'LINK',
     'FRAME_NODE',
@@ -55,12 +55,14 @@ __all__ = [
     'PARANOIA_SYSTEM_ERROR',
     'DEFAULT_EXTRA_PARAMETERS',
     'DEFAULT_OPTIONS',
+    'LOG_LAPSES',
 ]
 
 import logging
-import warnings
 import sys
-from collections import namedtuple
+import time
+from collections import defaultdict
+
 import multiprocessing
 import re
 
@@ -126,10 +128,10 @@ assert _check_assert() or True
 #####################################################################################################################
 # "Global" constants
 
-DEBUG = logging.DEBUG
-INFO = logging.INFO
-WARNING = logging.WARNING
-ERROR = logging.ERROR
+LOGGING_DEBUG = logging.DEBUG
+LOGGING_INFO = logging.INFO
+LOGGING_WARNING = logging.WARNING
+LOGGING_ERROR = logging.ERROR
 
 FRAMEWORK = "framework"
 LINK = "link"
@@ -160,5 +162,7 @@ DEFAULT_EXTRA_PARAMETERS = {
     '_text_before_node': '',
     '_text_after_node': '',
 }
+
+LOG_LAPSES = defaultdict(float)
 
 #####################################################################################################################

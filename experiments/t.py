@@ -10,18 +10,24 @@
 # Copyright 2023 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
+import logging
+import time
+
 import byron
 
-placeholder = byron.f.macro('')
-macro_foo = byron.f.macro('foo #{num:04x}', num=byron.f.integer_parameter(0, 2**16))
-macro_bar = byron.f.macro('bar {num:+0.3e}', num=byron.f.float_parameter(-1, 1))
-sub_header = byron.f.macro('; init {_node}', _label='PROC {_node}:\n')
-subroutines = byron.f.sequence([sub_header, byron.f.bunch([macro_foo, macro_bar], size=3)])
-macro_call = byron.f.macro('CALL {ref}', ref=byron.f.global_reference(subroutines, creative_zeal=1, first_macro=True))
-main_frame = byron.f.sequence(
-    [placeholder, byron.f.bunch([macro_foo, macro_bar, macro_call], weights=(1, 1, 1), size=6)]
-)
-subroutines.force_parent(placeholder)
+from tqdm.auto import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm
 
-byron.f.as_text(main_frame)
-byron.f.as_forest(main_frame)
+LOG = logging.getLogger(__name__)
+
+if __name__ == '__main__':
+    byron.logger.debug(
+        "[bold]B[/] [blue]blue[/] [blue bold]boldblue[/] Normal [bold red blink]Server is shutting down![/]",
+    )
+
+    exit()
+    with logging_redirect_tqdm([byron.logger]):
+        for i in tqdm(range(100)):
+            time.sleep(0.1)
+            if False and i > 0 and i % 7 == 0:
+                byron.logger.info(f"console logging redirected to `tqdm.write({i})`")

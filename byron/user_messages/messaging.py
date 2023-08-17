@@ -26,17 +26,18 @@
 # v1 / April 2023 / Squillero (GX)
 
 __all__ = [
-    "logger",
-    "performance_warning",
-    "runtime_warning",
-    "user_warning",
-    "syntax_warning",
-    "deprecation_warning",
-    "syntax_warning_hint",
+    'logger',
+    'performance_warning',
+    'runtime_warning',
+    'user_warning',
+    'syntax_warning',
+    'deprecation_warning',
+    'syntax_warning_hint',
 ]
 
 import logging
 import sys
+import time
 import warnings
 
 from byron.global_symbols import *
@@ -103,6 +104,7 @@ assert "logger" not in globals(), f"SystemError (paranoia check): byron logger a
 logging.basicConfig()  # Initialize logging
 logger = logging.getLogger('byron')
 logger.propagate = False
+
 assert 'logger' in globals(), f"SystemError (paranoia check): byron logger not initialized"
 
 if test_mode:
@@ -115,10 +117,26 @@ else:
     logger.setLevel(logging.INFO)
 
 # Alternative symbols: ⍄ ┊
-console_formatter = logging.Formatter("%(asctime)s ▷ %(levelname)s ▷ %(name)s::%(message)s", datefmt="%H:%M:%S")
-console_handler = logging.StreamHandler()
+
+from rich import logging as rich_logging
+from rich import highlighter as rich_highlighter
+
+
+# console_formatter = logging.Formatter('%(asctime)s ▷ %(levelname)s ▷ %(name)s::%(message)s', datefmt='%H:%M:%S')
+# console_handler = logging.StreamHandler()
+# console_handler.setFormatter(console_formatter)
+console_handler = rich_logging.RichHandler(
+    log_time_format='%H:%M:%S',  # '%H:%M:%S.%f'
+    omit_repeated_times=False,
+    show_path=False,
+    markup=True,
+    highlighter=rich_highlighter.NullHighlighter(),
+    keywords=['▷'],
+)
+console_formatter = logging.Formatter('▷ %(message)s')
 console_handler.setFormatter(console_formatter)
-logger.addHandler(console_handler)
+logger.handlers = [console_handler]
+# logger.handlers = []
 
 # file_formatter = logging.Formatter('[%(asctime)s] %(levelname)s %(name)s::%(message)s', datefmt="%Y-%m-%d %H:%M:%S,uuu")
 # file_handler = logging.FileHandler('debug.log')
@@ -131,3 +149,19 @@ if not sys.warnoptions:
     warnings.filterwarnings('once', category=ByronPerformanceWarning, module='byron')
     warnings.filterwarnings('once', category=ByronFriendlyWarning, module='byron')
     # warnings.filterwarnings('once', category=SyntaxWarning, module='byron')
+
+
+def hesitant_log(lapse: float, level: int, *args, **kwargs):
+    now = time.time()
+    if now - LOG_LAPSES[level] >= lapse:
+        logger.log(level, *args, **kwargs)
+        LOG_LAPSES[level] = now
+
+
+assert (
+    getattr(logger, '__dict__') and 'hesitant_log' not in logger.__dict__
+), f"PANIC: {logger} has already the attribute 'hesitant_log'"
+logger.hesitant_log = hesitant_log
+assert (
+    getattr(logger, '__dict__') and 'hesitant_log' in logger.__dict__
+), f"PANIC: cannot register attribute 'hesitant_log' in {logger}"

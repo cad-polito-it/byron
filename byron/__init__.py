@@ -107,26 +107,30 @@ del _patch_class_info
 #############################################################################
 # Welcome!
 
+# __welcome__ = (
+#     f'This is Byron v{__version__} "{__codename__}"\n' + f"(c) 2023 G. Squillero & A. Tonda — Licensed under Apache-2.0"
+# )
+
 __welcome__ = (
-    f'This is Byron v{__version__} "{__codename__}"\n' + f"(c) 2023 G. Squillero & A. Tonda — Licensed under Apache-2.0"
+    f'[bold]This is Byron v{__version__} "[italic]{__codename__}[/italic]"[/]\n'
+    + f"[bold](c) 2023 G. Squillero & A. Tonda — Licensed under Apache-2.0[/]"
 )
 
 
 def welcome(level=logging.DEBUG):
-    from sys import stderr
+    from sys import stderr, stdout
 
     stderr.flush()
-    for m in __welcome__.split("\n"):
+    stdout.flush()
+    lines = __welcome__.split("\n")
+    for m in lines:
         # stars: ⚝ ⭐// feathers: 🖋
-        user_messages.logger.log(level, f"🖋: {m}")
+        # user_messages.logger.log(level, f"🖋: {m}")
+        user_messages.logger.log(level, f"{m}")
+    stderr.flush()
+    stdout.flush()
     return True
 
-
-#############################################################################
-# Welcome
-
-if main_process and not notebook_mode:
-    welcome(logging.INFO)
 
 #############################################################################
 # Warning
@@ -149,6 +153,15 @@ elif not notebook_mode:
             + "[see https://github.com/cad-polito-it/byron/blob/pre-alpha/docs/paranoia.md for details]"
         )
     )
+
+#############################################################################
+# Welcome
+
+if main_process and not notebook_mode:
+    welcome(logging.INFO)
+
+#############################################################################
+# Warnings
 
 if not matplotlib_available:
     user_messages.runtime_warning("No 'matplotlib': plotting of individuals will not be available.")

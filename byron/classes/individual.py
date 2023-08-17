@@ -30,14 +30,14 @@
 __all__ = ['Individual', 'Lineage', 'Age']
 
 from typing import Any, Callable, Optional
-from itertools import chain, zip_longest
+from itertools import chain
 from copy import deepcopy, copy
-from dataclasses import dataclass
 import operator
 
 import networkx as nx
 
 from byron.user_messages import *
+from byron.user_messages.messaging import logger as byron_logger
 from byron.global_symbols import *
 from byron.tools.graph import *
 
@@ -304,13 +304,13 @@ class Individual(Paranoid):
     def run_paranoia_checks(self) -> bool:
         assert self.valid, f"{PARANOIA_VALUE_ERROR}: Individual {self!r} is not valid"
 
-        # check genome (structural)
+        # ==[check genome (structural)]======================================
         assert self.genome == self._genome, f"{PARANOIA_VALUE_ERROR}: Panic: genome != _genome"
         assert nx.is_weakly_connected(
             self._genome
         ), f"{PARANOIA_VALUE_ERROR}: genome of {self!r} is not a connected graph"
 
-        # check tree (structural)
+        # ==[check tree (structural)]========================================
         assert nx.is_branching(self.structure_tree) and nx.is_weakly_connected(
             self.structure_tree
         ), f"{PARANOIA_VALUE_ERROR}: structure_tree of {self!r} is not a tree"
@@ -318,7 +318,7 @@ class Individual(Paranoid):
             self._fitness is not None and self.is_finalized
         ), f"Value Error (paranoia check): Mismatch fitness and is_finalized"
 
-        # check edges (semantic)
+        # ==[check edges (semantic)]=========================================
         edges = self._genome.edges(keys=True, data=True)
         assert all("_type" in d for u, v, k, d in edges), "ValueError (paranoia check): missing '_type' attribute"
         assert all(
@@ -327,7 +327,7 @@ class Individual(Paranoid):
         tree_edges = [(u, v) for u, v, k, d in edges if d["_type"] == FRAMEWORK]
         assert len(tree_edges) == len(set(tree_edges)), "ValueError (paranoia check): duplicated framework edge"
 
-        # check nodes (semantic)
+        # ==[check nodes (semantic)]=========================================
         assert all(
             n < self._genome.graph["node_count"] for n in self._genome
         ), f"{PARANOIA_VALUE_ERROR}: invalid 'node_count' attribute ({self._genome.graph['node_count']})"
@@ -339,6 +339,7 @@ class Individual(Paranoid):
             for n, d in self._genome.nodes(data=True)
         )
 
+        # ==[check structural parameter]=====================================
         assert all(
             p._node_reference == NodeReference(self._genome, n)
             for n in self._genome

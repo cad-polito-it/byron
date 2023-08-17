@@ -30,28 +30,36 @@ __all__ = ["vanilla_ea"]
 from time import perf_counter_ns, process_time_ns
 from datetime import timedelta
 
+from tqdm.auto import tqdm
+from tqdm.contrib.logging import logging_redirect_tqdm, tqdm_logging_redirect
+
 from byron.operators import *
 from byron.sys import *
 from byron.classes.selement import *
-from byron.classes.population import *
 from byron.classes.frame import *
 from byron.classes.evaluator import *
-from byron.randy import rrandom
-from byron.user_messages import *
-
+from byron.fitness import make_fitness
+from byron.user_messages import logger as byron_logger
 from .selection import *
 
 
-def _elapsed(start):
+def _elapsed(start, steps=None):
     e = str(timedelta(microseconds=(perf_counter_ns() - start[0]) // 1e3)) + '.0000000000'
-    s1 = e[: e.index('.') + 3] + ' [t]'
-    e = str(timedelta(microseconds=(process_time_ns() - start[1]) // 1e3)) + '.0000000000'
-    s2 = e[: e.index('.') + 3] + ' [byron]'
-    return '⏱ ' + s1 + ' / ' + s2
+    s = e[: e.index('.') + 3] + ' [t]'
+    ret = '⌛ ' + s
+    if steps:
+        e = str(timedelta(microseconds=(perf_counter_ns() - start[0]) // 1e3 // steps)) + '.0000000000'
+        s = e[: e.index('.') + 3]
+        ret += ' / 🏃 ' + s
+    else:
+        e = str(timedelta(microseconds=(process_time_ns() - start[1]) // 1e3)) + '.0000000000'
+        s = e[: e.index('.') + 3] + ' [byron]'
+        ret += ' / ⏱️  ' + s
+    return ret
 
 
 def _new_best(population: Population, evaluator: EvaluatorABC):
-    logger.info(
+    byron_logger.info(
         f"vanilla_ea: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
     )
 
@@ -62,7 +70,7 @@ def vanilla_ea(
     mu: int = 10,
     lambda_: int = 20,
     max_generation: int = 100,
-    max_fitness: FitnessABC | None = None,
+    max_fitness: Any | None = None,
     population_extra_parameters: dict = None,
 ) -> Population:
     r"""A simple evolutionary algorithm
@@ -85,7 +93,7 @@ def vanilla_ea(
 
     """
     start = perf_counter_ns(), process_time_ns()
-    logger.info("vanilla_ea: 🍦 OPTIMIZATION STARTED ┈ %s", _elapsed(start))
+    byron_logger.info("vanilla_ea: 🍦 [b]VanillaEA started[/] ┈ %s", _elapsed(start))
 
     SElement.is_valid = SElement._is_valid_debug
     population = Population(top_frame, extra_parameters=population_extra_parameters, memory=True)
@@ -103,11 +111,13 @@ def vanilla_ea(
     best = population[0]
     _new_best(population, evaluator)
 
-    logger.info("vanilla_ea: End of initialization ┈ %s", _elapsed(start))
+    byron_logger.info("vanilla_ea: End of initialization ┈ %s", _elapsed(start, evaluator.fitness_calls))
 
     stopping_conditions = list()
     stopping_conditions.append(lambda: population.generation >= max_generation)
     if max_fitness:
+        if not isinstance(max_fitness, FitnessABC):
+            max_fitness = make_fitness(max_fitness)
         stopping_conditions.append(lambda: best.fitness == max_fitness or best.fitness >> max_fitness)
 
     # Let's roll
@@ -132,14 +142,20 @@ def vanilla_ea(
         if old_best != best:
             _new_best(population, evaluator)
 
-        logger.info("vanilla_ea: End of generation %s ┈ %s", population.generation, _elapsed(start))
+        byron_logger.hesitant_log(
+            1,
+            LOGGING_INFO,
+            "vanilla_ea: End of generation %s ┈ %s",
+            population.generation,
+            _elapsed(start, evaluator.fitness_calls),
+        )
 
     end = process_time_ns()
 
-    logger.info("vanilla_ea: 🍦 OPTIMIZATION COMPLETED ┈ %s", _elapsed(start))
-    logger.info("vanilla_ea: %s", _elapsed(start))
-    logger.info(
-        f"vanilla_ea: 🏆 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True)}"
+    byron_logger.info("vanilla_ea: 🍦 [b]VanillaEA completed[/] ┈ %s", _elapsed(start))
+    byron_logger.info("vanilla_ea: %s", _elapsed(start, evaluator.fitness_calls))
+    byron_logger.info(
+        f"vanilla_ea: 🏆 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True)}",
     )
 
     # for p in population._memory:
