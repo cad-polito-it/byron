@@ -43,19 +43,21 @@ from byron.user_messages import logger as byron_logger
 from .selection import *
 
 
-def _elapsed(start, steps=None):
-    e = str(timedelta(microseconds=(perf_counter_ns() - start[0]) // 1e3)) + '.0000000000'
+def _elapsed(start, *, process: bool = False, steps: int = 0):
+    data = list()
+    end = [process_time_ns(), perf_counter_ns()][::-1]
+    e = str(timedelta(microseconds=(end[0] - start[0]) // 1e3)) + '.0000000000'
     s = e[: e.index('.') + 3] + ' [t]'
-    ret = '⌛ ' + s
+    data.append('⌛ ' + s)
     if steps:
-        e = str(timedelta(microseconds=(perf_counter_ns() - start[0]) // 1e3 // steps)) + '.0000000000'
+        e = str(timedelta(microseconds=(end[0] - start[0]) // 1e3 // steps)) + '.0000000000'
         s = e[: e.index('.') + 3]
-        ret += ' / 🏃 ' + s
-    else:
-        e = str(timedelta(microseconds=(process_time_ns() - start[1]) // 1e3)) + '.0000000000'
+        data.append('🏃 ' + s)
+    if process:
+        e = str(timedelta(microseconds=(end[1] - start[1]) // 1e3)) + '.0000000000'
         s = e[: e.index('.') + 3] + ' [byron]'
-        ret += ' / ⏱️  ' + s
-    return ret
+        data.append('⏱️  ' + s)
+    return ' / '.join(data)
 
 
 def _new_best(population: Population, evaluator: EvaluatorABC):
@@ -93,7 +95,7 @@ def vanilla_ea(
 
     """
     start = perf_counter_ns(), process_time_ns()
-    byron_logger.info("vanilla_ea: 🍦 [b]VanillaEA started[/] ┈ %s", _elapsed(start))
+    byron_logger.info("vanilla_ea: 🍦 [b]VanillaEA started[/] ┈ %s", _elapsed(start, process=True))
 
     SElement.is_valid = SElement._is_valid_debug
     population = Population(top_frame, extra_parameters=population_extra_parameters, memory=True)
@@ -111,7 +113,7 @@ def vanilla_ea(
     best = population[0]
     _new_best(population, evaluator)
 
-    byron_logger.info("vanilla_ea: End of initialization ┈ %s", _elapsed(start, evaluator.fitness_calls))
+    byron_logger.info("vanilla_ea: End of initialization ┈ %s", _elapsed(start, steps=evaluator.fitness_calls))
 
     stopping_conditions = list()
     stopping_conditions.append(lambda: population.generation >= max_generation)
@@ -147,13 +149,12 @@ def vanilla_ea(
             LOGGING_INFO,
             "vanilla_ea: End of generation %s ┈ %s",
             population.generation,
-            _elapsed(start, evaluator.fitness_calls),
+            _elapsed(start, steps=evaluator.fitness_calls),
         )
 
     end = process_time_ns()
 
-    byron_logger.info("vanilla_ea: 🍦 [b]VanillaEA completed[/] ┈ %s", _elapsed(start))
-    byron_logger.info("vanilla_ea: %s", _elapsed(start, evaluator.fitness_calls))
+    byron_logger.info("vanilla_ea: 🍦 [b]VanillaEA completed[/] ┈ %s", _elapsed(start, process=True))
     byron_logger.info(
         f"vanilla_ea: 🏆 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True)}",
     )

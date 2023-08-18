@@ -115,7 +115,6 @@ class Population:
         assert all(i.run_paranoia_checks() for i in individual)
         self._generation += 1
         for i in individual:
-            i.discard_useless_components()
             i.age.birth = self._generation
             i.age.apparent_age = 0
             self._individuals.append(i)

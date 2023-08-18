@@ -31,19 +31,54 @@ from byron.randy import rrandom
 from byron.sys import *
 from byron.global_symbols import *
 from byron.classes.selement import SElement
+from byron.classes.frame import FrameABC
+from byron.framework.macro import macro
+from byron.classes.parameter import ParameterABC
 from byron.classes.population import Population
+from byron.operators.initializers import *
 from byron.classes.readymade_macros import MacroZero
 
 
 def as_text(
-    frame: type[SElement],
+    element: type[SElement] | ParameterABC,
     *,
     seed: int | None = 42,
     node_info: bool = True,
     extra_parameters: dict | None = None,
 ):
-    population = _prepare_test_population(frame, seed=seed, node_info=node_info, extra_parameters=extra_parameters)
-    dump = population.dump_individual(0)
+    if isinstance(element, type) and issubclass(element, SElement):
+        frame = element
+    elif isinstance(element, type) and issubclass(element, ParameterABC):
+        frame = macro(
+            '{p1.__class__}\n'
+            + '• {p1}\n'
+            + '• {p2}\n'
+            + '• {p3}\n'
+            + '• {p4}\n'
+            + '• {p5}\n'
+            + '• {p6}\n'
+            + '• {p7}\n'
+            + '• {p8}\n',
+            p1=element,
+            p2=element,
+            p3=element,
+            p4=element,
+            p5=element,
+            p6=element,
+            p7=element,
+            p8=element,
+        )
+        node_info = False
+    else:
+        raise NotImplementedError(f"{__name__}.as_text({element!r})")
+    individual = _generate_random_individual(frame, seed=seed)
+
+    if extra_parameters is None:
+        extra_parameters = dict()
+    parameters = DEFAULT_EXTRA_PARAMETERS | DEFAULT_OPTIONS | extra_parameters
+    if node_info:
+        parameters |= {'$dump_node_info': True}
+    dump = individual.dump(parameters)
     if notebook_mode:
         print(dump)
         return None
@@ -55,51 +90,44 @@ def as_lgp(
     frame: type[SElement],
     *,
     seed: int | None = 42,
-    extra_parameters: dict | None = None,
 ):
-    population = _prepare_test_population(frame, seed=seed, extra_parameters=extra_parameters)
+    if not isinstance(frame, type) or not issubclass(frame, FrameABC):
+        raise NotImplementedError(f"{__name__}.as_lgp({frame!r})")
+
+    individual = _generate_random_individual(frame, seed=seed)
     if notebook_mode:
-        return population[0].as_lgp()
+        return individual.as_lgp()
     else:
-        return population[0].as_lgp('byron_lgp.svg')
+        return individual.as_lgp('byron_lgp.svg')
 
 
 def as_forest(
     frame: type[SElement],
     *,
     seed: int | None = 42,
-    extra_parameters: dict | None = None,
 ):
-    population = _prepare_test_population(frame, seed=seed, extra_parameters=extra_parameters)
+    if not isinstance(frame, type) or not issubclass(frame, FrameABC):
+        raise NotImplementedError(f"{__name__}.as_forest({frame!r})")
+
+    individual = _generate_random_individual(frame, seed=seed)
     if notebook_mode:
-        return population[0].as_forest()
+        return individual.as_forest()
     else:
-        return population[0].as_forest('byron_forest.svg')
+        return individual.as_forest('byron_forest.svg')
 
 
-def _prepare_test_population(
+def _generate_random_individual(
     frame: type[SElement],
     *,
     seed: int | None = 42,
-    node_info: bool = True,
-    extra_parameters: dict | None = None,
 ):
     rrandom_state = rrandom.state
     rrandom.seed(seed)
-    population_parameters = dict()
-    if node_info:
-        population_parameters |= {'$dump_node_info': True}
-    if extra_parameters:
-        population_parameters |= extra_parameters
-    population = Population(top_frame=frame, extra_parameters=population_parameters)
 
-    generators = [op for op in get_operators() if op.num_parents is None]
-    random_individuals = list()
+    random_individuals = []
     while not random_individuals:
-        random_individuals = rrandom.choice(generators)(top_frame=frame)
-    for ind in random_individuals:
-        ind.genome.nodes[NODE_ZERO]['$omit_from_dump'] = True
-    population += random_individuals
+        random_individuals = random_individual(frame)
+    random_individuals[0].genome.nodes[NODE_ZERO]['$omit_from_dump'] = True
 
     rrandom.state = rrandom_state
-    return population
+    return random_individuals[0]

@@ -34,7 +34,7 @@ import platform
 import networkx as nx
 
 from byron.classes.macro import Macro
-from byron.global_symbols import __version__ as version
+from byron.global_symbols import *
 from byron.tools.names import canonize_name, _patch_class_info
 from byron.user_messages import *
 
@@ -42,7 +42,7 @@ from byron.user_messages import *
 class MacroZero(Macro):
     TEXT = (
         "{_comment}"
-        + f""" Automagically written by Byron v{version}"""
+        + f""" Automagically written by Byron v{__version__}"""
         + f""" on {datetime.today().strftime('%d-%b-%Y')}"""
         + f""" at {datetime.today().strftime('%H:%M:%S')}"""
     )

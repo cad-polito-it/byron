@@ -27,6 +27,7 @@
 
 __all__ = [
     '__version__',
+    '__date__',
     '__author__',
     '__copyright__',
     '__codename__',
@@ -66,7 +67,8 @@ from collections import defaultdict
 import multiprocessing
 import re
 
-__version__ = "0.1.dev3"
+__version__ = "0.8a1.dev4"
+__date__ = "18-08-2023"
 __codename__ = 'Don Juan'
 __author__ = "Giovanni Squillero and Alberto Tonda"
 __copyright__ = "Copyright (c) 2023 Giovanni Squillero and Alberto Tonda"

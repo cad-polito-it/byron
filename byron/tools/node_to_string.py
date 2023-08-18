@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
+# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -23,26 +23,27 @@
 # limitations under the License.
 
 # =[ HISTORY ]===============================================================
-# v1 / May 2023 / Squillero (GX)
+# v1 / August 2023 / Squillero (GX)
 
-"""
-Methods and constants to create the framework for the individuals.
+__all__ = ['node_to_str']
 
-Notes:
-    * As the framework is composed of classes, methods are class factories.
-    * Methods are cached, thus multiple calls with equal or equivalent argument return the `same` class. Ie.
-      Python operator ``is`` returns ``True``
-"""
+from byron.global_symbols import *
+from byron.classes.node_reference import NodeReference
+from byron.classes.node_view import NodeView
+from byron.classes.value_bag import ValueBag
 
-from .defaults import *
-from .bnf import *
-from .framework import *
-from .macro import *
-from .parameter import *
-from .parameter_structural_local import *
-from .parameter_structural_global import *
-from .shared import *
-from .show_element import *
 
-from byron.classes.readymade_macros import *
-from byron.classes.readymade_frames import *
+def node_to_str(nr: NodeReference) -> str:
+    extra_parameters = DEFAULT_EXTRA_PARAMETERS | nr.graph.nodes[nr.node]
+    extra_parameters |= {'_node': NodeView(nr)}
+    dumped = None
+    while dumped is None:
+        try:
+            dumped = nr.graph.nodes[nr.node]['_selement'].dump(ValueBag(extra_parameters))
+        except KeyError as k:
+            if k.args[0] in extra_parameters:
+                return '?'
+            extra_parameters[k.args[0]] = "{" + k.args[0] + "}"
+        except Exception as e:
+            return f'{e}'
+    return dumped

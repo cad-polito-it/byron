@@ -36,6 +36,7 @@ __all__ = [
     "get_all_macros",
     "get_all_frames",
     "get_all_parameters",
+    'fasten_subtree_parameters',
 ]
 
 from collections.abc import Sequence
@@ -43,7 +44,7 @@ import networkx as nx
 
 from byron.global_symbols import *
 from byron.classes.node_reference import NodeReference
-from byron.classes.parameter import ParameterABC
+from byron.classes.parameter import ParameterABC, ParameterStructuralABC
 from byron.classes.selement import *
 
 # =[PUBLIC FUNCTIONS]===================================================================================================
@@ -194,3 +195,12 @@ def _get_node_list(G: nx.classes.MultiDiGraph, *, root: int, type_: str | None) 
         tree.add_nodes_from(G.nodes)
         tree.add_edges_from((u, v) for u, v, k in G.edges(data="_type") if k == FRAMEWORK)
         return list(n for n in nx.dfs_preorder_nodes(tree, root) if type_ is None or G.nodes[n]["_type"] == type_)
+
+
+def fasten_subtree_parameters(node_reference: NodeReference):
+    for p, n in (
+        _
+        for _ in get_all_parameters(node_reference.graph, node_reference.node, node_id=True)
+        if isinstance(_[0], ParameterStructuralABC)
+    ):
+        p.fasten(NodeReference(node_reference.graph, n))

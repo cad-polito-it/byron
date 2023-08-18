@@ -27,4 +27,4 @@
 
 from .initializers import *
 from .mutation import *
-from .graph_crossover import *
+from ._graph_crossover import *

@@ -83,16 +83,6 @@ def unroll_selement(top: type[SElement], G: nx.classes.MultiDiGraph) -> NodeRefe
     return NodeReference(G, new_node)
 
 
-def fasten_subtree_parameters(node_reference: NodeReference):
-    for p, n in (
-        _
-        for _ in get_all_parameters(node_reference.graph, node_reference.node, node_id=True)
-        if isinstance(_[0], ParameterStructuralABC)
-    ):
-        assert not p.is_fastened, f"{PARANOIA_VALUE_ERROR}: {p} already fastened"
-        p.fasten(NodeReference(node_reference.graph, n))
-
-
 def initialize_subtree(node_reference: NodeReference):
     for p in get_all_parameters(node_reference.graph, node_reference.node):
         assert p.value is None, f"{PARANOIA_VALUE_ERROR}: {p} already initialized"

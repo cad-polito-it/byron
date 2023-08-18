@@ -10,7 +10,7 @@
 
 [tool.poetry]
 name = "byron"
-version = "0.1.dev15"
+version = "0.8a1.dev4"
 description = "Multi-purpose extensible self-adaptive optimizer and fuzzer"
 authors = [
     "Giovanni Squillero <giovanni.squillero@polito.it>",
@@ -22,7 +22,7 @@ authors = [
 license = "Apache-2.0"
 readme = "docs/pypi.md"
 classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
+    "Development Status :: 3 - Alpha",
     "Intended Audience :: Information Technology",
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: Apache Software License",
@@ -96,7 +96,7 @@ max-line-length = 120
 source-roots = ['src']
 
 [bumpver]
-current_version = "0.1.dev15"
+current_version = "0.8a1.dev4"
 version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
 
 [bumpver.file_patterns]
@@ -107,4 +107,8 @@ version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
 "README.md" = [
     "\\[Version: {pep440_version}\\]",
     "version-{pep440_version}-orange"
+]
+"byron/global_symbols.py" = [
+    '__version__ = "{pep440_version}"',
+    '__date__ = "0D-0M-YYYY"',
 ]

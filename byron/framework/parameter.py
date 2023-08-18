@@ -25,7 +25,7 @@
 # =[ HISTORY ]===============================================================
 # v1 / April 2023 / Squillero (GX)
 
-__all__ = ["integer_parameter", "float_parameter", "choice_parameter", "array_parameter"]
+__all__ = ['integer_parameter', 'float_parameter', 'choice_parameter', 'array_parameter', 'counter_parameter']
 
 from collections.abc import Collection
 from functools import cache
@@ -76,16 +76,16 @@ def _numeric(*, type_, min_, max_):
 
     if type_ == int and min_ == 0 and any(max_ == 2**n for n in range(4, 128 + 1)):
         p = next(n for n in range(4, 128 + 1) if max_ == 2**n)
-        _patch_class_info(T, f"{type_.__name__.title()}[{p}bit]", tag="parameter")
+        _patch_class_info(T, f'{type_.__name__.title()}[{p}bit]', tag='parameter')
     elif type_ == int:
-        _patch_class_info(T, f"{type_.__name__.title()}[{min_}..{max_-1}]", tag="parameter")
+        _patch_class_info(T, f'{type_.__name__.title()}[{min_}..{max_-1}]', tag='parameter')
     else:
-        _patch_class_info(T, f"{type_.__name__.title()}[{min_}–{max_})", tag="parameter")
+        _patch_class_info(T, f'{type_.__name__.title()}[{min_}–{max_})', tag='parameter')
     return T
 
 
 def integer_parameter(min_: int, max_: int) -> type[ParameterABC]:
-    """An Int parameter: an integer number in the half-open range [min_, max_)."""
+    r"""An Int parameter: an integer number in the half-open range [min_, max_)."""
 
     def check_range():
         if max_ - min_ == 1:
@@ -120,7 +120,7 @@ def integer_parameter(min_: int, max_: int) -> type[ParameterABC]:
 
 
 def float_parameter(min_: float, max_: float) -> type[ParameterABC]:
-    """A Float parameter: a floating point number in the half-open range [min_, max_)."""
+    r"""A Float parameter: a floating point number in the half-open range [min_, max_)."""
     assert check_valid_type(min_, Number)
     assert check_valid_type(max_, Number)
     return _numeric(type_=float, min_=float(min_), max_=float(max_))
@@ -151,12 +151,12 @@ def _choice_parameter(alternatives: tuple[Hashable]) -> type[ParameterABC]:
                 self.value = rrandom.sigma_choice(alternatives, loc=alternatives.index(self._value), strength=strength)
 
     # NOTE[GX]: alternative symbol: – (not a minus!)
-    _patch_class_info(T, "Choice[" + "┊".join(str(a) for a in alternatives) + "]", tag="parameter")
+    _patch_class_info(T, 'Choice[' + '┊'.join(str(a) for a in alternatives) + ']', tag='parameter')
     return T
 
 
 def choice_parameter(alternatives: Collection[Hashable]) -> type[ParameterABC]:
-    """A Choice parameter: an element from a fixed list of alternatives."""
+    r"""A Choice parameter: an element from a fixed list of alternatives."""
 
     def check_size():
         if len(alternatives) > 999:
@@ -215,7 +215,7 @@ def _array_parameter(symbols: tuple[str], length: int) -> type[ParameterABC]:
 
 
 def array_parameter(symbols: Collection[str], length: SupportsInt) -> type[ParameterABC]:
-    """An Array parameter: a fixed-length array of symbols."""
+    r"""An Array parameter: a fixed-length array of symbols."""
 
     assert check_valid_type(symbols, Collection)
     assert check_valid_length(symbols, 1)
@@ -226,3 +226,25 @@ def array_parameter(symbols: Collection[str], length: SupportsInt) -> type[Param
     assert check_value_range(int(length), 1)
 
     return _array_parameter(tuple(sorted(symbols)), int(length))
+
+
+@cache
+def counter_parameter() -> type[ParameterABC]:
+    r"""A simple counter, increments at each mutation"""
+
+    class T(ParameterABC):
+        __slots__ = []  # Preventing the automatic creation of __dict__
+        COUNTER = 0
+
+        def __init__(self):
+            super().__init__()
+
+        def is_correct(self, obj: Any) -> bool:
+            return True
+
+        def mutate(self, strength: float = 1.0) -> None:
+            T.COUNTER += 1
+            self.value = T.COUNTER
+
+    _patch_class_info(T, 'Counter[]', tag='parameter')
+    return T

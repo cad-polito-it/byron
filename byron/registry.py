@@ -179,6 +179,7 @@ def genetic_operator(*, num_parents: int = 1):
             offspring = [i for i in offspring if i.valid]
             for i in offspring:
                 i._lineage = Lineage(wrapper, tuple(weakref.proxy(a) for a in args))
+                i.discard_useless_components()
             if offspring:
                 wrapper.stats.offspring += len(offspring)
             else:

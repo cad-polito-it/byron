@@ -90,6 +90,13 @@ from byron.fitness_log import *
 # noinspection PyUnresolvedReferences
 from byron.sys import SYSINFO as sysinfo
 
+# noinspection PyUnresolvedReferences
+from byron.tools.node_to_string import node_to_str
+
+# noinspection PyUnresolvedReferences
+from byron.tools.graph import fasten_subtree_parameters
+
+
 #############################################################################
 # Patch names to ease debugging and visualization
 
@@ -112,7 +119,7 @@ del _patch_class_info
 # )
 
 __welcome__ = (
-    f'[bold]This is Byron v{__version__} "[italic]{__codename__}[/italic]"[/]\n'
+    f'[bold]This is Byron v{__version__.rsplit(".", maxsplit=1)[0]} "[italic]{__codename__}[/italic]"[/]\n'
     + f"[bold](c) 2023 G. Squillero & A. Tonda — Licensed under Apache-2.0[/]"
 )
 
