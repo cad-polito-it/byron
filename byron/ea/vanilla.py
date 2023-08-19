@@ -138,10 +138,11 @@ def vanilla_ea(
 
         old_best = best
         evaluator(population)
+        # population.freeze_individual()
         population.sort()
         population.individuals[mu:] = []
         best = population[0]
-        if old_best != best:
+        if best.fitness >> old_best.fitness:
             _new_best(population, evaluator)
 
         byron_logger.hesitant_log(
@@ -158,11 +159,5 @@ def vanilla_ea(
     byron_logger.info(
         f"vanilla_ea: 🏆 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True)}",
     )
-
-    # for p in population._memory:
-    #    if p not in population:
-    #        population += [p]
-
-    # print(f"Elapsed: {(end-start)/1e9:.2} seconds")
 
     return population

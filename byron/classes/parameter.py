@@ -25,7 +25,7 @@
 # =[ HISTORY ]===============================================================
 # v1 / April 2023 / Squillero (GX)
 
-__all__ = ["ParameterABC", "ParameterStructuralABC"]
+__all__ = ['ParameterABC', 'ParameterNumericABC', 'ParameterArrayABC', 'ParameterStructuralABC']
 
 from abc import ABC, abstractmethod
 from typing import Any
@@ -42,7 +42,7 @@ from byron.classes.node_reference import NodeReference
 class ParameterABC(Paranoid, ABC):
     """Generic class for storing a Macro parameter"""
 
-    __slots__ = ["target_variable"]  # Preventing the automatic creation of __dict__
+    __slots__ = []  # Preventing the automatic creation of __dict__
 
     COUNTER = 0
 
@@ -51,11 +51,14 @@ class ParameterABC(Paranoid, ABC):
         self._key = ParameterStructuralABC.COUNTER
         self._value = None
 
-    def __eq__(self, other: "ParameterABC") -> bool:
+    def __eq__(self, other: 'ParameterABC') -> bool:
         if type(self) != type(other):
             return False
         else:
             return self.key == other.key and self.value == other.value
+
+    def __hash__(self):
+        return hash((self.__class__, self.key, self.value))
 
     def __str__(self):
         return str(self.value)
@@ -79,6 +82,14 @@ class ParameterABC(Paranoid, ABC):
     @abstractmethod
     def mutate(self, strength: float = 1.0) -> None:
         pass
+
+
+class ParameterNumericABC(ParameterABC):
+    pass
+
+
+class ParameterArrayABC(ParameterABC):
+    pass
 
 
 class ParameterStructuralABC(ParameterABC, ABC):

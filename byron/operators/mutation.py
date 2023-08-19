@@ -38,7 +38,7 @@ from networkx import dfs_preorder_nodes
 
 
 @genetic_operator(num_parents=1)
-def single_parameter_mutation(parent: Individual, strength=1.0) -> list["Individual"]:
+def single_parameter_mutation(parent: Individual, strength=1.0) -> list['Individual']:
     offspring = parent.clone
     candidates = offspring.parameters
     if not candidates:
@@ -49,7 +49,22 @@ def single_parameter_mutation(parent: Individual, strength=1.0) -> list["Individ
 
 
 @genetic_operator(num_parents=1)
-def add_macro_to_bunch(parent: Individual, strength=1.0) -> list["Individual"]:
+def single_element_array_parameter_mutation(parent: Individual, strength=1.0) -> list['Individual']:
+    offspring = parent.clone
+    candidates = [p for p in offspring.parameters if isinstance(p, ParameterArrayABC)]
+    if not candidates:
+        raise ByronOperatorFailure
+    param = rrandom.choice(candidates)
+    new_value = list(param.value)
+    i = rrandom.randint(0, len(param.value) - 1)
+    new_value[i] = rrandom.choice(param.DIGITS)
+    param.value = ''.join(new_value)
+
+    return [offspring]
+
+
+@genetic_operator(num_parents=1)
+def add_macro_to_bunch(parent: Individual, strength=1.0) -> list['Individual']:
     offspring = parent.clone
     G = offspring.genome
     candidates = [
@@ -72,7 +87,7 @@ def add_macro_to_bunch(parent: Individual, strength=1.0) -> list["Individual"]:
 
 
 @genetic_operator(num_parents=1)
-def remove_macro_from_bunch(parent: Individual, strength=1.0) -> list["Individual"]:
+def remove_macro_from_bunch(parent: Individual, strength=1.0) -> list['Individual']:
     offspring = parent.clone
     G = offspring.genome
     frame_candidates = [

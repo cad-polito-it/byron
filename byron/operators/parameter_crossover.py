@@ -25,27 +25,38 @@
 # =[ HISTORY ]===============================================================
 # v1 / August 2023 / Squillero (GX)
 
-__all__ = []
+__all__ = ['array_parameter_uniform_crossover_choosy']
 
-import networkx as nx
-
-from byron.user_messages import *
 from byron.global_symbols import *
-from byron.registry import *
-from byron.classes.individual import *
-from byron.classes.node_reference import *
 from byron.operators.unroll import *
+from byron.user_messages import *
+from byron.classes import *
+from byron.registry import *
+from byron.functions import *
+from byron.randy import rrandom
+from byron.tools.graph import *
+
+from .tools import *
+
+# unfussy vs. chosy
 
 
-def _merge_individuals(individuals: list[Individual]) -> Individual:
-    # merge = Individual(individuals[0].top_frame)
-    merge = individuals[0].clone
-    merge._genome = nx.convert_node_labels_to_integers(merge._genome)
-    for ind in individuals[1:]:
-        new_nodezero = len(merge._genome)
-        merge._genome = nx.disjoint_union(merge._genome, ind._genome)
-        for u, v in merge._genome.edges(new_nodezero):
-            merge._genome.add_edge(NODE_ZERO, v, _type=FRAMEWORK)
-        merge._genome.remove_node(new_nodezero)
-    fasten_subtree_parameters(NodeReference(merge._genome, NODE_ZERO))
-    return merge
+@genetic_operator(num_parents=2)
+def array_parameter_uniform_crossover_choosy(
+    parent1: Individual, parent2: Individual, strength=1.0
+) -> list['Individual']:
+    offspring = parent1.clone
+    # offspring._genome = nx.convert_node_labels_to_integers(offspring._genome)
+
+    groups = group_parameters_on_classpath([offspring, parent2])
+    suitable_groups = {k: v for k, v in groups.items() if len(v) == 2}
+    if not suitable_groups:
+        raise ByronOperatorFailure
+
+    path = rrandom.choice(list(suitable_groups.keys()))
+    array_in_offspring = rrandom.choice(groups[path][offspring])
+    array_in_parent2 = rrandom.choice(groups[path][parent2])
+    new_value = [rrandom.choice([p1, p2]) for p1, p2 in zip(array_in_offspring.value, array_in_parent2.value)]
+    array_in_offspring.value = ''.join(new_value)
+
+    return [offspring]

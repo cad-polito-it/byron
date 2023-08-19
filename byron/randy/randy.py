@@ -179,7 +179,7 @@ class Randy:
             self._get_current_state() == self._get_saved_state()
         ), "Generator internal state has been modified externally"
         if strength == 1 or strength is None:
-            r = self._generator.choice(seq)
+            r = seq[self.randint(0, len(seq) - 1)]
         elif strength == 0:
             r = seq[loc]
         else:
@@ -199,12 +199,12 @@ class Randy:
         assert self._save_state()
         return next(val for val, cp in ((v, sum(p[0 : i + 1])) for i, v in enumerate(seq)) if cp >= r)
 
-    def choice(self, seq: Iterable[Any]) -> Any:
+    def choice(self, seq: Sequence[Any]) -> Any:
         """Returns a random element from the pool."""
         assert (
             self._get_current_state() == self._get_saved_state()
         ), "Generator internal state has been modified externally"
-        r = self._generator.choice(seq)
+        r = seq[self.randint(0, len(seq) - 1)]
         assert self._save_state()
         return r
 
@@ -233,9 +233,9 @@ class Randy:
         assert (
             self._get_current_state() == self._get_saved_state()
         ), "Generator internal state has been modified externally"
-        r = self._generator.random() * (b - a + 1) + a
+        r = self._generator.integers(a, b + 1)
         assert self._save_state()
-        return int(r)
+        return r
 
     def sigma_randint(self, a: int, b: int, *, loc: int | None = None, strength: float | None = None) -> int:
         """Returns a random integer in [a, b[ by perturbing loc with a given strength."""

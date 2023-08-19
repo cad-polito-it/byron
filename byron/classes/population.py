@@ -37,6 +37,7 @@ from byron.user_messages import *
 from byron.classes.selement import SElement
 from byron.classes.fitness import FitnessABC
 from byron.classes.individual import Individual
+from byron.classes.frozen_individual import FrozenIndividual
 
 
 class Population:
@@ -174,6 +175,7 @@ class Population:
 
         self._individuals = sorted_
 
-    def aging(self):
-        for i in self.individuals:
-            i.age = i.age + 1
+    def freeze_individual(self):
+        for ind in self._individuals:
+            if ind.is_finalized and not isinstance(ind, FrozenIndividual):
+                ind.__class__ = FrozenIndividual

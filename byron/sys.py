@@ -29,7 +29,7 @@
 Mostly useful in interactive environments such as a Jupyter Notebook.
 """
 
-__all__ = ["get_operators"]
+__all__ = ['get_operators', 'log_operators']
 
 import inspect
 from pprint import pformat
@@ -109,6 +109,17 @@ class SysInfo:
 def get_operators():
     snapshot = inspect.currentframe().f_globals
     return [o for o in snapshot.values() if hasattr(o, '_byron_') and o.type == GENETIC_OPERATOR]
+
+
+def log_operators():
+    all_ops = sorted(get_operators(), key=lambda o: (o.num_parents if o.num_parents is not None else -1, o.__name__))
+
+    descr = {None: 'init', 1: 'mut', 2: 'xover'}
+
+    logger.info(f"[b]DETECTED GENETIC OPERATORS[/b]")
+    for op in all_ops:
+        name = f'{op.__name__} ({descr[op.num_parents]})'
+        logger.info(f"[blue]*[/blue] {name:.<50s}: {op.stats}")
 
 
 assert "SYSINFO" not in globals(), f"SystemError (paranoia check): SYSINFO already initialized."

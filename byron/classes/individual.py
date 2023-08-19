@@ -143,17 +143,17 @@ class Individual(Paranoid):
             )
         )
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(self._id)
 
     # PROPERTIES
 
     @property
-    def id(self):
+    def id(self) -> int:
         return self._id
 
     @property
-    def is_finalized(self):
+    def is_finalized(self) -> bool:
         return self._fitness is not None
 
     @property
@@ -168,6 +168,7 @@ class Individual(Paranoid):
         scratch = self._fitness, self._lineage
         self._fitness, self._lineage = None, None
         I = deepcopy(self)
+        I.__class__ = Individual
         Individual.__COUNTER += 1
         I._id = Individual.__COUNTER
         self._fitness, self._lineage = scratch
@@ -176,59 +177,41 @@ class Individual(Paranoid):
         return I
 
     @property
-    def dfs_nodes(self):
+    def dfs_nodes(self) -> list[int]:
         """Return all node indexes in reliable order."""
         return list(nx.dfs_preorder_nodes(self.structure_tree))
 
     @property
-    def top_frame(self):
+    def top_frame(self) -> FrameABC:
         return self._genome.graph['top_frame']
 
     @property
-    def macros(self):
+    def macros(self) -> list[Macro]:
         """Return all macro instances in unreliable order."""
         return [
             self._genome.nodes[n]["_selement"] for n in self._genome if self._genome.nodes[n]["_type"] == MACRO_NODE
         ]
 
     @property
-    def frames(self):
+    def frames(self) -> list[FrameABC]:
         """Return all frame instances in unreliable order."""
         return [
             self._genome.nodes[n]["_selement"] for n in self._genome if self._genome.nodes[n]["_type"] == FRAME_NODE
         ]
 
     @property
-    def parameters(self):
+    def parameters(self) -> list[ParameterABC]:
         """Return all parameter instances in unreliable order."""
         return [p for n in self._genome for p in self._genome.nodes[n].values() if isinstance(p, ParameterABC)]
 
     @property
-    def OLDISH_valid(self) -> bool:
-        """Checks the syntax of the individual."""
-        for n in nx.dfs_preorder_nodes(self.structure_tree, source=NODE_ZERO):
-            if "_frame" in self._genome.nodes[n]:
-                if not self._genome.nodes[n]["_frame"].run_checks(NodeView(self._genome, n)):
-                    return False
-            elif "_macro" in self._genome.nodes[n]:
-                if not self._genome.nodes[n]["_macro"].run_checks(NodeView(self._genome, n)):
-                    return False
-                if not all(p.valid for p in self._genome.nodes[n]["_macro"].population_extra_parameters.values()):
-                    return False
-            elif "root" in self._genome.nodes[n] and self._genome.nodes[n]["root"] is True:
-                pass  # safe
-            else:
-                raise SyntaxWarning(f"Unknown node type: {self._genome.nodes[n]}")
-        return True
-
-    @property
-    def G(self):
+    def G(self) -> nx.classes.MultiDiGraph:
         """Individual's underlying NetworkX MultiDiGraph."""
         # TODO DeprecationWarning?
         return self._genome
 
     @property
-    def genome(self):
+    def genome(self) -> nx.classes.MultiDiGraph:
         """Individual's genome (ie. the underlying NetworkX MultiDiGraph)."""
         # TODO: Add paranoia check?
         return self._genome
@@ -260,12 +243,12 @@ class Individual(Paranoid):
         self._age = value
 
     @property
-    def fitness(self):
+    def fitness(self) -> FitnessABC:
         """The fitness of the individual."""
         assert self.is_finalized, f"{PARANOIA_VALUE_ERROR}: Individual not marked as final, fitness value not set"
         return self._fitness
 
-    def _check_fitness(self, value):
+    def _check_fitness(self, value) -> bool:
         check_valid_types(value, FitnessABC)
         assert (
             not self.is_finalized
@@ -273,7 +256,7 @@ class Individual(Paranoid):
         return True
 
     @fitness.setter
-    def fitness(self, value: FitnessABC):
+    def fitness(self, value: FitnessABC) -> None:
         """Set the fitness of the individual and update operator stats"""
         assert self._check_fitness(value)
         self._fitness = value
@@ -285,10 +268,12 @@ class Individual(Paranoid):
             value << i.fitness or not value.is_distinguishable(i.fitness) for i in self.lineage.parents
         ):
             self._lineage.operator.stats.failures += 1
-        logger.debug(
-            # f"Individual: {self.describe(include_fitness=True, include_birth=True, include_structure=True)}"
-            f"Individual: Fitness of {self} is {value}"
-        )
+        logger.debug(f"Individual: Fitness of {self} is {value}")
+
+        # Yeuch!
+        from .frozen_individual import FrozenIndividual
+
+        self.__class__ = FrozenIndividual
 
     #######################################################################
     # PUBLIC METHODS

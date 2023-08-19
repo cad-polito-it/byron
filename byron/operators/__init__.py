@@ -25,6 +25,7 @@
 # HISTORY
 # v1 / June 2023 / Squillero (GX)
 
+from .tools import *
 from .initializers import *
 from .mutation import *
-from ._graph_crossover import *
+from .parameter_crossover import *

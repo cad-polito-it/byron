@@ -34,13 +34,13 @@ from typing import Any, Hashable, SupportsInt
 
 from byron.user_messages import *
 from byron.tools.names import _patch_class_info
-from byron.classes.parameter import ParameterABC
+from byron.classes.parameter import *
 from byron.randy import rrandom
 
 
 @cache
 def _numeric(*, type_, min_, max_):
-    class T(ParameterABC):
+    class T(ParameterNumericABC):
         f"""An {type_} parameter in half-open range [{min_}, {max_})."""
 
         __slots__ = []  # Preventing the automatic creation of __dict__
@@ -184,7 +184,7 @@ def choice_parameter(alternatives: Collection[Hashable]) -> type[ParameterABC]:
 
 @cache
 def _array_parameter(symbols: tuple[str], length: int) -> type[ParameterABC]:
-    class T(ParameterABC):
+    class T(ParameterArrayABC):
         __slots__ = []  # Preventing the automatic creation of __dict__
 
         DIGITS = tuple(symbols)

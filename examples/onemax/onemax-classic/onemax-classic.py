@@ -17,7 +17,7 @@ import rich
 
 import byron
 
-NUM_BITS = 100
+NUM_BITS = 500
 
 
 @byron.fitness_function
@@ -37,9 +37,11 @@ def main():
     # evaluators.append(byron.evaluator.MakefileEvaluator('genome.dat', required_files=['onemax-shell.sh']))
 
     byron.logger.info("main: Using %s", evaluator)
-    population = byron.ea.vanilla_ea(top_frame, evaluator, max_generation=100, lambda_=20, mu=30, max_fitness=NUM_BITS)
-    # population[0].as_lgp('best-lgp.png')
-    # population[0].as_forest('best-forest.png')
+    population = byron.ea.vanilla_ea(
+        top_frame, evaluator, max_generation=5_000, lambda_=20, mu=30, max_fitness=NUM_BITS
+    )
+
+    byron.sys.log_operators()
 
 
 if __name__ == "__main__":
