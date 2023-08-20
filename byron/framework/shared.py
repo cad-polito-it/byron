@@ -28,7 +28,7 @@
 __all__ = ["make_shared_parameter"]
 
 from typing import Any
-from byron.classes.parameter import ParameterABC
+from byron.classes.parameter import *
 from byron.tools.names import _patch_class_info
 
 # MAKE KEY (TODO!!!)
@@ -38,13 +38,13 @@ _parameters = set()
 def make_shared_parameter(parameter: type[ParameterABC]) -> type[ParameterABC]:
     parameter_instance = parameter()
 
-    class T(ParameterABC):
+    class T(ParameterSharedABC):
         def __init__(self):
             if parameter_instance.key not in _parameters:
-                self._owner = True
+                self._is_owner = True
                 _parameters.add(parameter_instance.key)
             else:
-                self._owner = False
+                self._is_owner = False
 
         @property
         def value(self):
@@ -52,11 +52,15 @@ def make_shared_parameter(parameter: type[ParameterABC]) -> type[ParameterABC]:
 
         @value.setter
         def value(self, new_value):
-            if self._owner:
+            if self._is_owner:
                 parameter_instance.value = new_value
 
+        @property
+        def is_owner(self):
+            return self._is_owner
+
         def mutate(self, strength: float = 1.0) -> None:
-            if self._owner:
+            if self.is_owner:
                 parameter_instance.mutate(strength)
 
         def is_correct(self, obj: Any) -> bool:

@@ -25,7 +25,7 @@
 # =[ HISTORY ]===============================================================
 # v1 / April 2023 / Squillero (GX)
 
-__all__ = ['ParameterABC', 'ParameterNumericABC', 'ParameterArrayABC', 'ParameterStructuralABC']
+__all__ = ['ParameterABC', 'ParameterNumericABC', 'ParameterArrayABC', 'ParameterStructuralABC', 'ParameterSharedABC']
 
 from abc import ABC, abstractmethod
 from typing import Any
@@ -89,6 +89,10 @@ class ParameterNumericABC(ParameterABC):
 
 
 class ParameterArrayABC(ParameterABC):
+    pass
+
+
+class ParameterSharedABC(ParameterABC):
     pass
 
 
