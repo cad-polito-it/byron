@@ -62,17 +62,17 @@ def _numeric(*, type_, min_, max_):
 
             def mutate(self, strength: float = 1.0) -> None:
                 if strength == 1.0:
-                    self.value = rrandom.sigma_randint(min_, max_)
+                    self.value = rrandom.random_int(min_, max_)
                 else:
-                    self.value = rrandom.sigma_randint(min_, max_, loc=self._value, strength=strength)
+                    self.value = rrandom.random_int(min_, max_, loc=self._value, strength=strength)
 
         elif type_ == float:
 
             def mutate(self, strength: float = 1.0) -> None:
                 if strength == 1.0:
-                    self.value = rrandom.sigma_random(min_, max_)
+                    self.value = rrandom.random_float(min_, max_)
                 else:
-                    self.value = rrandom.sigma_random(min_, max_, loc=self._value, strength=strength)
+                    self.value = rrandom.random_float(min_, max_, loc=self._value, strength=strength)
 
     if type_ == int and min_ == 0 and any(max_ == 2**n for n in range(4, 128 + 1)):
         p = next(n for n in range(4, 128 + 1) if max_ == 2**n)
@@ -146,9 +146,9 @@ def _choice_parameter(alternatives: tuple[Hashable]) -> type[ParameterABC]:
 
         def mutate(self, strength: float = 1.0) -> None:
             if strength == 1.0:
-                self.value = rrandom.sigma_choice(alternatives)
+                self.value = rrandom.choice(alternatives)
             else:
-                self.value = rrandom.sigma_choice(alternatives, loc=alternatives.index(self._value), strength=strength)
+                self.value = rrandom.choice(alternatives, loc=alternatives.index(self._value), sigma=strength)
 
     # NOTE[GX]: alternative symbol: – (not a minus!)
     _patch_class_info(T, 'Choice[' + '┊'.join(str(a) for a in alternatives) + ']', tag='parameter')

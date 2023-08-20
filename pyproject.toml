@@ -63,6 +63,7 @@ pylint = "^2.17.4"
 pytest = "^7.4.0"
 black = {extras = ["jupyter"], version = "^23.7.0"}
 bumpver = "^2023.1126"
+seaborn = "^0.12.2"
 
 [build-system]
 requires = ["poetry-core"]

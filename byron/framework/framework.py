@@ -203,7 +203,7 @@ def bunch(
 
         @property
         def successors(self):
-            n_macros = rrandom.randint(T.SIZE[0], T.SIZE[1] - 1)
+            n_macros = rrandom.random_int(T.SIZE[0], T.SIZE[1])
             return [rrandom.choice(T.POOL) for _ in range(n_macros)]
 
     def check_out_degree(n):

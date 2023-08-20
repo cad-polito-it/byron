@@ -11,7 +11,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import logging
-import byron as byron
+import byron
 
 
 def test_shared():

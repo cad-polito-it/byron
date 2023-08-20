@@ -84,9 +84,9 @@ def _local_reference(
                 raise ByronOperatorFailure
 
             if strength == 1 or self.value is None:
-                self.value = rrandom.sigma_choice(pt, None, 1)
+                self.value = rrandom.choice(pt, None)
             else:
-                self.value = rrandom.sigma_choice(pt, pt.index(self.value), strength)
+                self.value = rrandom.sigmachoice(pt, pt.index(self.value), strength)
 
     _patch_class_info(
         T,

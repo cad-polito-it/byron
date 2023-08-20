@@ -106,9 +106,9 @@ def _global_reference(
             # first try
             potential_targets = self.get_potential_targets()
             if strength == 1.0:
-                target = rrandom.sigma_choice(potential_targets)
+                target = rrandom.choice(potential_targets)
             else:
-                target = rrandom.sigma_choice(potential_targets, self.value, strength)
+                target = rrandom.choice(potential_targets, self.value, sigma=strength)
             if target is None:
                 new_node_reference = unroll_selement(self._target_frame, self._node_reference.graph)
 
@@ -119,9 +119,9 @@ def _global_reference(
 
                 # second and last try
                 if strength == 1.0:
-                    target = rrandom.sigma_choice(self.get_potential_targets(add_none=False))
+                    target = rrandom.choice(self.get_potential_targets(add_none=False))
                 else:
-                    target = rrandom.sigma_choice(self.get_potential_targets(add_none=False), self.value, strength)
+                    target = rrandom.choice(self.get_potential_targets(add_none=False), self.value, sigma=strength)
 
             if not target:
                 raise ByronOperatorFailure

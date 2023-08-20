@@ -25,4 +25,8 @@
 # =[ HISTORY ]===============================================================
 # v1 / May 2023 / Squillero (GX)
 
-from .randy import *
+from .main import *
+
+assert "rrandom" not in globals(), f"SystemError (paranoia check): Randy the Random already initialized"
+rrandom = Randy(42)
+assert "rrandom" in globals(), f"SystemError (paranoia check): Randy the Random not initialized"

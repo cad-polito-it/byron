@@ -76,7 +76,7 @@ from byron import fitness_ as fitness
 from byron import fitness_ as fit
 
 # noinspection PyUnresolvedReferences
-from byron.randy.randy import rrandom
+from byron.randy import rrandom
 
 # noinspection PyUnresolvedReferences
 from byron.user_messages.messaging import logger

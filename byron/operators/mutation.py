@@ -56,7 +56,7 @@ def single_element_array_parameter_mutation(parent: Individual, strength=1.0) ->
         raise ByronOperatorFailure
     param = rrandom.choice(candidates)
     new_value = list(param.value)
-    i = rrandom.randint(0, len(param.value) - 1)
+    i = rrandom.random_int(0, len(param.value))
     new_value[i] = rrandom.choice(param.DIGITS)
     param.value = ''.join(new_value)
 
@@ -81,7 +81,7 @@ def add_macro_to_bunch(parent: Individual, strength=1.0) -> list['Individual']:
     new_macro_reference = unroll_selement(new_macro_type, G)
     G.add_edge(node, new_macro_reference.node, _type=FRAMEWORK)
     initialize_subtree(new_macro_reference)
-    i = rrandom.randint(0, len(successors))
+    i = rrandom.random_int(0, len(successors))
     set_successors_order(NodeReference(G, node), successors[:i] + [new_macro_reference.node] + successors[i:])
     return [offspring]
 
