@@ -116,7 +116,7 @@ def log_operators():
 
     descr = {None: 'init', 1: 'mut', 2: 'xover'}
 
-    logger.info(f"[b]DETECTED GENETIC OPERATORS[/b]")
+    logger.info(f"[b]REGISTERED GENETIC OPERATORS[/b]")
     for op in all_ops:
         name = f'{op.__name__} ({descr[op.num_parents]})'
         logger.info(f"[blue]*[/blue] {name:.<50s}: {op.stats}")

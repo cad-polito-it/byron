@@ -66,3 +66,10 @@ def test_randy_choice():
         for i, c in enumerate(alphabet):
             val = byron.rrandom.choice(alphabet, loc=i, sigma=0)
             assert val == c
+
+
+def test_randy_shuffle():
+    base = list(range(1000))
+    byron.rrandom.shuffle(base)
+    assert base != list(range(1000))
+    assert set(base) == set(list(range(1000)))

@@ -27,6 +27,7 @@
 
 __all__ = ['array_parameter_uniform_crossover_choosy']
 
+import byron
 from byron.global_symbols import *
 from byron.operators.unroll import *
 from byron.user_messages import *
@@ -48,7 +49,7 @@ def array_parameter_uniform_crossover_choosy(
     offspring = parent1.clone
     # offspring._genome = nx.convert_node_labels_to_integers(offspring._genome)
 
-    groups = group_parameters_on_classpath([offspring, parent2])
+    groups = group_parameters_on_classpath([offspring, parent2], parameter_type=ParameterArrayABC)
     suitable_groups = {k: v for k, v in groups.items() if len(v) == 2}
     if not suitable_groups:
         raise ByronOperatorFailure

@@ -62,7 +62,7 @@ def _elapsed(start, *, process: bool = False, steps: int = 0):
 
 def _new_best(population: Population, evaluator: EvaluatorABC):
     byron_logger.info(
-        f"vanilla_ea: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
+        f"VanillaEA: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
     )
 
 
@@ -95,7 +95,7 @@ def vanilla_ea(
 
     """
     start = perf_counter_ns(), process_time_ns()
-    byron_logger.info("vanilla_ea: 🍦 [b]VanillaEA started[/] ┈ %s", _elapsed(start, process=True))
+    byron_logger.info("VanillaEA: 🍦 [b]VanillaEA started[/] ┈ %s", _elapsed(start, process=True))
 
     SElement.is_valid = SElement._is_valid_debug
     population = Population(top_frame, extra_parameters=population_extra_parameters, memory=True)
@@ -113,7 +113,7 @@ def vanilla_ea(
     best = population[0]
     _new_best(population, evaluator)
 
-    byron_logger.info("vanilla_ea: End of initialization ┈ %s", _elapsed(start, steps=evaluator.fitness_calls))
+    byron_logger.info("VanillaEA: End of initialization ┈ %s", _elapsed(start, steps=evaluator.fitness_calls))
 
     stopping_conditions = list()
     stopping_conditions.append(lambda: population.generation >= max_generation)
@@ -148,16 +148,16 @@ def vanilla_ea(
         byron_logger.hesitant_log(
             1,
             LOGGING_INFO,
-            "vanilla_ea: End of generation %s ┈ %s",
+            "VanillaEA: End of generation %s ┈ %s",
             population.generation,
             _elapsed(start, steps=evaluator.fitness_calls),
         )
 
     end = process_time_ns()
 
-    byron_logger.info("vanilla_ea: 🍦 [b]VanillaEA completed[/] ┈ %s", _elapsed(start, process=True))
+    byron_logger.info("VanillaEA: 🍦 [b]VanillaEA completed[/] ┈ %s", _elapsed(start, process=True))
     byron_logger.info(
-        f"vanilla_ea: 🏆 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True)}",
+        f"VanillaEA: 🏆 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True)}",
     )
 
     return population

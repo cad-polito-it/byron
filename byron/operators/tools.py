@@ -63,14 +63,15 @@ def group_macros_on_classpath(
 
 
 def group_parameters_on_macro(
-    individuals: Sequence[Individual],
+    individuals: Sequence[Individual], *, parameter_type=None
 ) -> dict[SElement, dict[Individual, list[ParameterABC]]]:
+    if parameter_type is None:
+        parameter_type = ParameterABC
     groups = defaultdict(lambda: defaultdict(list))
-
     for ind in individuals:
         for node, selement in ind.genome.nodes(data='_selement'):
             groups[selement.__class__][ind].extend(
-                [p for p in ind.genome.nodes[node].values() if isinstance(p, ParameterABC)]
+                [p for p in ind.genome.nodes[node].values() if isinstance(p, parameter_type)]
             )
     # remove entries with empty values
     groups = {path: {p: v for p, v in values.items() if v} for path, values in groups.items()}
@@ -78,8 +79,10 @@ def group_parameters_on_macro(
 
 
 def group_parameters_on_classpath(
-    individuals: Sequence[Individual],
+    individuals: Sequence[Individual], *, parameter_type=None
 ) -> dict[tuple[SElement], dict[Individual, list[ParameterABC]]]:
+    if parameter_type is None:
+        parameter_type = ParameterABC
     groups = defaultdict(lambda: defaultdict(list))
     for ind in individuals:
         for node, path in (
@@ -88,7 +91,7 @@ def group_parameters_on_classpath(
             if isinstance(ind.genome.nodes[n]['_selement'], Macro)
         ):
             groups[tuple(ind.genome.nodes[v]['_selement'].__class__ for v in path)][ind].extend(
-                [p for p in ind.genome.nodes[node].values() if isinstance(p, ParameterABC)]
+                [p for p in ind.genome.nodes[node].values() if isinstance(p, parameter_type)]
             )
     # remove entries with empty values
     groups = {path: {p: v for p, v in values.items() if v} for path, values in groups.items()}

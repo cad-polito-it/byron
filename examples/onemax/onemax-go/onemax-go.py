@@ -55,19 +55,22 @@ def main():
     # evaluator = byron.evaluator.ParallelScriptEvaluator(
     #    'go', 'onemax.go', other_required_files=('main.go',), flags=('run',), timeout=5
     # )
+
+    byron.f.set_option('$dump_node_info', True)
     final_population = byron.ea.vanilla_ea(
         top_frame,
         evaluator,
-        max_generation=10,
+        max_generation=1,
         max_fitness=byron.fitness.make_fitness(64.0),
-        population_extra_parameters={'$dump_node_info': True},
     )
 
-    for i, I in final_population:
-        I.as_lgp(f'final-individual_{I.id}.png')
-        with open(f'final-individual_{I.id}.go', 'w') as out:
-            out.write(final_population.dump_individual(i))
-        print(I.describe(max_recursion=None))
+    byron.sys.log_operators()
+
+    # for i, I in final_population:
+    #    I.as_lgp(f'final-individual_{I.id}.png')
+    #    with open(f'final-individual_{I.id}.go', 'w') as out:
+    #        out.write(final_population.dump_individual(i))
+    #    print(I.describe(max_recursion=None))
 
 
 if __name__ == "__main__":
