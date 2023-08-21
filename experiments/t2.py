@@ -54,13 +54,13 @@ call = byron.f.macro("jmp {target}", target=global_ref)
 test_call = byron.f.bunch(call, size=5)
 mycode = byron.f.sequence([code_up, test_call, code_down], name="MyCode")
 
-prologue = byron.f.bunch(byron.f.macro("{_comment} PROLOGUE (node {_node.pathname})"))
-epilogue = byron.f.bunch([byron.f.macro("{_comment} EPILOGUE (node {_node.pathname})")])
+prologue = byron.f.bunch(byron.f.macro("{_comment} PROLOGUE (node {_node.path_string})"))
+epilogue = byron.f.bunch([byron.f.macro("{_comment} EPILOGUE (node {_node.path_string})")])
 
 program = byron.f.sequence([prologue, test_call, mycode, test_call, epilogue], name="Program")
 # program = byron.f.sequence([prologue, test_jmp, test_call, test_jmp, epilogue])
 
-# program.add_check(lambda node: node.successors[1].framework_out_degree == node.successors[2].framework_out_degree)
+# program.add_check(lambda node: node.successors[1].out_degree == node.successors[2].out_degree)
 # code_up.add_check(
 #    lambda node: all(node.successors[i].macro.v < node.successors[i + 1].macro.v for i in range(node.out_degree - 1)))
 # code_down.add_check(

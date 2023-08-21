@@ -28,8 +28,8 @@ proc = byron.f.sequence([entry_point, vanilla, "ret"], name="Wazoo")
 # call = byron.f.macro('call {sub}', sub=byron.f.integer_parameter(0, 256))
 body = byron.f.bunch([inst, inst, inst, call], size=10)
 
-# prologue = byron.f.bunch(byron.f.macro('{_comment} PROLOGUE (node {_node.pathname})'))
-# epilogue = byron.f.bunch([byron.f.macro('{_comment} EPILOGUE (node {_node.pathname})')])
+# prologue = byron.f.bunch(byron.f.macro('{_comment} PROLOGUE (node {_node.path_string})'))
+# epilogue = byron.f.bunch([byron.f.macro('{_comment} EPILOGUE (node {_node.path_string})')])
 
 program = byron.f.sequence([body])
 

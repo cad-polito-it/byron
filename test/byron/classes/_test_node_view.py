@@ -32,13 +32,6 @@ def test_nodeview_properties(sample_graph):
     assert node_view.id == 0
 
 
-def test_nodeview_attributes(sample_graph):
-    ref = byron.classes.NodeReference(sample_graph, 0)
-    node_view = byron.classes.NodeView(ref)
-
-    assert dict(node_view.attributes) == {"_macro": "macro1"}
-
-
 def test_nodeview_setattr(sample_graph):
     ref = byron.classes.NodeReference(sample_graph, 0)
     node_view = byron.classes.NodeView(ref)
@@ -61,13 +54,6 @@ def test_nodeview_getattr_deprecated_property(sample_graph):
 
     with pytest.deprecated_call():
         _ = node_view.G
-
-
-def test_nodeview_framework_tree(sample_graph):
-    ref = byron.classes.NodeReference(sample_graph, 0)
-    node_view = byron.classes.NodeView(ref)
-
-    assert len(node_view.framework_tree.edges) == 1
 
 
 def test_nodeview_predecessor(sample_graph):
@@ -106,13 +92,6 @@ def test_nodeview_path(sample_graph):
     assert node_view.path == (0, 1)
 
 
-def test_nodeview_pathname(sample_graph):
-    ref = byron.classes.NodeReference(sample_graph, 1)
-    node_view = byron.classes.NodeView(ref)
-
-    assert node_view.pathname == "n0.n1"
-
-
 def test_nodeview_out_degree(sample_graph):
     ref = byron.classes.NodeReference(sample_graph, 0)
     node_view = byron.classes.NodeView(ref)
@@ -131,7 +110,7 @@ def test_nodeview_kind_out_degree(sample_graph):
     ref = byron.classes.NodeReference(sample_graph, 0)
     node_view = byron.classes.NodeView(ref)
 
-    assert node_view.framework_out_degree == 1
+    assert node_view.out_degree == 1
 
 
 def test_nodeview_kind_in_degree(sample_graph):

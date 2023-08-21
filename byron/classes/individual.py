@@ -490,21 +490,21 @@ class Individual(Paranoid):
 
             # --[node]-------------------------------------------------------
             bag = ValueBag(local_parameters)
-            node_str = "{_text_before_node}".format(**bag)
+            node_str = '{_text_before_node}'.format(**bag)
             if nr.graph.in_degree(nr.node) > 1:
                 node_str += bag['_label'].format(**bag)
             if nr.graph.nodes[nr.node]['_type'] == MACRO_NODE:
                 node_str += '{_text_before_macro}'.format(**bag)
                 node_str += nr.graph.nodes[nr.node]['_selement'].dump(bag)
-                if bag["$dump_node_info"]:
+                if bag['$dump_node_info'] and nr.node != NODE_ZERO:
                     if node_str:
                         node_str += '  '
-                    node_str += '{_comment} 🖋 {_node.pathname} ➜ {_node.name}'.format(**bag)
-                node_str += "{_text_after_macro}".format(**bag)
+                    node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.selement}'.format(**bag)
+                node_str += '{_text_after_macro}'.format(**bag)
             elif nr.graph.nodes[nr.node]["_type"] == FRAME_NODE:
-                node_str += "{_text_before_frame}".format(**bag)
-                if bag["$dump_node_info"]:
-                    node_str += "{_comment} 🖋 {_node.pathname} ➜ {_node.name}{_text_after_macro}".format(**bag)
+                node_str += '{_text_before_frame}'.format(**bag)
+                if bag['$dump_node_info']:
+                    node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.selement}{_text_after_macro}'.format(**bag)
                 node_str += "{_text_after_frame}".format(**bag)
             node_str += "{_text_after_node}".format(**bag)
             # ---------------------------------------------------------------
@@ -545,12 +545,12 @@ class Individual(Paranoid):
             node_str += '{_text_before_macro}'.format(**bag)
             node_str += nr.graph.nodes[nr.node]['_selement'].dump(bag)
             if bag["$dump_node_info"]:
-                node_str += "  {_comment} 🖋 {_node.pathname} ➜ {_node.name}".format(**bag)
+                node_str += "  {_comment} 🖋 {_node.path_string} ➜ {_node.selement}".format(**bag)
             node_str += "{_text_after_macro}".format(**bag)
         elif nr.graph.nodes[nr.node]["_type"] == FRAME_NODE:
             node_str += "{_text_before_frame}".format(**bag)
             if bag["$dump_node_info"]:
-                node_str += "{_comment} 🖋 {_node.pathname} ➜ {_node.name}{_text_after_macro}".format(**bag)
+                node_str += "{_comment} 🖋 {_node.path_string} ➜ {_node.selement}{_text_after_macro}".format(**bag)
             node_str += "{_text_after_frame}".format(**bag)
         node_str += "{_text_after_node}".format(**bag)
         # ====================================================================

@@ -68,10 +68,10 @@ def define_library():
 def main():
     top_frame = define_library()
 
-    # evaluator = byron.evaluator.ScriptEvaluator('./evaluate-all.sh', filename_format="individual{i:06}.go")
-    evaluator = byron.evaluator.ParallelScriptEvaluator(
-        'go', 'onemax.go', other_required_files=('main.go',), flags=('run',), timeout=5, default_result='0'
-    )
+    evaluator = byron.evaluator.ScriptEvaluator('./evaluate-all.sh', filename_format="individual{i:06}.go")
+    # evaluator = byron.evaluator.ParallelScriptEvaluator(
+    #     'go', 'onemax.go', other_required_files=('main.go',), flags=('run',), timeout=5, default_result='0'
+    # )
 
     byron.f.set_option('$dump_node_info', True)
     final_population = byron.ea.vanilla_ea(

@@ -42,6 +42,9 @@ class FrameABC(SElement, Paranoid):
         super().__init__()
         self._checks = list()
 
+    def __str__(self):
+        return self.__class__.__name__
+
     @property
     def valid(self) -> bool:
         # TODO!
