@@ -41,6 +41,8 @@ def main():
         top_frame, evaluator, max_generation=5_000, lambda_=20, mu=30, max_fitness=NUM_BITS
     )
 
+    print()
+
     byron.sys.log_operators()
 
 

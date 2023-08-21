@@ -242,13 +242,13 @@ class Individual(Paranoid):
         logger.debug(f"Individual: Fitness of {self} is {value}")
 
     @property
-    def as_message(self) -> frozenset[int]:
-        message = set()
+    def as_message(self) -> list[int]:
+        message = list()
         for node, data in [(n, e) for n, e in self._genome.nodes(data=True)]:
-            message |= data['_selement'].shannon
+            message.extend(data['_selement'].shannon)
             for k in filter(lambda k: k.isalnum(), data):
-                message |= {hash((node, data[k].value))}
-        return frozenset(message)
+                message.extend([hash((node, data[k].value))])
+        return message
 
     #######################################################################
     # CACHED PROPERTIED

@@ -76,8 +76,8 @@ class Macro(SElement, Paranoid):
         return self.PARAMETERS
 
     @property
-    def shannon(self) -> set[int]:
-        return {hash(self.__class__)}
+    def shannon(self) -> list[int]:
+        return [hash(self.__class__)]
 
     # def __getitem__(self, parameter: str) -> Any:
     #    assert Macro.is_name_valid(parameter), \

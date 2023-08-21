@@ -91,5 +91,5 @@ class SElement(metaclass=SElementMeta):
         return check_result
 
     @property
-    def shannon(self) -> set[int]:
+    def shannon(self) -> list[int]:
         raise NotImplementedError

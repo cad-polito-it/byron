@@ -96,6 +96,9 @@ from byron.tools.node_to_string import node_to_str
 # noinspection PyUnresolvedReferences
 from byron.tools.graph import fasten_subtree_parameters
 
+# noinspection PyUnresolvedReferences
+from byron.tools.entropy import *
+
 
 #############################################################################
 # Patch names to ease debugging and visualization

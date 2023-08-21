@@ -152,7 +152,7 @@ def vanilla_ea(
         byron_logger.hesitant_log(
             1,
             LOGGING_INFO,
-            "VanillaEA: End of generation %s ┈ %s",
+            f"VanillaEA: End of generation %s (𝐻: {population.entropy:.4f}) ┈ %s",
             population.generation,
             _elapsed(start, steps=evaluator.fitness_calls),
         )

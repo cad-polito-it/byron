@@ -37,6 +37,7 @@ from byron.user_messages import *
 from byron.classes.selement import SElement
 from byron.classes.fitness import FitnessABC
 from byron.classes.individual import Individual
+from byron.tools.entropy import *
 
 
 class Population:
@@ -93,6 +94,11 @@ class Population:
     @property
     def finalized(self):
         return list(filter(lambda x: x[1].is_finalized, enumerate(self._individuals)))
+
+    @property
+    def entropy(self):
+        # calculate_delta_entropy(i.as_message for i in self._individuals)
+        return calculate_entropy(i.as_message for i in self._individuals)
 
     def __getitem__(self, item):
         return self._individuals[item]

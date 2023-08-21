@@ -67,8 +67,8 @@ class FrameABC(SElement, Paranoid):
         return True
 
     @property
-    def shannon(self) -> set[int]:
-        return {hash(self.__class__)}
+    def shannon(self) -> list[int]:
+        return [hash(self.__class__)]
 
 
 class FrameSequence:

@@ -54,8 +54,8 @@ class MacroZero(Macro):
         return True
 
     @property
-    def shannon(self) -> set[int]:
-        return {hash(self.__class__)}
+    def shannon(self) -> list[int]:
+        return [hash(self.__class__)]
 
 
 class Info(Macro):
@@ -74,8 +74,8 @@ class Info(Macro):
         return True
 
     @property
-    def shannon(self) -> set[int]:
-        return {hash(self.__class__)}
+    def shannon(self) -> list[int]:
+        return [hash(self.__class__)]
 
 
 _patch_class_info(
