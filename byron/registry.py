@@ -48,8 +48,8 @@ from byron.classes.fitness import *
 from byron import fitness
 from byron.fitness_log import *
 
-FAMILYTREE_FILENAME = "genealogy.db"
-FITNESS_LOG_FILENAME = "fitness.db"
+FAMILYTREE_FILENAME = 'genealogy.db'
+FITNESS_LOG_FILENAME = 'fitness.db'
 
 
 def _genetic_operator_proto(*, strength=1.0) -> list[Individual] | None:
@@ -99,7 +99,7 @@ class Statistics:
 
 
 def fitness_function(
-    func: Callable[..., FitnessABC] | None = None, /, *, type_: type[FitnessABC] = None, backend: str | None = "list"
+    func: Callable[..., FitnessABC] | None = None, /, *, type_: type[FitnessABC] = None, backend: str | None = 'list'
 ):
     if type_ is None:
         type_ = lambda f: fitness.make_fitness(f)

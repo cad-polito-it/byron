@@ -13,7 +13,7 @@
 import networkx as nx
 import byron as byron
 
-FRAMEWORK = "framework"
+FRAMEWORK = 'framework'
 NODE_ZERO = 0
 
 

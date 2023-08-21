@@ -223,7 +223,7 @@ class PythonEvaluator(EvaluatorABC):
         ), f"TypeError: {fitness_function} has not be registered as a MicgroGP fitness function"
 
         if not backend or (self._max_workers is not None and self._max_workers < 2):
-            backend = ""
+            backend = ''
             self._max_workers = 1
 
         self._fitness_function = fitness_function
@@ -446,7 +446,7 @@ class ScriptEvaluator(EvaluatorABC):
         script_name: str,
         args: Sequence[str] | None = None,
         *,
-        filename_format: str = "phenotype_{i:x}.txt",
+        filename_format: str = 'phenotype_{i:x}.txt',
         timeout: int | None = 60,
         **kwargs,
     ) -> None:

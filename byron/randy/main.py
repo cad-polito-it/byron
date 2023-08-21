@@ -29,9 +29,9 @@ class Randy:
     """Safe, reproducible random numbers for EA applications."""
 
     SMALL_NUMBER = 1e-15
-    LOG_FILENAME = "randy.log"
+    LOG_FILENAME = 'randy.log'
 
-    __slots__ = ["_generator", "_calls", "_saved_state"]
+    __slots__ = ['_generator', '_calls', '_saved_state']
 
     def __getstate__(self):
         return self._generator.__getstate__(), self._calls

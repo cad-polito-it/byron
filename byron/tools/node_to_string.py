@@ -43,7 +43,7 @@ def node_to_str(nr: NodeReference) -> str:
         except KeyError as k:
             if k.args[0] in extra_parameters:
                 return '?'
-            extra_parameters[k.args[0]] = "{" + k.args[0] + "}"
+            extra_parameters[k.args[0]] = '{' + k.args[0] + '}'
         except Exception as e:
             return f'{e}'
     return dumped

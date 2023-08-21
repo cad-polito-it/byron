@@ -98,7 +98,7 @@ def _patch_class_info(obj: type, name: str | None, tag: str | None = None) -> No
     if name:
         obj.__name__ = name
     obj.__qualname__ = obj.__name__
-    obj.__module__ = "byron"
+    obj.__module__ = 'byron'
 
     if tag is not None:
         obj.__module__ += f".{tag}"

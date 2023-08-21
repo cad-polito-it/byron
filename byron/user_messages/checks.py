@@ -33,8 +33,8 @@ from collections.abc import Collection
 from .messaging import logger
 from .exception import *
 
-PARANOIA_TYPE_ERROR = "TypeError (paranoia check)"
-PARANOIA_VALUE_ERROR = "ValueError (paranoia check)"
+PARANOIA_TYPE_ERROR = 'TypeError (paranoia check)'
+PARANOIA_VALUE_ERROR = 'ValueError (paranoia check)'
 
 
 def check_valid_type(obj, valid: type, subclass: bool = False) -> bool:
@@ -48,7 +48,7 @@ def check_valid_type(obj, valid: type, subclass: bool = False) -> bool:
     elif not subclass and isinstance(obj, type) and issubclass(obj, valid):
         hint = " — did you forget to instantiate the object?"
     else:
-        hint = ""
+        hint = ''
     logger.error(
         "TypeError: invalid type %s for %s: expected %s%s%s",
         type(obj),

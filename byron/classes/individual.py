@@ -125,7 +125,7 @@ class Individual(Paranoid):
         self._genome = nx.MultiDiGraph(node_count=NODE_ZERO + 1, top_frame=top_frame)
         self._genome.add_node(NODE_ZERO, _selement=MacroZero(), _type=MACRO_NODE)
         self._fitness = None
-        self._str = ""
+        self._str = ''
         self._lineage = None
         self._age = Age()
 
@@ -403,7 +403,7 @@ class Individual(Paranoid):
         include_age: bool = True,
         include_lineage: bool = True,
         max_recursion: int = 0,
-        _indent_level: str = "",
+        _indent_level: str = '',
     ):
         desc = str(self)
         delem = list()
@@ -438,12 +438,12 @@ class Individual(Paranoid):
                 max_recursion -= 1
             for p in self.lineage.parents:
                 try:
-                    descr += "\n" + p.describe(
+                    descr += '\n' + p.describe(
                         include_fitness=include_fitness,
                         include_structure=include_structure,
                         include_lineage=include_lineage,
                         max_recursion=max_recursion,
-                        _indent_level=_indent_level + "  ",
+                        _indent_level=_indent_level + '  ',
                     )
                 except ReferenceError:
                     pass
@@ -505,8 +505,8 @@ class Individual(Paranoid):
                 node_str += '{_text_before_frame}'.format(**bag)
                 if bag['$dump_node_info']:
                     node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.selement}{_text_after_macro}'.format(**bag)
-                node_str += "{_text_after_frame}".format(**bag)
-            node_str += "{_text_after_node}".format(**bag)
+                node_str += '{_text_after_frame}'.format(**bag)
+            node_str += '{_text_after_node}'.format(**bag)
             # ---------------------------------------------------------------
 
             if not bag['$omit_from_dump']:
@@ -538,21 +538,21 @@ class Individual(Paranoid):
 
         # ==[NODE]============================================================
         bag = ValueBag(local_parameters)
-        node_str = "{_text_before_node}".format(**bag)
+        node_str = '{_text_before_node}'.format(**bag)
         if nr.graph.in_degree(nr.node) > 1:
             node_str += bag['_label'].format(**bag)
         if nr.graph.nodes[nr.node]['_type'] == MACRO_NODE:
             node_str += '{_text_before_macro}'.format(**bag)
             node_str += nr.graph.nodes[nr.node]['_selement'].dump(bag)
-            if bag["$dump_node_info"]:
-                node_str += "  {_comment} 🖋 {_node.path_string} ➜ {_node.selement}".format(**bag)
-            node_str += "{_text_after_macro}".format(**bag)
-        elif nr.graph.nodes[nr.node]["_type"] == FRAME_NODE:
-            node_str += "{_text_before_frame}".format(**bag)
-            if bag["$dump_node_info"]:
-                node_str += "{_comment} 🖋 {_node.path_string} ➜ {_node.selement}{_text_after_macro}".format(**bag)
-            node_str += "{_text_after_frame}".format(**bag)
-        node_str += "{_text_after_node}".format(**bag)
+            if bag['$dump_node_info']:
+                node_str += '  {_comment} 🖋 {_node.path_string} ➜ {_node.selement}'.format(**bag)
+            node_str += '{_text_after_macro}'.format(**bag)
+        elif nr.graph.nodes[nr.node]['_type'] == FRAME_NODE:
+            node_str += '{_text_before_frame}'.format(**bag)
+            if bag['$dump_node_info']:
+                node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.selement}{_text_after_macro}'.format(**bag)
+            node_str += '{_text_after_frame}'.format(**bag)
+        node_str += '{_text_after_node}'.format(**bag)
         # ====================================================================
 
         dump += node_str

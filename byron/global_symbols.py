@@ -67,21 +67,21 @@ from collections import defaultdict
 import multiprocessing
 import re
 
-__version__ = "0.8a1.dev7"
-__date__ = "20-08-2023"
-__codename__ = 'Don Juan'
+__version__ = "0.8a1.dev8"
+__date__ = "21-08-2023"
+__codename__ = "Don Juan"
 __author__ = "Giovanni Squillero and Alberto Tonda"
 __copyright__ = "Copyright (c) 2023 Giovanni Squillero and Alberto Tonda"
 
 #####################################################################################################################
 # Auto-detected "modes"
 
-test_mode = "pytest" in sys.modules
+test_mode = 'pytest' in sys.modules
 main_process = multiprocessing.current_process().name == "MainProcess"
 
 notebook_mode = False
 try:
-    if "zmqshell" in str(type(get_ipython())):
+    if 'zmqshell' in str(type(get_ipython())):
         notebook_mode = True
 except NameError:
     pass
@@ -135,21 +135,21 @@ LOGGING_INFO = logging.INFO
 LOGGING_WARNING = logging.WARNING
 LOGGING_ERROR = logging.ERROR
 
-FRAMEWORK = "framework"
-LINK = "link"
-FRAME_NODE = "frame"
-MACRO_NODE = "macro"
-SEQUENCE_FRAME = "sequence"
-ALTERNATIVE_FRAME = "alternative"
-MACRO_BUNCH_FRAME = "bunch"
-BNF_FRAME = "bunch"
+FRAMEWORK = 'framework'
+LINK = 'link'
+FRAME_NODE = 'frame'
+MACRO_NODE = 'macro'
+SEQUENCE_FRAME = 'sequence'
+ALTERNATIVE_FRAME = 'alternative'
+MACRO_BUNCH_FRAME = 'bunch'
+BNF_FRAME = 'bunch'
 NODE_ZERO = 0
-BYRON_TAG = "To have joy, one must share it"
-GENETIC_OPERATOR = "genetic_operator"
-FITNESS_FUNCTION = "fitness_function"
-PARANOIA_TYPE_ERROR = "TypeError (paranoia check)"
-PARANOIA_VALUE_ERROR = "ValueError (paranoia check)"
-PARANOIA_SYSTEM_ERROR = "SystemError (paranoia check)"
+BYRON_TAG = 'To have joy, one must share it'
+GENETIC_OPERATOR = 'genetic_operator'
+FITNESS_FUNCTION = 'fitness_function'
+PARANOIA_TYPE_ERROR = 'TypeError (paranoia check)'
+PARANOIA_VALUE_ERROR = 'ValueError (paranoia check)'
+PARANOIA_SYSTEM_ERROR = 'SystemError (paranoia check)'
 
 DEFAULT_OPTIONS = {
     '$dump_node_info': False,
