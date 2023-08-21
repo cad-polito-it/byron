@@ -159,6 +159,9 @@ def genetic_operator(*, num_parents: int = 1):
         @wraps(func)
         def wrapper(*args: Individual, **kwargs):
             wrapper.stats.calls += 1
+
+            logger.debug(f"genetic_operator: {func.__name__}({', '.join(str(_) for _ in args)})")
+
             try:
                 offspring = func(*args, **kwargs)
             except ByronOperatorFailure:

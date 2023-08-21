@@ -24,7 +24,7 @@
 # =[ HISTORY ]===============================================================
 # v1 / June 2023 / Squillero (GX)
 
-from typing import Optional, Callable, Any, Sequence
+from typing import Optional, Callable, Sequence
 from uuid import uuid1 as generate_uuid
 
 from byron.user_messages import *
@@ -89,3 +89,7 @@ class SElement(metaclass=SElementMeta):
                 logger.info(f"NodeChecks: Failed check on genome 0x{id(node.genome):x}: {f.__qualname__}({node})")
                 check_result = False
         return check_result
+
+    @property
+    def shannon(self) -> set[int]:
+        raise NotImplementedError

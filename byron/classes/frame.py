@@ -66,6 +66,10 @@ class FrameABC(SElement, Paranoid):
         FrameABC._registered_names.add(name)
         return True
 
+    @property
+    def shannon(self) -> set[int]:
+        return {hash(self.__class__)}
+
 
 class FrameSequence:
     r"""Empty class to mark frames of type "Sequence"

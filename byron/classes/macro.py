@@ -75,6 +75,10 @@ class Macro(SElement, Paranoid):
     def parameter_types(self) -> dict[str, type[ParameterABC]]:
         return self.PARAMETERS
 
+    @property
+    def shannon(self) -> set[int]:
+        return {hash(self.__class__)}
+
     # def __getitem__(self, parameter: str) -> Any:
     #    assert Macro.is_name_valid(parameter), \
     #        f"{PARANOIA_VALUE_ERROR}: invalid parameter name: {parameter}"
@@ -85,9 +89,9 @@ class Macro(SElement, Paranoid):
         # return f'Macro❬{self.__class__.__name__}❭'
         return self.__class__.__name__
 
-    def dump(self, extra_parameters: ValueBag) -> str:
-        check_valid_type(extra_parameters, ValueBag)
-        return self.text.format(**extra_parameters)
+    def dump(self, parameters: ValueBag) -> str:
+        assert check_valid_type(parameters, ValueBag)
+        return self.text.format(**parameters)
 
     @staticmethod
     def is_name_valid(name: str) -> bool:

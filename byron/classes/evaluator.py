@@ -35,7 +35,7 @@ __all__ = [
 
 from typing import Callable, Sequence
 from abc import ABC, abstractmethod
-
+from dataclasses import dataclass
 from itertools import zip_longest
 
 import os
@@ -54,6 +54,15 @@ from byron.fitness import make_fitness
 from byron.classes.population import Population
 from byron.registry import *
 from byron.global_symbols import *
+
+
+@dataclass(kw_only=True, slots=True)
+class DebugInfo:
+    cmdline: str
+    stdout: str
+    stderr: str
+    returncode: int
+    cwd: str
 
 
 class EvaluatorABC(ABC):
@@ -551,6 +560,7 @@ class ParallelScriptEvaluator(EvaluatorABC):
         other_required_files: Sequence[str] = (),
         flags: Sequence[str] = tuple(),
         timeout: int | None = 60,
+        default_result: str = '',
         **kwargs,
     ) -> None:
         r"""
@@ -568,6 +578,8 @@ class ParallelScriptEvaluator(EvaluatorABC):
             Files that need to be present for the makefile to work in addition to `makefile` and `filename`
         timeout
             Seconds to wait for make completion (``None`` indefinitely)
+        default_result
+            Default result if the script returns non-zero exit status
         kwargs
             Extra parameters for :class:`classes.evaluator.EvaluatorABC` (ie. `strip_phenotypes`, `max_workers`)
         """
@@ -577,12 +589,13 @@ class ParallelScriptEvaluator(EvaluatorABC):
         self._flags = tuple(flags)
         self._other_required_files = tuple(other_required_files)
         self._timeout = timeout
+        self._default_result = default_result
         self._byron_base_dir = os.getcwd()
 
     def __str__(self):
         return f"{self.__class__.__name__}❬{self._filename}❭"
 
-    def _evaluate(self, phenotype: str):
+    def _evaluate(self, phenotype: str) -> DebugInfo:
         with tempfile.TemporaryDirectory(prefix="byron_", ignore_cleanup_errors=True) as tmp_dir:
             for f in [*self._other_required_files]:
                 assert os.path.exists(
@@ -596,18 +609,19 @@ class ParallelScriptEvaluator(EvaluatorABC):
                 cwd=tmp_dir,
                 universal_newlines=True,
                 shell=False,
-                check=True,
+                check=False,
                 text=True,
                 timeout=self._timeout,
                 capture_output=True,
             )
 
-            if result is None or not result.stdout:
-                raise ChildProcessError(
-                    f"ParallelScriptEvaluator:evaluate: Command '{' '.join([self._script, *self._flags])}' in {tmp_dir} returned empty stdout"
-                    + (f" and stderr '{result.stderr}')" if result and result.stderr else "")
-                )
-        return result
+        return DebugInfo(
+            cmdline=' '.join([self._script, *self._flags, self._filename, *self._other_required_files]),
+            stdout=result.stdout,
+            stderr=result.stderr,
+            returncode=result.returncode,
+            cwd=tmp_dir,
+        )
 
     def evaluate_population(self, population: Population) -> None:
         indexes = list()
@@ -620,11 +634,26 @@ class ParallelScriptEvaluator(EvaluatorABC):
         with ThreadPoolExecutor(max_workers=self._max_workers, thread_name_prefix="byron$") as pool:
             for i, result in zip(indexes, pool.map(self._evaluate, phenotypes)):
                 self._fitness_calls += 1
-                if result is None:
-                    raise RuntimeError(f"Thread failed (returned None)")
-                else:
-                    value = [float(r) for r in result.stdout.split()]
-                    if len(value) == 1:
-                        value = value[0]
-                    fitness = make_fitness(value)
-                    population[i].fitness = fitness
+                if result.returncode and self._default_result:
+                    logger.info(
+                        f"ParallelScriptEvaluator: failed to evaluate {population[i]} (exit status: [red]{result.returncode}[/red])"
+                    )
+                    logger.debug(
+                        f"ParallelScriptEvaluator: command \"{result.cmdline}\" exit status: {result.returncode}"
+                        + f"\n[red]---[/red]\n{result.stderr}\n[red]---[/red]"
+                    )
+                    result.stdout = self._default_result + '\n'
+                elif not self._default_result:
+                    logger.error(f"ParallelScriptEvaluator: failed to evaluate {population[i]}")
+                    logger.error(
+                        f"command \"{result.cmdline}\" exit status: {result.returncode}"
+                        + f"\n[red]---[/red]\n{result.stderr}\n[red]---[/red]"
+                    )
+                    raise ValueError(
+                        "ParallelScriptEvaluator: {population[i]}: ParallelScriptEvaluator: script returned non-zero exit status"
+                    )
+                value = [float(r) for r in result.stdout.split()]
+                if len(value) == 1:
+                    value = value[0]
+                fitness = make_fitness(value)
+                population[i].fitness = fitness

@@ -68,26 +68,32 @@ def define_library():
 def main():
     top_frame = define_library()
 
-    evaluator = byron.evaluator.ScriptEvaluator('./evaluate-all.sh', filename_format="individual{i:06}.go")
-    # evaluator = byron.evaluator.ParallelScriptEvaluator(
-    #    'go', 'onemax.go', other_required_files=('main.go',), flags=('run',), timeout=5
-    # )
+    # evaluator = byron.evaluator.ScriptEvaluator('./evaluate-all.sh', filename_format="individual{i:06}.go")
+    evaluator = byron.evaluator.ParallelScriptEvaluator(
+        'go', 'onemax.go', other_required_files=('main.go',), flags=('run',), timeout=5, default_result='0'
+    )
 
     byron.f.set_option('$dump_node_info', True)
     final_population = byron.ea.vanilla_ea(
         top_frame,
         evaluator,
-        max_generation=1_000,
+        max_generation=100,
+        mu=50,
+        lambda_=20,
         max_fitness=byron.fitness.make_fitness(64.0),
     )
 
+    byron.logger.info("[b]POPULATION[/b]")
+    max_f = max(i.fitness for i in final_population.individuals)
+    min_f = min(i.fitness for i in final_population.individuals)
+    byron.logger.info(f"* {len(final_population)} individuals ({min_f} – {max_f})")
     byron.sys.log_operators()
 
-    # for i, I in final_population:
-    #    I.as_lgp(f'final-individual_{I.id}.png')
-    #    with open(f'final-individual_{I.id}.go', 'w') as out:
-    #        out.write(final_population.dump_individual(i))
-    #    print(I.describe(max_recursion=None))
+    for i, I in final_population:
+        # I.as_lgp(f'final-individual_{I.id}.png')
+        with open(f'final-individual_{I.id}.go', 'w') as out:
+            out.write(final_population.dump_individual(i))
+        byron.logger.info(f"OneMaxGo: {I.describe(max_recursion=None)}")
 
 
 if __name__ == "__main__":

@@ -27,6 +27,7 @@
 
 __all__ = ["vanilla_ea"]
 
+from typing import Any
 from time import perf_counter_ns, process_time_ns
 from datetime import timedelta
 
@@ -133,7 +134,10 @@ def vanilla_ea(
                 parents.append(tournament_selection(population, 1))
             new_individuals += op(*parents)
 
-        assert new_individuals, f"{PARANOIA_VALUE_ERROR}: empty offspring (no new individuals)."
+        if not new_individuals:
+            byron_logger.warning(
+                "VanillaEA: empty offspring (no new individuals) ┈ %s", _elapsed(start, steps=evaluator.fitness_calls)
+            )
         population += new_individuals
 
         old_best = best

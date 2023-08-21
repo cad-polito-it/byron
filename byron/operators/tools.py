@@ -85,6 +85,7 @@ def group_parameters_on_classpath(
         parameter_type = ParameterABC
     groups = defaultdict(lambda: defaultdict(list))
     for ind in individuals:
+        assert set(ind.structure_tree.nodes) == set(ind.genome.nodes)
         for node, path in (
             (n, p)
             for n, p in nx.single_source_dijkstra_path(ind.structure_tree, 0).items()

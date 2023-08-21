@@ -33,6 +33,7 @@ from typing import Any, Callable, Optional
 from itertools import chain
 from copy import deepcopy, copy
 import operator
+from functools import cache, cached_property
 
 import networkx as nx
 
@@ -132,7 +133,8 @@ class Individual(Paranoid):
         self._genome.clear()  # NOTE[GX]: I guess it's useless...
 
     def __str__(self):
-        return f"𝕚{self._id}"
+        # return f"𝕚{self._id}" + " | " + str(hash(self.as_message)) + ' | ' + str(self.structure_tree)
+        return f"{'𝐢' if self.is_finalized else '𝕚'}{self._id}"
 
     def __eq__(self, other) -> bool:
         return (
@@ -186,25 +188,6 @@ class Individual(Paranoid):
         return self._genome.graph['top_frame']
 
     @property
-    def macros(self) -> list[Macro]:
-        """Return all macro instances in unreliable order."""
-        return [
-            self._genome.nodes[n]["_selement"] for n in self._genome if self._genome.nodes[n]["_type"] == MACRO_NODE
-        ]
-
-    @property
-    def frames(self) -> list[FrameABC]:
-        """Return all frame instances in unreliable order."""
-        return [
-            self._genome.nodes[n]["_selement"] for n in self._genome if self._genome.nodes[n]["_type"] == FRAME_NODE
-        ]
-
-    @property
-    def parameters(self) -> list[ParameterABC]:
-        """Return all parameter instances in unreliable order."""
-        return [p for n in self._genome for p in self._genome.nodes[n].values() if isinstance(p, ParameterABC)]
-
-    @property
     def G(self) -> nx.classes.MultiDiGraph:
         """Individual's underlying NetworkX MultiDiGraph."""
         # TODO DeprecationWarning?
@@ -215,18 +198,6 @@ class Individual(Paranoid):
         """Individual's genome (ie. the underlying NetworkX MultiDiGraph)."""
         # TODO: Add paranoia check?
         return self._genome
-
-    @property
-    def structure_tree(self) -> nx.classes.DiGraph:
-        """A tree with the structure tree of the individual (ie. only edges of `kind=FRAMEWORK`)."""
-
-        tree = nx.DiGraph()
-        tree.add_nodes_from(self._genome.nodes)
-        tree.add_edges_from((u, v) for u, v, k in self._genome.edges(data="_type") if k == FRAMEWORK)
-        assert nx.is_branching(tree) and nx.is_weakly_connected(
-            tree
-        ), f"{PARANOIA_VALUE_ERROR}: Structure of {self!r} is not a valid tree"
-        return tree
 
     @property
     def lineage(self):
@@ -270,17 +241,87 @@ class Individual(Paranoid):
             self._lineage.operator.stats.failures += 1
         logger.debug(f"Individual: Fitness of {self} is {value}")
 
-        # Yeuch!
-        from .frozen_individual import FrozenIndividual
+    @property
+    def as_message(self) -> frozenset[int]:
+        message = set()
+        for node, data in [(n, e) for n, e in self._genome.nodes(data=True)]:
+            message |= data['_selement'].shannon
+            for k in filter(lambda k: k.isalnum(), data):
+                message |= {hash((node, data[k].value))}
+        return frozenset(message)
 
-        self.__class__ = FrozenIndividual
+    #######################################################################
+    # CACHED PROPERTIED
+
+    @cached_property
+    def __cached_macros(self) -> list[Macro]:
+        return [
+            self._genome.nodes[n]["_selement"] for n in self._genome if self._genome.nodes[n]["_type"] == MACRO_NODE
+        ]
+
+    @property
+    def macros(self) -> list[Macro]:
+        """Return all macro instances in unreliable order."""
+        cache = self.__cached_macros
+        if not self.is_finalized:
+            del self.__cached_macros
+        return cache
+
+    @cached_property
+    def frames(self) -> list[FrameABC]:
+        return [
+            self._genome.nodes[n]["_selement"] for n in self._genome if self._genome.nodes[n]["_type"] == FRAME_NODE
+        ]
+
+    @property
+    def frames(self) -> list[FrameABC]:
+        """Return all frame instances in unreliable order."""
+        cache = self.__cached_frames
+        if not self.is_finalized:
+            del self.__cached_frames
+        return cache
+
+    @cached_property
+    def __cached_parameters(self) -> list[ParameterABC]:
+        return [p for n in self._genome for p in self._genome.nodes[n].values() if isinstance(p, ParameterABC)]
+
+    @property
+    def parameters(self) -> list[ParameterABC]:
+        """Return all parameter instances in unreliable order."""
+        cache = self.__cached_parameters
+        if not self.is_finalized:
+            del self.__cached_parameters
+        return cache
+
+    @cached_property
+    def __cached_structure_tree(self) -> nx.classes.DiGraph:
+        tree = nx.DiGraph()
+        tree.add_nodes_from(self._genome.nodes)
+        tree.add_edges_from((u, v) for u, v, k in self._genome.edges(data="_type") if k == FRAMEWORK)
+        assert nx.is_branching(tree) and nx.is_weakly_connected(
+            tree
+        ), f"{PARANOIA_VALUE_ERROR}: Structure of {self!r} is not a valid tree"
+        return tree
+
+    @property
+    def structure_tree(self) -> nx.classes.DiGraph:
+        """A tree with the structure tree of the individual (ie. only edges of `kind=FRAMEWORK`)."""
+
+        cache = self.__cached_structure_tree
+        if not self.is_finalized:
+            del self.__cached_structure_tree
+        return cache
 
     #######################################################################
     # PUBLIC METHODS
     def run_paranoia_checks(self) -> bool:
+        logger.debug(f"run_paranoia_checks: Checking {self}")
         assert self.valid, f"{PARANOIA_VALUE_ERROR}: Individual {self!r} is not valid"
 
         # ==[check genome (structural)]======================================
+        assert self.genome == self._genome, f"{PARANOIA_VALUE_ERROR}: Panic!"
+        assert self.genome == self.G, f"{PARANOIA_VALUE_ERROR}: Panic!"
+
         assert self.genome == self._genome, f"{PARANOIA_VALUE_ERROR}: Panic: genome != _genome"
         assert nx.is_weakly_connected(
             self._genome
@@ -296,6 +337,12 @@ class Individual(Paranoid):
         assert nx.is_branching(self.structure_tree) and nx.is_weakly_connected(
             self.structure_tree
         ), f"{PARANOIA_VALUE_ERROR}: structure_tree of {self!r} is not a tree"
+
+        assert set(self.genome.nodes) == set(
+            self.structure_tree.nodes
+        ), f"{PARANOIA_VALUE_ERROR}: node mismatch with structure tree: {set(self.genome.nodes) ^ set(self.structure_tree.nodes)}"
+
+        # ==[check genome (fitness)]=========================================
         assert (self._fitness is None and not self.is_finalized) or (
             self._fitness is not None and self.is_finalized
         ), f"Value Error (paranoia check): Mismatch fitness and is_finalized"
@@ -412,7 +459,10 @@ class Individual(Paranoid):
             if NODE_ZERO not in ccomp:
                 self.G.remove_nodes_from(ccomp)
 
-    def dump(self, extra_parameters: dict) -> str:
+    def dump(self, extra_parameters: dict | None = None) -> str:
+        if extra_parameters is None:
+            extra_parameters = DEFAULT_EXTRA_PARAMETERS | DEFAULT_OPTIONS
+
         # =[Flatten the graph into a list of nodes]==========================
         tree = nx.DiGraph()
         tree.add_nodes_from(self._genome.nodes)

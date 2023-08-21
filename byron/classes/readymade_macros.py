@@ -53,6 +53,10 @@ class MacroZero(Macro):
     def valid(self) -> bool:
         return True
 
+    @property
+    def shannon(self) -> set[int]:
+        return {hash(self.__class__)}
+
 
 class Info(Macro):
     TEXT = '''{_comment} * Byron {_byron.byron}
@@ -68,6 +72,10 @@ class Info(Macro):
     @property
     def valid(self) -> bool:
         return True
+
+    @property
+    def shannon(self) -> set[int]:
+        return {hash(self.__class__)}
 
 
 _patch_class_info(

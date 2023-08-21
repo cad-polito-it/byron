@@ -37,7 +37,6 @@ from byron.user_messages import *
 from byron.classes.selement import SElement
 from byron.classes.fitness import FitnessABC
 from byron.classes.individual import Individual
-from byron.classes.frozen_individual import FrozenIndividual
 
 
 class Population:
@@ -150,6 +149,7 @@ class Population:
         return ind.dump(self.population_extra_parameters | extra_parameters)
 
     def evaluate(self):
+        raise NotImplementedError
         whole_pop = [self.dump_individual(i) for i in self.individuals]
         result = self._evaluator._evaluate(whole_pop)
         if logger.level <= logging.DEBUG:
@@ -174,8 +174,3 @@ class Population:
             sorted_ += sorted(pareto, key=lambda i: (i.fitness, -i.id))
 
         self._individuals = sorted_
-
-    def freeze_individual(self):
-        for ind in self._individuals:
-            if ind.is_finalized and not isinstance(ind, FrozenIndividual):
-                ind.__class__ = FrozenIndividual
