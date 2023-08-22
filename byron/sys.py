@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -29,7 +29,7 @@
 Mostly useful in interactive environments such as a Jupyter Notebook.
 """
 
-__all__ = ['get_operators', 'log_operators']
+__all__ = ['get_operators', 'log_operators', 'SYSINFO']
 
 import inspect
 from pprint import pformat
@@ -124,4 +124,4 @@ def log_operators():
 
 assert "SYSINFO" not in globals(), f"SystemError (paranoia check): SYSINFO already initialized."
 SYSINFO = SysInfo()
-assert "SYSINFO" in globals(), f"SystemError (paranoia check): FRAMEWORK_DIRECTORY not initialized."
+assert "SYSINFO" in globals(), f"SystemError (paranoia check): SYSINFO not initialized."

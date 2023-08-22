@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -35,7 +35,6 @@ import networkx as nx
 
 from byron.classes.macro import Macro
 from byron.global_symbols import *
-from byron.tools.names import canonize_name, _patch_class_info
 from byron.user_messages import *
 
 
@@ -78,7 +77,5 @@ class Info(Macro):
         return [hash(self.__class__)]
 
 
-_patch_class_info(
-    MacroZero, canonize_name("MacroZero", "Macro", make_unique=False, warn_duplicates=False), tag="framework"
-)
-_patch_class_info(Info, canonize_name("Info", "Macro", make_unique=False, warn_duplicates=False), tag="framework")
+MacroZero._patch_info()
+Info._patch_info()

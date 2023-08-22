@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -32,7 +32,6 @@ from functools import cache
 
 from byron.classes.fitness import FitnessABC
 from byron.user_messages import *
-from byron.tools.names import _patch_class_info
 
 
 @cache
@@ -56,7 +55,5 @@ def reverse_fitness(fitness_class: type[FitnessABC]) -> type[FitnessABC]:
         def _decorate(self) -> str:
             # return 'ᴙ⟦' + fitness_class._decorate(self) + '⟧'
             return "ᴙ" + fitness_class._decorate(self)
-
-    _patch_class_info(T, f"reverse[{fitness_class.__name__}]", tag="fitness")
 
     return T

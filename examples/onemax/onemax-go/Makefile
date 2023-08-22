@@ -1,6 +1,6 @@
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -11,5 +11,6 @@
 SHELL=/bin/sh
 
 clean:
+	-rm -f individual[0-9]*.go saved-individual[0-9]*.go
 	-rm -f *-ind*[a-f0-9]*.go
 	-rm -f *.png

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -67,8 +67,8 @@ from collections import defaultdict
 import multiprocessing
 import re
 
-__version__ = "0.8a1.dev8"
-__date__ = "21-08-2023"
+__version__ = "0.8a1.dev9"
+__date__ = "22-08-2023"
 __codename__ = "Don Juan"
 __author__ = "Giovanni Squillero and Alberto Tonda"
 __copyright__ = "Copyright (c) 2023 Giovanni Squillero and Alberto Tonda"

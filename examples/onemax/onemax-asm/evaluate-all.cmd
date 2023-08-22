@@ -1,6 +1,6 @@
 @echo off
 rem    __                          (`/\
-rem   |  |--.--.--.----.-----.-----`=\/\   This file is part of Byron v0.1
+rem   |  |--.--.--.----.-----.-----`=\/\   This file is part of Byron v0.8
 rem   |  _  |  |  |   _|  _  |     |`=\/\  An evolutionary optimizer & fuzzer
 rem   |_____|___  |__| |_____|__|__| `=\/  https://github.com/cad-polito-it/byron
 rem         |_____|                     \

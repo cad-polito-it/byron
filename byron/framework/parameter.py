@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -33,7 +33,6 @@ from numbers import Number
 from typing import Any, Hashable, SupportsInt
 
 from byron.user_messages import *
-from byron.tools.names import _patch_class_info
 from byron.classes.parameter import *
 from byron.randy import rrandom
 
@@ -76,11 +75,11 @@ def _numeric(*, type_, min_, max_):
 
     if type_ == int and min_ == 0 and any(max_ == 2**n for n in range(4, 128 + 1)):
         p = next(n for n in range(4, 128 + 1) if max_ == 2**n)
-        _patch_class_info(T, f'{type_.__name__.title()}[{p}bit]', tag='parameter')
+        T._patch_info(name=f'{type_.__name__.title()}[{p}bit]')
     elif type_ == int:
-        _patch_class_info(T, f'{type_.__name__.title()}[{min_}..{max_-1}]', tag='parameter')
+        T._patch_info(name=f'{type_.__name__.title()}[{min_}..{max_ - 1}]')
     else:
-        _patch_class_info(T, f'{type_.__name__.title()}[{min_}–{max_})', tag='parameter')
+        T._patch_info(name=f'{type_.__name__.title()}[{min_}–{max_})')
     return T
 
 
@@ -151,7 +150,7 @@ def _choice_parameter(alternatives: tuple[Hashable]) -> type[ParameterABC]:
                 self.value = rrandom.choice(alternatives, loc=alternatives.index(self._value), sigma=strength)
 
     # NOTE[GX]: alternative symbol: – (not a minus!)
-    _patch_class_info(T, 'Choice[' + '┊'.join(str(a) for a in alternatives) + ']', tag='parameter')
+    T._patch_info(name='Choice[' + '┊'.join(str(a) for a in alternatives) + ']')
     return T
 
 
@@ -210,7 +209,7 @@ def _array_parameter(symbols: tuple[str], length: int) -> type[ParameterABC]:
                 new_value = [rrandom.choice(symbols) if rrandom.boolean(strength) else old for old in self._value]
             self.value = "".join(new_value)
 
-    _patch_class_info(T, "Array[" + "".join(str(a) for a in symbols) + f"ｘ{length}]", tag="parameter")
+    T._patch_info(name="Array[" + "".join(str(a) for a in symbols) + f"ｘ{length}]")
     return T
 
 
@@ -246,5 +245,5 @@ def counter_parameter() -> type[ParameterABC]:
             T.COUNTER += 1
             self.value = T.COUNTER
 
-    _patch_class_info(T, 'Counter[]', tag='parameter')
+    T._patch_info(name='Counter[]')
     return T

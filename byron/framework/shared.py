@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -29,7 +29,6 @@ __all__ = ["make_shared_parameter"]
 
 from typing import Any
 from byron.classes.parameter import *
-from byron.tools.names import _patch_class_info
 
 # MAKE KEY (TODO!!!)
 _parameters = set()
@@ -66,5 +65,5 @@ def make_shared_parameter(parameter: type[ParameterABC]) -> type[ParameterABC]:
         def is_correct(self, obj: Any) -> bool:
             return parameter_instance.is_correct(obj)
 
-    _patch_class_info(T, f"Shared❬{parameter_instance.__class__.__name__}❭", tag="parameter")
+    T._patch_info(name=f"Shared❬{parameter_instance.__class__.__name__}❭")
     return T

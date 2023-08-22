@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -28,12 +28,11 @@
 __all__ = ["bnf"]
 
 from byron.global_symbols import FRAMEWORK
-from byron.tools.names import _patch_class_info, FRAMEWORK_DIRECTORY
 from byron.classes.frame import FrameABC
 from byron.classes.selement import SElement
 from byron.classes.macro import Macro
 from byron.classes.readymade_frames import SELF
-from byron.tools.names import canonize_name, uncanonize_name
+from byron.tools.names import base_name
 from byron.framework.macro import macro
 
 from .framework import *
@@ -107,14 +106,14 @@ def bnf(
     derivations = list()
     for expression in production:
         frame = sequence(expression)
-        _patch_class_info(frame, canonize_name("BNF:" + uncanonize_name(frame.__name__), "Frame"), tag=FRAMEWORK)
+        frame._patch_info(name='BNF:' + base_name(frame.BYRON_CLASS_NAME) + '#')
         derivations.append(frame)
 
     root = alternative(derivations, extra_parameters=extra_parameters)
     if name:
-        _patch_class_info(root, canonize_name(name, "Frame", user=True), tag=FRAMEWORK)
+        root._patch_info(custom_class_id=name)
     else:
-        _patch_class_info(root, canonize_name("BNF", "Frame"), tag=FRAMEWORK)
+        root._patch_info(name="BNF#")
 
     # patch derivations to include a self reference
     for derivation in root.ALTERNATIVES:

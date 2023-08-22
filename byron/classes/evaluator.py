@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -497,7 +497,7 @@ class ScriptEvaluator(EvaluatorABC):
             results = list(filter(lambda s: bool(s), result.stdout.split("\n")))
             assert len(results) == len(
                 individuals
-            ), f"{PARANOIA_VALUE_ERROR}: number of results and number of individual mismatch: found {len(results)} expected {len(individuals)}"
+            ), f"{PARANOIA_VALUE_ERROR}: Number of results and number of individual mismatch: found {len(results)} expected {len(individuals)}"
             for ind, line in zip_longest(individuals, results):
                 value = [float(r) for r in line.split()]
                 if len(value) == 1:

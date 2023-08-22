@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -27,8 +27,8 @@
 
 __all__ = ["SELF"]
 
+from byron.global_symbols import *
 from .frame import FrameABC
-from byron.tools.names import canonize_name, _patch_class_info
 
 
 class SELF(FrameABC):
@@ -37,4 +37,4 @@ class SELF(FrameABC):
     pass
 
 
-_patch_class_info(SELF, canonize_name("SELF", "Frame", make_unique=False, warn_duplicates=False), tag="framework")
+SELF._patch_info()

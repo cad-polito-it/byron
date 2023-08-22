@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -39,7 +39,7 @@ from byron.classes.paranoid import Paranoid
 from byron.classes.node_reference import NodeReference
 
 
-class ParameterABC(Paranoid, ABC):
+class ParameterABC(SElement, Paranoid):
     """Generic class for storing a Macro parameter"""
 
     __slots__ = []  # Preventing the automatic creation of __dict__
@@ -76,7 +76,7 @@ class ParameterABC(Paranoid, ABC):
 
     @value.setter
     def value(self, new_value):
-        assert self.is_correct(new_value), f"{PARANOIA_VALUE_ERROR}: invalid value: {new_value}"
+        assert self.is_correct(new_value), f"{PARANOIA_VALUE_ERROR}: Invalid value: {new_value}"
         self._value = new_value
 
     @abstractmethod
@@ -96,7 +96,7 @@ class ParameterSharedABC(ParameterABC):
     pass
 
 
-class ParameterStructuralABC(ParameterABC, ABC):
+class ParameterStructuralABC(ParameterABC):
     """Generic class for storing a Macro structural parameter"""
 
     __slots__ = []  # Preventing the automatic creation of __dict__
@@ -119,12 +119,12 @@ class ParameterStructuralABC(ParameterABC, ABC):
 
     @property
     def graph(self):
-        assert self.is_fastened, f"{PARANOIA_VALUE_ERROR}: structural parameter is not fastened"
+        assert self.is_fastened, f"{PARANOIA_VALUE_ERROR}: Structural parameter is not fastened"
         return self._node_reference.graph
 
     @property
     def node(self):
-        assert self.is_fastened, f"{PARANOIA_VALUE_ERROR}: structural parameter is not fastened"
+        assert self.is_fastened, f"{PARANOIA_VALUE_ERROR}: Structural parameter is not fastened"
         return self._node_reference.node
 
     @property
@@ -135,7 +135,7 @@ class ParameterStructuralABC(ParameterABC, ABC):
     def value(self):
         assert (
             self.is_fastened
-        ), f"{PARANOIA_VALUE_ERROR}: attempt to retrieve the value of an unfastened structural parameter"
+        ), f"{PARANOIA_VALUE_ERROR}: Attempt to retrieve the value of an unfastened structural parameter"
         if self._node_reference is None:
             return None
         return next(

@@ -55,7 +55,7 @@ def set_parameter(key: str, value: Any) -> None:
 
     See `byron.DEFAULT_EXTRA_PARAMETERS` for the complete list of default parameters.
     """
-    assert re.fullmatch(r'_[a-z_0-9]+', key), f"{PARANOIA_VALUE_ERROR}: invalid key name {key}"
+    assert re.fullmatch(r'_[a-z_0-9]+', key), f"{PARANOIA_VALUE_ERROR}: Invalid key name {key}"
     DEFAULT_EXTRA_PARAMETERS[key] = value
 
 
@@ -69,5 +69,5 @@ def set_option(key: str, value: Any) -> None:
     See `byron.DEFAULT_OPTIONS` for the complete list of default parameters.
     """
 
-    assert re.fullmatch(r'\$[a-z_0-9]+', key), f"{PARANOIA_VALUE_ERROR}: invalid option name {key}"
+    assert re.fullmatch(r'\$[a-z_0-9]+', key), f"{PARANOIA_VALUE_ERROR}: Invalid option name {key}"
     DEFAULT_OPTIONS[key] = value

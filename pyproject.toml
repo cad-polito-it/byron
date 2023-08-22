@@ -1,6 +1,6 @@
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -10,7 +10,7 @@
 
 [tool.poetry]
 name = "byron"
-version = "0.8a1.dev8"
+version = "0.8a1.dev9"
 description = "Multi-purpose extensible self-adaptive optimizer and fuzzer"
 authors = [
     "Giovanni Squillero <giovanni.squillero@polito.it>",
@@ -97,7 +97,7 @@ max-line-length = 120
 source-roots = ['src']
 
 [bumpver]
-current_version = "0.8a1.dev8"
+current_version = "0.8a1.dev9"
 version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
 commit_message = "Bump version to {new_version}"
 commit = false

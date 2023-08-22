@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -325,22 +325,22 @@ class Individual(Paranoid):
         assert self.genome == self._genome, f"{PARANOIA_VALUE_ERROR}: Panic: genome != _genome"
         assert nx.is_weakly_connected(
             self._genome
-        ), f"{PARANOIA_VALUE_ERROR}: genome of {self!r} is not a connected graph"
+        ), f"{PARANOIA_VALUE_ERROR}: Genome of {self!r} is not a connected graph"
 
         G = nx.MultiDiGraph()
         G.add_edges_from(self.G.edges)
         G.remove_node(NODE_ZERO)
         assert (
             sum(1 for _ in nx.weakly_connected_components(G)) == 1
-        ), f"{PARANOIA_TYPE_ERROR}: individual is not a weakly connected graph"
+        ), f"{PARANOIA_TYPE_ERROR}: Individual is not a weakly connected graph"
 
         assert nx.is_branching(self.structure_tree) and nx.is_weakly_connected(
             self.structure_tree
-        ), f"{PARANOIA_VALUE_ERROR}: structure_tree of {self!r} is not a tree"
+        ), f"{PARANOIA_VALUE_ERROR}: Structure_tree of {self!r} is not a tree"
 
         assert set(self.genome.nodes) == set(
             self.structure_tree.nodes
-        ), f"{PARANOIA_VALUE_ERROR}: node mismatch with structure tree: {set(self.genome.nodes) ^ set(self.structure_tree.nodes)}"
+        ), f"{PARANOIA_VALUE_ERROR}: Node mismatch with structure tree: {set(self.genome.nodes) ^ set(self.structure_tree.nodes)}"
 
         # ==[check genome (fitness)]=========================================
         assert (self._fitness is None and not self.is_finalized) or (
@@ -359,17 +359,17 @@ class Individual(Paranoid):
         # ==[check nodes (semantic)]=========================================
         assert all(
             n < self._genome.graph["node_count"] for n in self._genome
-        ), f"{PARANOIA_VALUE_ERROR}: invalid 'node_count' attribute ({self._genome.graph['node_count']})"
+        ), f"{PARANOIA_VALUE_ERROR}: Invalid 'node_count' attribute ({self._genome.graph['node_count']})"
 
         assert all(
             '_selement' in d for n, d in self._genome.nodes(data=True)
-        ), f"{PARANOIA_VALUE_ERROR}: missing '_selement'"
+        ), f"{PARANOIA_VALUE_ERROR}: Missing '_selement'"
         assert all(
             (isinstance(d['_selement'], Macro) and d['_type'] == 'macro')
             or (isinstance(d['_selement'], FrameABC) and d['_type'] == 'frame')
             for n, d in self._genome.nodes(data=True)
         )
-        assert isinstance(self._genome.nodes[0]['_selement'], MacroZero), f"{PARANOIA_TYPE_ERROR}: incorrect NodeZero"
+        assert isinstance(self._genome.nodes[0]['_selement'], MacroZero), f"{PARANOIA_TYPE_ERROR}: Incorrect NodeZero"
 
         # ==[check structural parameter]=====================================
         assert all(
@@ -381,17 +381,17 @@ class Individual(Paranoid):
 
         structural_edges = [(u, v, k) for u, v, k, d in self._genome.edges(data='_type', keys=True) if d == LINK]
         assert len(structural_edges) == len(set(k for u, v, k in structural_edges)), (
-            f"{PARANOIA_VALUE_ERROR}: found duplicated keys in structural edges: "
+            f"{PARANOIA_VALUE_ERROR}: Found duplicated keys in structural edges: "
             + f"{set(x for i, x in enumerate(list(k for u, v, k in structural_edges)) if i != list(k for u, v, k in structural_edges).index(x))}"
         )
         structural_parameters = [p for p in self.parameters if isinstance(p, ParameterStructuralABC)]
         assert len(structural_edges) == len(structural_parameters), (
-            f"{PARANOIA_VALUE_ERROR}: inconsistent number of structural edges: "
+            f"{PARANOIA_VALUE_ERROR}: Inconsistent number of structural edges: "
             + f"found {len(structural_edges)}, expecting {len(structural_parameters)}"
         )
         assert set(k for u, v, k in structural_edges) == set(
             p._key for p in structural_parameters
-        ), f"{PARANOIA_VALUE_ERROR}: inconsistent keys in structural edges"
+        ), f"{PARANOIA_VALUE_ERROR}: Inconsistent keys in structural edges"
 
         return True
 
@@ -499,12 +499,14 @@ class Individual(Paranoid):
                 if bag['$dump_node_info'] and nr.node != NODE_ZERO:
                     if node_str:
                         node_str += '  '
-                    node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.selement}'.format(**bag)
+                    node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.selement.__class__}'.format(**bag)
                 node_str += '{_text_after_macro}'.format(**bag)
             elif nr.graph.nodes[nr.node]["_type"] == FRAME_NODE:
                 node_str += '{_text_before_frame}'.format(**bag)
                 if bag['$dump_node_info']:
-                    node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.selement}{_text_after_macro}'.format(**bag)
+                    node_str += (
+                        '{_comment} 🖋 {_node.path_string} ➜ {_node.selement.__class__}{_text_after_macro}'.format(**bag)
+                    )
                 node_str += '{_text_after_frame}'.format(**bag)
             node_str += '{_text_after_node}'.format(**bag)
             # ---------------------------------------------------------------
@@ -545,12 +547,14 @@ class Individual(Paranoid):
             node_str += '{_text_before_macro}'.format(**bag)
             node_str += nr.graph.nodes[nr.node]['_selement'].dump(bag)
             if bag['$dump_node_info']:
-                node_str += '  {_comment} 🖋 {_node.path_string} ➜ {_node.selement}'.format(**bag)
+                node_str += '  {_comment} 🖋 {_node.path_string} ➜ {_node.selement.__class__}'.format(**bag)
             node_str += '{_text_after_macro}'.format(**bag)
         elif nr.graph.nodes[nr.node]['_type'] == FRAME_NODE:
             node_str += '{_text_before_frame}'.format(**bag)
             if bag['$dump_node_info']:
-                node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.selement}{_text_after_macro}'.format(**bag)
+                node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.selement.__class__}{_text_after_macro}'.format(
+                    **bag
+                )
             node_str += '{_text_after_frame}'.format(**bag)
         node_str += '{_text_after_node}'.format(**bag)
         # ====================================================================

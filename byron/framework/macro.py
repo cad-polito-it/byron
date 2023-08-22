@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -32,7 +32,6 @@ from typing import Any
 
 from byron.global_symbols import FRAMEWORK
 from byron.user_messages import *
-from byron.tools.names import canonize_name, _patch_class_info, FRAMEWORK_DIRECTORY
 from byron.classes.macro import Macro
 from byron.classes.parameter import ParameterABC
 
@@ -49,11 +48,10 @@ def _macro(
         __slots__ = []  # Preventing the automatic creation of __dict__
 
     if not macro_parameters:
-        _patch_class_info(M, canonize_name('Text', 'Macro'), tag=FRAMEWORK)
+        M._patch_info(name='Text#')
     else:
-        _patch_class_info(M, canonize_name('User', 'Macro'), tag=FRAMEWORK)
+        M._patch_info(name='User#')
 
-    FRAMEWORK_DIRECTORY[M.ID] = M
     return M
 
 

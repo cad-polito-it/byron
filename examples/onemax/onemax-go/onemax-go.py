@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -32,7 +32,7 @@ def define_library():
 
     # standard
     main_prologue = byron.f.macro('package main\nfunc evolved_function() uint64 {{')
-    main_prologue.ID = 'prologue'
+    main_prologue.baptize('prologue')
     imath = byron.f.macro(
         '{var} {op}= {num}',
         var=byron.f.global_reference(variable, creative_zeal=1),

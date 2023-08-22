@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -104,15 +104,6 @@ from byron.tools.entropy import *
 # Patch names to ease debugging and visualization
 
 # noinspection PyUnresolvedReferences
-from byron.tools.names import _patch_class_info
-
-for name in sorted(dir()):
-    item = globals()[name]
-    if isinstance(item, type) and item.__name__.endswith("ABC"):
-        _patch_class_info(item, item.__name__, tag="abc")
-    elif isinstance(item, type):
-        _patch_class_info(item, item.__name__)
-del _patch_class_info
 
 #############################################################################
 # Welcome!

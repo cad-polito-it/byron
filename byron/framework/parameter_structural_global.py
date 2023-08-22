@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -37,11 +37,10 @@ from byron.global_symbols import *
 
 from byron.classes.parameter import ParameterStructuralABC
 from byron.operators.unroll import *
-from byron.classes.selement import SElement
+from byron.classes.selement import SElement, SElementMeta
 from byron.tools.names import *
 
 from byron.tools.graph import *
-from byron.tools.names import canonize_name, _patch_class_info
 
 __all__ = ["global_reference"]
 
@@ -57,17 +56,10 @@ def _global_reference(
     class T(ParameterStructuralABC):
         __slots__ = ["_target_frame"]  # Preventing the automatic creation of __dict__
 
-        if isinstance(target_frame, str):
-
-            def __init__(self):
-                super().__init__()
-                self._target_frame = FRAMEWORK_DIRECTORY[target_frame]
-
-        else:
-
-            def __init__(self):
-                super().__init__()
-                self._target_frame = target_frame
+        def __init__(self):
+            super().__init__()
+            # NOTE[GX] if target_frame is a string it works thanks to selement string magic!
+            self._target_frame = target_frame
 
         def get_potential_targets(self, add_none=True):
             G = self._node_reference.graph
@@ -101,7 +93,7 @@ def _global_reference(
             return targets
 
         def mutate(self, strength: float = 1.0) -> None:
-            assert self.is_fastened, f"{PARANOIA_VALUE_ERROR}: node is unfastened"
+            assert self.is_fastened, f"{PARANOIA_VALUE_ERROR}: Node is unfastened"
 
             # first try
             potential_targets = self.get_potential_targets()
@@ -131,9 +123,9 @@ def _global_reference(
                     self.self.graph.remove_nodes_from(ccomp)
 
     if isinstance(target_frame, str):
-        _patch_class_info(T, f"GlobalReference['{target_frame}']", tag="parameter")
+        T._patch_info(name=f"GlobalReference['{target_frame}']")
     else:
-        _patch_class_info(T, f"GlobalReference[{target_frame.__name__}]", tag="parameter")
+        T._patch_info(name=f"GlobalReference[{target_frame}]")
     return T
 
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -159,8 +159,6 @@ def genetic_operator(*, num_parents: int = 1):
         @wraps(func)
         def wrapper(*args: Individual, **kwargs):
             wrapper.stats.calls += 1
-
-            logger.debug(f"genetic_operator: {func.__name__}({', '.join(str(_) for _ in args)})")
 
             try:
                 offspring = func(*args, **kwargs)

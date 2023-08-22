@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -46,9 +46,7 @@ def as_text(
     node_info: bool = True,
     extra_parameters: dict | None = None,
 ):
-    if isinstance(element, type) and issubclass(element, SElement):
-        frame = element
-    elif isinstance(element, type) and issubclass(element, ParameterABC):
+    if isinstance(element, type) and issubclass(element, ParameterABC):
         frame = macro(
             '{p1.__class__}\n'
             + '• {p1}\n'
@@ -69,6 +67,8 @@ def as_text(
             p8=element,
         )
         node_info = False
+    elif isinstance(element, type) and issubclass(element, SElement):
+        frame = element
     else:
         raise NotImplementedError(f"{__name__}.as_text({element!r})")
     individual = _generate_random_individual(frame, seed=seed)

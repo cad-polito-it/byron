@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -58,7 +58,7 @@ def unroll_individual(individual: Individual, top: type[FrameABC]) -> int | None
 
     assert check_valid_types(individual, Individual)
     assert check_valid_types(top, FrameABC, Macro, subclass=True)
-    assert not individual.is_finalized, f"{PARANOIA_VALUE_ERROR}: individual is finalized"
+    assert not individual.is_finalized, f"{PARANOIA_VALUE_ERROR}: Individual is finalized"
 
     G = individual.genome
     new_node_reference = unroll_selement(top, G)

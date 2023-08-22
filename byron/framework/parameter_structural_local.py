@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -36,7 +36,6 @@ from byron.classes.node_reference import NodeReference
 from byron.randy import rrandom
 
 from byron.tools.graph import *
-from byron.tools.names import canonize_name, _patch_class_info
 
 __all__ = ["local_reference"]
 
@@ -88,11 +87,10 @@ def _local_reference(
             else:
                 self.value = rrandom.sigmachoice(pt, pt.index(self.value), strength)
 
-    _patch_class_info(
-        T,
-        f"""LocalReference[{'<' if backward else '≮'}{'=' if self_loop else '≠'}{'>' if forward else '≯'}]""",
-        tag="parameter",
+    T._patch_info(
+        name=f"LocalReference[{'<' if backward else '≮'}{'=' if self_loop else '≠'}{'>' if forward else '≯'}]"
     )
+
     return T
 
 

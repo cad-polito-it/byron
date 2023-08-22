@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -32,7 +32,6 @@ from typing import Sequence
 
 from byron.global_symbols import *
 from byron.user_messages import *
-from byron.tools.names import canonize_name, _patch_class_info, FRAMEWORK_DIRECTORY
 from byron.classes.selement import SElement
 from byron.classes.frame import *
 from byron.classes.macro import Macro
@@ -109,12 +108,10 @@ def alternative(
             return [rrandom.choice(T.ALTERNATIVES)]
 
     if name:
-        _patch_class_info(T, canonize_name(name, "Frame", user=True), tag=FRAMEWORK)
-        T.ID = name
+        T._patch_info(custom_class_id=name)
     else:
-        _patch_class_info(T, canonize_name("FrameAlternative", "Frame"), tag=FRAMEWORK)
+        T._patch_info(name="FrameAlternative#")
 
-    FRAMEWORK_DIRECTORY[T.ID] = T
     return T
 
 
@@ -135,12 +132,12 @@ def sequence(
             return T.SEQUENCE
 
     if name:
-        _patch_class_info(T, canonize_name(name, "Frame", user=True), tag=FRAMEWORK)
-        T.ID = name
+        T._patch_info(custom_class_id=name)
+    elif len(cooked_seq) == 1:
+        T._patch_info(name="SingleFrame#")
     else:
-        _patch_class_info(T, canonize_name("FrameSequence", "Frame"), tag=FRAMEWORK)
+        T._patch_info(name="FrameSequence#")
 
-    FRAMEWORK_DIRECTORY[T.ID] = T
     return T
 
 
@@ -182,14 +179,14 @@ def bunch(
     else:
         size = tuple(size)
         assert len(size) == 2, f"{PARANOIA_VALUE_ERROR}: Not a half open range [min, max)"
-    assert 0 <= size[0] < size[1], f"{PARANOIA_VALUE_ERROR}: min size is {size[0]} and max size is {size[1]-1}"
+    assert 0 <= size[0] < size[1], f"{PARANOIA_VALUE_ERROR}: Min size is {size[0]} and max size is {size[1]-1}"
 
     assert _debug_hints()
 
     if weights is None:
         weights = [1] * len(pool)
     else:
-        assert len(weights) == len(pool), f"{PARANOIA_VALUE_ERROR}: number of weights non coherent with pool size"
+        assert len(weights) == len(pool), f"{PARANOIA_VALUE_ERROR}: Number of weights non coherent with pool size"
 
     class T(FrameMacroBunch, FrameABC):
         SIZE = size
@@ -213,15 +210,12 @@ def bunch(
 
     # White parentheses: ⦅ ⦆  (U+2985, U+2986)
     if name:
-        canonic_name = canonize_name(name, "Frame", user=True)
-        T.ID = name
+        T._patch_info(custom_class_id=name)
     elif size == (1, 2):
-        canonic_name = canonize_name("SingleMacro", "Frame")
+        T._patch_info(name='SingleMacro#')
     elif size[1] - size[0] == 1:
-        canonic_name = canonize_name("MacroArray", "Frame")
+        T._patch_info(name='MacroArray#')
     else:
-        canonic_name = canonize_name("MacroBunch", "Frame")
-    _patch_class_info(T, canonic_name, tag=FRAMEWORK)
+        T._patch_info(name='MacroBunch#')
 
-    FRAMEWORK_DIRECTORY[T.ID] = T
     return T

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -86,10 +86,10 @@ class Scalar(FitnessABC, float):
         assert super().check_comparable(other)
         assert (
             not isinstance(other, self.__class__) or self._abs_tol == other._abs_tol
-        ), f"{PARANOIA_VALUE_ERROR}: different absolute tolerance: {float(self)}±{self._abs_tol} vs. {float(other)}±{other._abs_tol}"
+        ), f"{PARANOIA_VALUE_ERROR}: Different absolute tolerance: {float(self)}±{self._abs_tol} vs. {float(other)}±{other._abs_tol}"
         assert (
             not isinstance(other, self.__class__) or self._rel_tol == other._rel_tol
-        ), f"{PARANOIA_VALUE_ERROR}: different relative tolerance: {float(self)}±{self._rel_tol}r vs. {float(other)}±{other._rel_tol}r"
+        ), f"{PARANOIA_VALUE_ERROR}: Different relative tolerance: {float(self)}±{self._rel_tol}r vs. {float(other)}±{other._rel_tol}r"
         return True
 
 
@@ -164,15 +164,3 @@ def make_fitness(data: Any):
         assert (
             isinstance(data, Sequence) or isinstance(data, int) or isinstance(data, float)
         ), f"TypeError: Can't convert {data!r} ({type()}) to Fitness"
-
-
-##############################################################################
-# Patch names
-# _patch_class_info(Scalar, 'Scalar', tag='fitness')
-# _patch_class_info(Integer, 'Integer', tag='fitness')
-# _patch_class_info(Float, 'Float', tag='fitness')
-# _patch_class_info(Vector, 'Vector', tag='fitness')
-# _patch_class_info(Lexicographic, 'Vector', tag='fitness')
-# _patch_class_info(ApproximateVector, 'VectorApproximate', tag='fitness')
-# _patch_class_info(IntegerVector, 'VectorInteger', tag='fitness')
-# _patch_class_info(ScalarVector, 'VectorScalar', tag='fitness')

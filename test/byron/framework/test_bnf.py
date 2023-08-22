@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -17,4 +17,5 @@ def test_bnf():
     production = [[byron.f.SELF]]
     name = "test_bnf"
     frame = byron.f.bnf(production, name)
-    assert frame.__name__ == "Frame<test_bnf>"
+    assert str(frame) == 'Frame❰test_bnf❱'
+    assert byron.tools.names.base_name(str(frame)) == name

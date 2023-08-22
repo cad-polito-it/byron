@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -51,15 +51,6 @@ class Macro(SElement, Paranoid):
     def __init__(self):
         super().__init__()
 
-    def __eq__(self, other: "Macro") -> bool:
-        if type(self) != type(other):
-            return False
-        elif self.text != other.text or self.parameter_types != other.parameter_types:
-            return False
-        # elif self.text != other.text or self.parameters != other.parameters:
-        #    return False
-        return True
-
     # PEDANTIC
     def is_correct(self, nv: Any) -> bool:
         """Checks a NodeView against a macro."""
@@ -78,16 +69,6 @@ class Macro(SElement, Paranoid):
     @property
     def shannon(self) -> list[int]:
         return [hash(self.__class__)]
-
-    # def __getitem__(self, parameter: str) -> Any:
-    #    assert Macro.is_name_valid(parameter), \
-    #        f"{PARANOIA_VALUE_ERROR}: invalid parameter name: {parameter}"
-    #    return self.parameters[parameter]
-
-    def __str__(self):
-        # BRACKETS: ⁅ ⁆ 〈 〉❬ ❭
-        # return f'Macro❬{self.__class__.__name__}❭'
-        return self.__class__.__name__
 
     def dump(self, parameters: ValueBag) -> str:
         assert check_valid_type(parameters, ValueBag)

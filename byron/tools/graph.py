@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -88,7 +88,7 @@ def set_successors_order(ref: NodeReference, new_order: Sequence[int]) -> None:
     assert all(k == 0 for u, v, k in current), f"ValueError: Found a FRAMEWORK edge with key != 0."
     assert {v for u, v, k in current} == set(
         new_order
-    ), f"{PARANOIA_VALUE_ERROR}: mismatching new order: {[v for u, v, k in current]} vs. {new_order}."
+    ), f"{PARANOIA_VALUE_ERROR}: Mismatching new order: {[v for u, v, k in current]} vs. {new_order}."
 
     attributes = dict()
     for u, v, k in current:

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #################################|###|#####################################
 #  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.1    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
@@ -33,7 +33,6 @@ from functools import wraps, cache
 # from byron.classes.paranoid import Paranoid
 from byron.global_symbols import *
 from byron.user_messages import *
-from byron.tools.names import _patch_class_info
 
 
 # class FitnessABC(Paranoid, ABC):
@@ -78,7 +77,7 @@ class FitnessABC(ABC):
     def check_comparable(self, other: "FitnessABC"):
         assert (
             self.__class__ == other.__class__
-        ), f"{PARANOIA_TYPE_ERROR}: different Fitness types: {self.__class__} and {other.__class__}."
+        ), f"{PARANOIA_TYPE_ERROR}: Different Fitness types: {self.__class__} and {other.__class__}."
         return True
 
     def _decorate(self) -> str:
