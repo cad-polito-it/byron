@@ -13,7 +13,7 @@
 
 import math
 from functools import lru_cache
-from typing import Any
+from typing import Any, Optional
 from collections.abc import Sequence, Iterable
 
 import numpy as np
@@ -41,7 +41,7 @@ class Randy:
         _calls = state[1]
         assert self._save_state()
 
-    def __init__(self, seed: Any | None = None) -> None:
+    def __init__(self, seed: Optional = None) -> None:
         self._generator = np.random.default_rng(seed)
         self._calls = 0
         # with open(Randy.LOG_FILENAME, 'a') as fout:
@@ -86,7 +86,7 @@ class Randy:
         ), "State Error (paranoia check): internal generator has been modified"
         return True
 
-    def seed(self, seed: Any | None = None) -> None:
+    def seed(self, seed: Optional = None) -> None:
         assert (
             seed is not None
             or notebook_mode
