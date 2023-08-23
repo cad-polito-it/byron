@@ -29,7 +29,7 @@
 
 __all__ = ["Statistics", "fitness_function", "genetic_operator", "get_byron_type"]
 
-from typing import Callable
+from typing import Callable, Optional
 from dataclasses import dataclass
 
 from functools import wraps
@@ -99,7 +99,7 @@ class Statistics:
 
 
 def fitness_function(
-    func: Callable[..., FitnessABC] | None = None, /, *, type_: type[FitnessABC] = None, backend: str | None = 'list'
+    func: Optional[Callable[..., FitnessABC]] = None, /, *, type_: type[FitnessABC] = None, backend: str | None = 'list'
 ):
     if type_ is None:
         type_ = lambda f: fitness.make_fitness(f)

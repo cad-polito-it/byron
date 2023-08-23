@@ -33,7 +33,7 @@ __all__ = [
     'ScriptEvaluator',
 ]
 
-from typing import Callable, Sequence
+from typing import Callable, Sequence, Optional
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from itertools import zip_longest
@@ -444,7 +444,7 @@ class ScriptEvaluator(EvaluatorABC):
     def __init__(
         self,
         script_name: str,
-        args: Sequence[str] | None = None,
+        args: Optional[Sequence[str]] = None,
         *,
         filename_format: str = 'phenotype_{i:x}.txt',
         timeout: int | None = 60,

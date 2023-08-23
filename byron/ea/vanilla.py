@@ -27,7 +27,7 @@
 
 __all__ = ["vanilla_ea"]
 
-from typing import Any
+from typing import Any, Optional
 from time import perf_counter_ns, process_time_ns
 from datetime import timedelta
 
@@ -73,7 +73,7 @@ def vanilla_ea(
     mu: int = 10,
     lambda_: int = 20,
     max_generation: int = 100,
-    max_fitness: Any | None = None,
+    max_fitness: Optional = None,
     population_extra_parameters: dict = None,
 ) -> Population:
     r"""A simple evolutionary algorithm
