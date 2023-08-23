@@ -61,13 +61,10 @@ __all__ = [
 
 import logging
 import sys
-import time
 from collections import defaultdict
-
 import multiprocessing
-import re
 
-__version__ = "0.8a1.dev10"
+__version__ = "0.8a1.dev12"
 __date__ = "23-08-2023"
 __codename__ = "Don Juan"
 __author__ = "Giovanni Squillero and Alberto Tonda"
@@ -80,11 +77,16 @@ test_mode = 'pytest' in sys.modules
 main_process = multiprocessing.current_process().name == "MainProcess"
 
 notebook_mode = False
-try:
-    if 'zmqshell' in str(type(get_ipython())):
-        notebook_mode = True
-except NameError:
-    pass
+if any('jupyter' in k for k in sys.modules.keys()):
+    notebook_mode = True
+elif any('google.colab' in k for k in sys.modules.keys()):
+    notebook_mode = True
+else:
+    try:
+        if 'zmqshell' in str(type(get_ipython())):
+            notebook_mode = True
+    except NameError:
+        pass
 
 joblib_available = False
 try:

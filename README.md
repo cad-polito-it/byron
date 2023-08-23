@@ -4,7 +4,7 @@
 [![License: Apache 2.0](https://img.shields.io/badge/license-apache--2.0-green.svg)](https://opensource.org/licenses/Apache-2.0) 
 [![Status: Actrive](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/cad-polito-it/byron)
 ![Language: Python](https://img.shields.io/badge/language-python-blue.svg)
-![Version: 0.1.dev2](https://img.shields.io/badge/version-0.8a1.dev10-orange.svg)
+![Version: 0.1.dev2](https://img.shields.io/badge/version-0.8a1.dev12-orange.svg)
 ![Codename: Don Juan](https://img.shields.io/badge/codename-Don_Juan-pink.svg)
 [![Documentation Status](https://readthedocs.org/projects/byron/badge/?version=pre-alpha)](https://byron.readthedocs.io/en/pre-alpha/?badge=pre-alpha)
 
