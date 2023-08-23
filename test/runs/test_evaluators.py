@@ -10,6 +10,8 @@
 # Copyright 2023 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
+import pytest
+
 import logging
 import itertools
 import os
@@ -25,6 +27,7 @@ def fitness(genotype):
     return sum(b == '1' for b in genotype)
 
 
+@pytest.mark.avoidable
 def test_evaluators():
     assert os.path.exists('runs') or os.path.exists('test/runs')
     if os.path.exists('test/runs'):
