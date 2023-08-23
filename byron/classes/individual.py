@@ -33,7 +33,7 @@ from typing import Any, Callable, Optional
 from itertools import chain
 from copy import deepcopy, copy
 import operator
-from functools import cache, cached_property
+from functools import cached_property
 
 import networkx as nx
 
@@ -161,8 +161,7 @@ class Individual(Paranoid):
     @property
     def valid(self) -> bool:
         return all(
-            self.genome.nodes[n]["_selement"].is_valid(NodeView(NodeReference(self.genome, n)))
-            for n in nx.dfs_preorder_nodes(self.genome)
+            self.genome.nodes[n]["_selement"].is_valid(NodeView(NodeReference(self._genome, n))) for n in self._genome
         )
 
     @property
@@ -253,48 +252,64 @@ class Individual(Paranoid):
     #######################################################################
     # CACHED PROPERTIED
 
+    @property
+    def macros(self) -> list[Macro]:
+        """Return all macro instances in unreliable order."""
+        if self.is_finalized:
+            return self._cached_macros
+        return self._macros()
+
     @cached_property
-    def __cached_macros(self) -> list[Macro]:
+    def _cached_macros(self) -> list[Macro]:
+        return self._macros()
+
+    def _macros(self) -> list[Macro]:
         return [
             self._genome.nodes[n]["_selement"] for n in self._genome if self._genome.nodes[n]["_type"] == MACRO_NODE
         ]
 
     @property
-    def macros(self) -> list[Macro]:
-        """Return all macro instances in unreliable order."""
-        cache = self.__cached_macros
-        if not self.is_finalized:
-            del self.__cached_macros
-        return cache
+    def frames(self) -> list[FrameABC]:
+        """Return all frame instances in unreliable order."""
+        if self.is_finalized:
+            return self._cached_frames
+        return self._frames()
 
     @cached_property
-    def frames(self) -> list[FrameABC]:
+    def _cached_frames(self) -> list[FrameABC]:
+        return self._frames()
+
+    def _frames(self) -> list[FrameABC]:
         return [
             self._genome.nodes[n]["_selement"] for n in self._genome if self._genome.nodes[n]["_type"] == FRAME_NODE
         ]
 
     @property
-    def frames(self) -> list[FrameABC]:
-        """Return all frame instances in unreliable order."""
-        cache = self.__cached_frames
-        if not self.is_finalized:
-            del self.__cached_frames
-        return cache
+    def parameters(self) -> list[ParameterABC]:
+        """Return all parameter instances in unreliable order."""
+        if self.is_finalized:
+            return self._cached_parameters
+        return self._parameters()
 
     @cached_property
-    def __cached_parameters(self) -> list[ParameterABC]:
+    def _cached_parameters(self) -> list[ParameterABC]:
+        return self._parameters()
+
+    def _parameters(self) -> list[ParameterABC]:
         return [p for n in self._genome for p in self._genome.nodes[n].values() if isinstance(p, ParameterABC)]
 
     @property
-    def parameters(self) -> list[ParameterABC]:
-        """Return all parameter instances in unreliable order."""
-        cache = self.__cached_parameters
-        if not self.is_finalized:
-            del self.__cached_parameters
-        return cache
+    def structure_tree(self) -> nx.classes.DiGraph:
+        """A tree with the structure tree of the individual (ie. only edges of `kind=FRAMEWORK`)."""
+        if self.is_finalized:
+            return self._cached_structure_tree
+        return self._structure_tree()
 
     @cached_property
-    def __cached_structure_tree(self) -> nx.classes.DiGraph:
+    def _cached_structure_tree(self) -> nx.classes.DiGraph:
+        return self._structure_tree()
+
+    def _structure_tree(self) -> nx.classes.DiGraph:
         tree = nx.DiGraph()
         tree.add_nodes_from(self._genome.nodes)
         tree.add_edges_from((u, v) for u, v, k in self._genome.edges(data="_type") if k == FRAMEWORK)
@@ -302,15 +317,6 @@ class Individual(Paranoid):
             tree
         ), f"{PARANOIA_VALUE_ERROR}: Structure of {self!r} is not a valid tree"
         return tree
-
-    @property
-    def structure_tree(self) -> nx.classes.DiGraph:
-        """A tree with the structure tree of the individual (ie. only edges of `kind=FRAMEWORK`)."""
-
-        cache = self.__cached_structure_tree
-        if not self.is_finalized:
-            del self.__cached_structure_tree
-        return cache
 
     #######################################################################
     # PUBLIC METHODS
@@ -338,14 +344,15 @@ class Individual(Paranoid):
             self.structure_tree
         ), f"{PARANOIA_VALUE_ERROR}: Structure_tree of {self!r} is not a tree"
 
-        assert set(self.genome.nodes) == set(
-            self.structure_tree.nodes
-        ), f"{PARANOIA_VALUE_ERROR}: Node mismatch with structure tree: {set(self.genome.nodes) ^ set(self.structure_tree.nodes)}"
+        assert set(self.genome.nodes) == set(self.structure_tree.nodes), (
+            f"{PARANOIA_VALUE_ERROR}: Node mismatch with structure tree: "
+            + f"{set(self.genome.nodes) ^ set(self.structure_tree.nodes)}"
+        )
 
         # ==[check genome (fitness)]=========================================
         assert (self._fitness is None and not self.is_finalized) or (
             self._fitness is not None and self.is_finalized
-        ), f"Value Error (paranoia check): Mismatch fitness and is_finalized"
+        ), "Value Error (paranoia check): Mismatch fitness and is_finalized"
 
         # ==[check edges (semantic)]=========================================
         edges = self._genome.edges(keys=True, data=True)
@@ -499,14 +506,12 @@ class Individual(Paranoid):
                 if bag['$dump_node_info'] and nr.node != NODE_ZERO:
                     if node_str:
                         node_str += '  '
-                    node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.selement.__class__}'.format(**bag)
+                    node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.type_}'.format(**bag)
                 node_str += '{_text_after_macro}'.format(**bag)
             elif nr.graph.nodes[nr.node]["_type"] == FRAME_NODE:
                 node_str += '{_text_before_frame}'.format(**bag)
                 if bag['$dump_node_info']:
-                    node_str += (
-                        '{_comment} 🖋 {_node.path_string} ➜ {_node.selement.__class__}{_text_after_macro}'.format(**bag)
-                    )
+                    node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.type_}{_text_after_macro}'.format(**bag)
                 node_str += '{_text_after_frame}'.format(**bag)
             node_str += '{_text_after_node}'.format(**bag)
             # ---------------------------------------------------------------
@@ -547,14 +552,12 @@ class Individual(Paranoid):
             node_str += '{_text_before_macro}'.format(**bag)
             node_str += nr.graph.nodes[nr.node]['_selement'].dump(bag)
             if bag['$dump_node_info']:
-                node_str += '  {_comment} 🖋 {_node.path_string} ➜ {_node.selement.__class__}'.format(**bag)
+                node_str += '  {_comment} 🖋 {_node.path_string} ➜ {_node.type_}'.format(**bag)
             node_str += '{_text_after_macro}'.format(**bag)
         elif nr.graph.nodes[nr.node]['_type'] == FRAME_NODE:
             node_str += '{_text_before_frame}'.format(**bag)
             if bag['$dump_node_info']:
-                node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.selement.__class__}{_text_after_macro}'.format(
-                    **bag
-                )
+                node_str += '{_comment} 🖋 {_node.path_string} ➜ {_node.type_}{_text_after_macro}'.format(**bag)
             node_str += '{_text_after_frame}'.format(**bag)
         node_str += '{_text_after_node}'.format(**bag)
         # ====================================================================

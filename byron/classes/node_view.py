@@ -27,6 +27,7 @@
 
 __all__ = ["NodeView"]
 
+import dataclasses
 from dataclasses import dataclass
 from functools import cached_property
 
@@ -37,6 +38,7 @@ from byron.user_messages import *
 from byron.classes.value_bag import ValueBag
 from byron.classes.node_reference import NodeReference
 from byron.classes.selement import SElement
+from byron.classes.parameter import ParameterABC
 
 from byron.tools.graph import *
 
@@ -66,12 +68,26 @@ class NodeView:
         return self.ref.graph.nodes[self.ref.node]['_selement']
 
     @property
+    def type_(self) -> type:
+        return self.ref.graph.nodes[self.ref.node]['_selement'].__class__
+
+    @property
+    def node_type(self) -> type:
+        return self.ref.graph.nodes[self.ref.node]['_type']
+
+    @property
     def path_string(self) -> str:
         return ".".join(f"{nv}" for nv in self.path[1:])
 
     @cached_property
-    def attributes(self) -> ValueBag:
-        return ValueBag(self.ref.graph.nodes[self.ref.node])
+    def node_attributes(self) -> ValueBag:
+        return dict(self.ref.graph.nodes[self.ref.node])
+
+    @cached_property
+    def p(self) -> ValueBag:
+        return ValueBag(
+            {k: v.value for k, v in self.ref.graph.nodes[self.ref.node].items() if isinstance(v, ParameterABC)}
+        )
 
     @cached_property
     def structure_tree(self) -> nx.DiGraph:
@@ -110,6 +126,10 @@ class NodeView:
     def out_degree(self):
         """Number of successors in the structure tree"""
         return sum(1 for u, v, k in self.ref.graph.out_edges(self.ref.node, data="_type") if k == FRAMEWORK)
+
+    @property
+    def fields(self):
+        return sorted(k for k in self.__dir__() if k[0] != '_')
 
 
 # class Old_NodeView:

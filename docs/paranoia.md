@@ -3,9 +3,9 @@
 > Can you help me occupy my brain?  
 > Oh, yeah  
 
-In **production**, Byron is typically run from a non-interactive script, for example on a server with ssh access. In this context, performance is critical, while verbosity should be minimal. During the **setup**, on the other hand, the user needs to check the various parameters and the coherence of the constraints. Here, speed is not essential, while warnings and hints can be quite useful. 
+In **production**, Byron is typically run from a non-interactive script, for example on a server with ssh access. In this context, performance is critical, while verbosity should be minimal. During **setup**, on the other hand, the user needs to check the various parameters and the coherence of the constraints. Here, speed is not essential, while warnings and hints can be quite useful. 
 
-Byron's ***paranoia checks*** are computationally intensive routines  that thoroughly analyze and verify both the integrity of the internal data structures and the  parameter values, providing error messages and hints. *Paranoia checks* are supposed to be used only during the setup phase, and they are automatically removed when an optimization flag is used.
+Byron's *paranoia checks* are computationally intensive routines that thoroughly analyze and verify both the integrity of internal data structures and parameter values, and provide error messages and hints. *Paranoia checks* are intended to be used during setup and are automatically removed when an optimization flag is specified..
 
 ## Terminal
 
@@ -13,7 +13,7 @@ If *paranoia checks* are enabled, the user is warned of the potential, indeed al
 
 > Paranoia checks are enabled: performances can be significantly impaired — consider using '-O'
 
-Possible solutions.
+Possible solutions:
 
 ### Use `-O` flag
 
@@ -37,20 +37,24 @@ By default, code run in IPython is not optimized. Byron should detect when it is
 
 > Paranoia checks are enabled in this notebook: performances can be significantly impaired
 
-Possible solutions.
+Possible solutions:
+
+### Export to a script
+
+Probably the best solution:
+
+* In Jupyter, from menu `File`, choose `Save and Export Notebook As...`, and then `Executable Script`.
+* Enable optimization when running the script from the terminal (see above).
 
 ### Set `PYTHONOPTIMIZE`
 
-It may be enough to set [`PYTHONOPTIMIZE`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONOPTIMIZE) before starting Jupyter:
+Set [`PYTHONOPTIMIZE`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHONOPTIMIZE) before starting Jupyter:
 
 ```shell
 $ PYTHONOPTIMIZE=1 jupyter-notebook
 ```
 
-### Export to a script
-
-* In Jupyter, from menu `File`, choose `Save and Export Notebook As...`, and then `Executable Script`.
-* Enable optimization when running the script from the terminal (see above).
+:warning: This will disable every single `assert` in notebooks: the behavior of other modules will be affected as well.
 
 ### Use magic
 
@@ -61,7 +65,7 @@ Jupyter allows some of the IPython's [magics](https://ipython.readthedocs.io/en/
 
 import byron
 
-# All super-fuzzer code
+# Fuzzer code
 ```
 
 * :+1: May be used in remote Notebooks (e.g., [Google's Colab](https://colab.research.google.com/))

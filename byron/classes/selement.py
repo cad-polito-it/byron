@@ -169,11 +169,11 @@ class SElement(metaclass=SElementMeta):
     def add_node_check(cls, function: Callable) -> None:
         cls.NODE_CHECKS = tuple([*cls.NODE_CHECKS, function])
 
-    def is_valid(self, node: Optional["NodeReference"] = None) -> bool:
+    def is_valid(self, node: Optional['NodeReference'] = None) -> bool:
         r"""Checks the validity of a `NodeReference` and internal attributes"""
         return all(f(node) for f in self.__class__.NODE_CHECKS)
 
-    def _is_valid_debug(self, node: "NodeReference") -> None:
+    def _is_valid_debug(self, node: 'NodeReference') -> None:
         check_result = True
         for f in self.__class__.NODE_CHECKS:
             if not f(node):

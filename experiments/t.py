@@ -12,6 +12,15 @@
 
 import byron
 
-macro_foo = byron.f.macro('foo #{num:04x}', num=byron.f.integer_parameter(0, 2**16))
-macro_bar = byron.f.macro('bar {num:+0.3e}', num=byron.f.float_parameter(-1, 1))
-macro_baz = byron.f.macro('baz 0x{array}', array=byron.f.array_parameter("0123456789abcdef", 8))
+
+def silly_check(nr):
+    values = list()
+    for s in nr.successors:
+        values.append(s.p.num)  # lazy fingers: s.p.num
+    return sorted(values, reverse=True) == values
+
+
+foo = byron.f.macro('foo {num}', num=byron.f.integer_parameter(-1000, +1000))
+sorted_bunch = byron.f.bunch([foo], size=7)
+sorted_bunch.add_node_check(silly_check)
+byron.f.as_text(sorted_bunch)

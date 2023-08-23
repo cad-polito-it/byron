@@ -203,8 +203,8 @@ def bunch(
             n_macros = rrandom.random_int(T.SIZE[0], T.SIZE[1])
             return [rrandom.choice(T.POOL) for _ in range(n_macros)]
 
-    def check_out_degree(n):
-        return n.out_degree >= size[0] and n.out_degree < size[1]
+    def check_out_degree(nr):
+        return nr.out_degree >= size[0] and nr.out_degree < size[1]
 
     T.add_node_check(check_out_degree)
 
