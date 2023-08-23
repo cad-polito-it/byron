@@ -41,7 +41,7 @@ class SElementMeta(type):
     BYRON_CLASS_ID: str
     BYRON_CLASS_NAME: str
     BYRON_CLASS_TAGS: tuple[str]
-    FORCED_PARENT: type | str | None
+    FORCED_PARENT: Optional[type | str]
 
     _counters = defaultdict(int)
 
