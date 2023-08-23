@@ -88,7 +88,7 @@ def check_value_range(val: Number, min_: Optional[Number] = None, max_: Optional
     return True
 
 
-def check_valid_length(obj: Collection, min_length: int | None = None, max_length: int | None = None) -> bool:
+def check_valid_length(obj: Collection, min_length: Optional[int] = None, max_length: Optional[int] = None) -> bool:
     """Checks that `len(obj)` is in the half-open range [min_, max_)."""
     if min_length is not None and len(obj) < min_length:
         logger.error("ValueError: incorrect length: len(%s) < %s", repr(obj), repr(min_length))
