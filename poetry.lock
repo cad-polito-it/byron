@@ -12,6 +12,7 @@ files = [
 ]
 
 [package.dependencies]
+exceptiongroup = {version = "*", markers = "python_version < \"3.11\""}
 idna = ">=2.8"
 sniffio = ">=1.1"
 
@@ -30,26 +31,6 @@ files = [
     {file = "appnope-0.1.3-py2.py3-none-any.whl", hash = "sha256:265a455292d0bd8a72453494fa24df5a11eb18373a60c7c0430889f22548605e"},
     {file = "appnope-0.1.3.tar.gz", hash = "sha256:02bd91c4de869fbb1e1c50aafc4098827a7a54ab2f39d9dcba6c9547ed920e24"},
 ]
-
-[[package]]
-name = "arcade"
-version = "2.6.17"
-description = "Arcade Game Development Library"
-optional = false
-python-versions = ">=3.7"
-files = [
-    {file = "arcade-2.6.17-py3-none-any.whl", hash = "sha256:eee7fcbb1384bf5964f4bb796d234896573045139cd297b0a482b63a9e905c2f"},
-]
-
-[package.dependencies]
-pillow = ">=9.3.0,<9.4.0"
-pyglet = "2.0.dev23"
-pymunk = ">=6.4.0,<6.5.0"
-pytiled-parser = "2.2.0"
-
-[package.extras]
-dev = ["Pygments (==2.10.0)", "Sphinx (==4.5.0)", "coverage", "coveralls", "dirsync", "dirsync (==2.2.5)", "docutils (<0.18)", "flake8", "furo", "mypy", "pytest", "pytest-cov", "pytest-mock", "pyyaml (==6.0)", "sphinx-copybutton", "sphinx-copybutton (==0.5.0)", "sphinx-sitemap", "sphinx-sitemap (==2.2.0)", "wheel"]
-docs = ["Pygments (==2.10.0)", "Sphinx (==4.5.0)", "dirsync", "dirsync (==2.2.5)", "docutils (<0.18)", "furo", "pyyaml (==6.0)", "sphinx-copybutton", "sphinx-copybutton (==0.5.0)", "sphinx-sitemap", "sphinx-sitemap (==2.2.0)", "wheel"]
 
 [[package]]
 name = "argon2-cffi"
@@ -135,7 +116,11 @@ files = [
 
 [package.dependencies]
 lazy-object-proxy = ">=1.4.0"
-wrapt = {version = ">=1.14,<2", markers = "python_version >= \"3.11\""}
+typing-extensions = {version = ">=4.0.0", markers = "python_version < \"3.11\""}
+wrapt = [
+    {version = ">=1.11,<2", markers = "python_version < \"3.11\""},
+    {version = ">=1.14,<2", markers = "python_version >= \"3.11\""},
+]
 
 [[package]]
 name = "asttokens"
@@ -164,6 +149,9 @@ files = [
     {file = "async-lru-2.0.4.tar.gz", hash = "sha256:b8a59a5df60805ff63220b2a0c5b5393da5521b113cd5465a44eb037d81a5627"},
     {file = "async_lru-2.0.4-py3-none-any.whl", hash = "sha256:ff02944ce3c288c5be660c42dbcca0742b32c3b279d6dceda655190240b99224"},
 ]
+
+[package.dependencies]
+typing-extensions = {version = ">=4.0.0", markers = "python_version < \"3.11\""}
 
 [[package]]
 name = "attrs"
@@ -262,6 +250,7 @@ packaging = ">=22.0"
 pathspec = ">=0.9.0"
 platformdirs = ">=2"
 tokenize-rt = {version = ">=3.2.0", optional = true, markers = "extra == \"jupyter\""}
+tomli = {version = ">=1.1.0", markers = "python_version < \"3.11\""}
 
 [package.extras]
 colorama = ["colorama (>=0.4.3)"]
@@ -715,6 +704,20 @@ files = [
 
 [package.extras]
 graph = ["objgraph (>=1.7.2)"]
+
+[[package]]
+name = "exceptiongroup"
+version = "1.1.3"
+description = "Backport of PEP 654 (exception groups)"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "exceptiongroup-1.1.3-py3-none-any.whl", hash = "sha256:343280667a4585d195ca1cf9cef84a4e178c4b6cf2274caef9859782b567d5e3"},
+    {file = "exceptiongroup-1.1.3.tar.gz", hash = "sha256:097acd85d473d75af5bb98e41b61ff7fe35efe6675e4f9370ec6ec5126d160e9"},
+]
+
+[package.extras]
+test = ["pytest (>=6)"]
 
 [[package]]
 name = "executing"
@@ -1284,6 +1287,7 @@ jupyter-server = ">=2.4.0,<3"
 jupyterlab-server = ">=2.19.0,<3"
 notebook-shim = ">=0.2"
 packaging = "*"
+tomli = {version = "*", markers = "python_version < \"3.11\""}
 tornado = ">=6.2.0"
 traitlets = "*"
 
@@ -1713,6 +1717,7 @@ files = [
 
 [package.dependencies]
 mypy-extensions = ">=1.0.0"
+tomli = {version = ">=1.1.0", markers = "python_version < \"3.11\""}
 typing-extensions = ">=4.1.0"
 
 [package.extras]
@@ -2259,17 +2264,6 @@ files = [
 ]
 
 [[package]]
-name = "pyglet"
-version = "2.0.dev23"
-description = "Cross-platform windowing and multimedia library"
-optional = false
-python-versions = "*"
-files = [
-    {file = "pyglet-2.0.dev23-py3-none-any.whl", hash = "sha256:3f425b45376892f6866e9b10f215004f22f720a2ff02df5d4b96405d04cb546d"},
-    {file = "pyglet-2.0.dev23.zip", hash = "sha256:0e8fab3cb085b9ae28ad782bf636e75b9493816baee9c1c57cb9d0769b1b894d"},
-]
-
-[[package]]
 name = "pygments"
 version = "2.16.1"
 description = "Pygments is a syntax highlighting package written in Python."
@@ -2297,81 +2291,19 @@ files = [
 [package.dependencies]
 astroid = ">=2.15.6,<=2.17.0-dev0"
 colorama = {version = ">=0.4.5", markers = "sys_platform == \"win32\""}
-dill = {version = ">=0.3.6", markers = "python_version >= \"3.11\""}
+dill = [
+    {version = ">=0.2", markers = "python_version < \"3.11\""},
+    {version = ">=0.3.6", markers = "python_version >= \"3.11\""},
+]
 isort = ">=4.2.5,<6"
 mccabe = ">=0.6,<0.8"
 platformdirs = ">=2.2.0"
+tomli = {version = ">=1.1.0", markers = "python_version < \"3.11\""}
 tomlkit = ">=0.10.1"
 
 [package.extras]
 spelling = ["pyenchant (>=3.2,<4.0)"]
 testutils = ["gitpython (>3)"]
-
-[[package]]
-name = "pymunk"
-version = "6.4.0"
-description = "Pymunk is a easy-to-use pythonic 2d physics library"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "pymunk-6.4.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:3651706fad57d2ef5be58cccc911e8ddf71c2d22171e28e05624dbf8591a519b"},
-    {file = "pymunk-6.4.0-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:491feebb552e17f81c2b24d7a6558ad7e1c5f59545f0494b5fa3f0174f4fc54d"},
-    {file = "pymunk-6.4.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:19051ac3916767b000c8d6b945883769276b82c5e9660f3739b2af534393794b"},
-    {file = "pymunk-6.4.0-cp310-cp310-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:a01637814a4cd9e356deb3145d54a71cdd256823a0ae32706d8c731b6053c67b"},
-    {file = "pymunk-6.4.0-cp310-cp310-musllinux_1_1_i686.whl", hash = "sha256:189b12b71dd938758745892aa9d6ea26c8b9b5fdf4e985638137ce4e02ff9d5f"},
-    {file = "pymunk-6.4.0-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:1e02e45012e788fe828e5ea470049f797688565a4ff06f7b8269f5f22d152ea5"},
-    {file = "pymunk-6.4.0-cp310-cp310-win32.whl", hash = "sha256:ad252c1221f201b466984a17e6c61198e6be44691d4f5d46192fb313e8d170fc"},
-    {file = "pymunk-6.4.0-cp310-cp310-win_amd64.whl", hash = "sha256:8b65185404af6a3bc8447d8aa3d0149378323d8d487aa4accf1eb2491f21a568"},
-    {file = "pymunk-6.4.0-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:0063de8563021f47abbca03526f77786caa9c441ed90264566ad59e480688c95"},
-    {file = "pymunk-6.4.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:02d4650c677a37d6d4617b4fd74ce1b943da9f916062bf7b60cd849c7da18d75"},
-    {file = "pymunk-6.4.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:39d6bf81b0d9ffe84adc926e74e3a446c515107d87408b0812ca7fc18378a7e2"},
-    {file = "pymunk-6.4.0-cp311-cp311-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:b7b326b64d2903a17581952c8813e64e8373077481f602420e683e0940e9f00a"},
-    {file = "pymunk-6.4.0-cp311-cp311-musllinux_1_1_i686.whl", hash = "sha256:f477e920b537e0a1d25a3bfe2672c042b40e2d9da156869c9c6fe208e8ae4668"},
-    {file = "pymunk-6.4.0-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:5d6b19d8bf6394507bb0425f627a30d00ad49c94aaa92abd284594d78a1aa7c3"},
-    {file = "pymunk-6.4.0-cp311-cp311-win32.whl", hash = "sha256:1c849e96d9d9b10d46eb9f5ebab7a9e120aba1ff911d055cff896bec519db965"},
-    {file = "pymunk-6.4.0-cp311-cp311-win_amd64.whl", hash = "sha256:8d0747e0074adf8e6997bc3991d712f2476b2abde2328f1cf7b2bc6120753db9"},
-    {file = "pymunk-6.4.0-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:061c52ff3c1fe8a86a6bea072099f0ef2f68e18d4987a92eb04c727479f9aae5"},
-    {file = "pymunk-6.4.0-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:85a942fdce0a8122e4ad2a0ae8c19a2bcad31716d63b57aa43394ebe2a95c650"},
-    {file = "pymunk-6.4.0-cp36-cp36m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:236188f41b58e00c0d3249ebe09c96ee8853e583558088a809203c663a366876"},
-    {file = "pymunk-6.4.0-cp36-cp36m-musllinux_1_1_i686.whl", hash = "sha256:e6da38bfce15ea8df39fd11614224500c98e7dfd372a5a6de7745a5599879a88"},
-    {file = "pymunk-6.4.0-cp36-cp36m-musllinux_1_1_x86_64.whl", hash = "sha256:e3aff899733251b50f4d762d497cd3b1481b6d16488f0dcb179f73ef9a626cc8"},
-    {file = "pymunk-6.4.0-cp36-cp36m-win32.whl", hash = "sha256:486c17603abf92f32aa1640f1f03b8b7637b9acb20750a88e02ac58c95c2be96"},
-    {file = "pymunk-6.4.0-cp36-cp36m-win_amd64.whl", hash = "sha256:c167bcd66f4ff322abef24175b5518b8a9f27798a2b8dbb6f7b632115dc71186"},
-    {file = "pymunk-6.4.0-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:292494cb438047206c03820b0c41d072992cb028d20a3d920277479dc3011ee7"},
-    {file = "pymunk-6.4.0-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c9763088b1a229ea816adfc672fe3ae0cc8153d39a98da602c98ff190ba584d8"},
-    {file = "pymunk-6.4.0-cp37-cp37m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:393b2eea7319b6a841ff597e9ff90ec8ab1fff6c0a8c920d08c5231ed87a1cdc"},
-    {file = "pymunk-6.4.0-cp37-cp37m-musllinux_1_1_i686.whl", hash = "sha256:6a59b1fb11a1c9c9b2abac78d97c96a060f77f8be6e0e8815fc25ae6ed5120d9"},
-    {file = "pymunk-6.4.0-cp37-cp37m-musllinux_1_1_x86_64.whl", hash = "sha256:3bf05beb688f06bc51cb27e56c5f05ceb189ce108e536cdccb6e710ca4975da0"},
-    {file = "pymunk-6.4.0-cp37-cp37m-win32.whl", hash = "sha256:ef2c25ecd78883b90f038299ca632cdd55e92148647d7242f7132dd5e8a5ba77"},
-    {file = "pymunk-6.4.0-cp37-cp37m-win_amd64.whl", hash = "sha256:19798b0a0e98ce84489023b832963aa3f8f05097c3614b3b777885a8dc039030"},
-    {file = "pymunk-6.4.0-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:853a4839601ab82f4055791afa7284e71ad7c58c68719ee7160c48026589d0ab"},
-    {file = "pymunk-6.4.0-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:030acf18b2fe6ed0211feab645ce51568b18b182756256b8135d20411ae9b27e"},
-    {file = "pymunk-6.4.0-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:7efb271777bb887451d3cba88110c9d9a21ba231eb4b1605e88b7822a2d2e5d7"},
-    {file = "pymunk-6.4.0-cp38-cp38-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:32665d4ba65ff4310de0405d8fd0436d3a808a9d1ce61604078054af7d08497a"},
-    {file = "pymunk-6.4.0-cp38-cp38-musllinux_1_1_i686.whl", hash = "sha256:6043c7031c5f7d8443cd6aa06f774b4bf2389c1164fda33e8ec80848c16b1710"},
-    {file = "pymunk-6.4.0-cp38-cp38-musllinux_1_1_x86_64.whl", hash = "sha256:e1bdc6d7c59ceb1bae542e3b3093054e06b96080ab46f6a80def20afe3d268a2"},
-    {file = "pymunk-6.4.0-cp38-cp38-win32.whl", hash = "sha256:a1e75d8ae0b38e8c8c87231e8728bfa6c19f59d4006417630dff87c151726e83"},
-    {file = "pymunk-6.4.0-cp38-cp38-win_amd64.whl", hash = "sha256:2d58222bbd358f03f3fe29a1878d9d0f78513dd9822f622fa9023b899b3eb42f"},
-    {file = "pymunk-6.4.0-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:190060a06a98cb06cfe68c190b79c8575460a8ae27b55e62f1aa1ee06a7acf77"},
-    {file = "pymunk-6.4.0-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:e0ec63a3796a5c7f1efeb6a40194806bcbc2389cd32e8fc67915daa395991c0c"},
-    {file = "pymunk-6.4.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:80998668f87fc696e48fc972a341a787e747cfdd3b23fff0e6a73c6ab882e165"},
-    {file = "pymunk-6.4.0-cp39-cp39-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:0ef39069e4ccd90b188102381e8fb2558ecfd61bd04d09370896cb76eafd0773"},
-    {file = "pymunk-6.4.0-cp39-cp39-musllinux_1_1_i686.whl", hash = "sha256:83efbe0d23cee31c4fd80c853babd2cb8cafb12cf94b8c2ab88748d9435064d9"},
-    {file = "pymunk-6.4.0-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:1301f9e657c26de9148c6857b3d9005c6356b4a0783d06cdecfd00661b2161e7"},
-    {file = "pymunk-6.4.0-cp39-cp39-win32.whl", hash = "sha256:710746dcb65ae543dcfa2f64c19793ecd5d12d70cee10ea2efc6fd6a7a5265a9"},
-    {file = "pymunk-6.4.0-cp39-cp39-win_amd64.whl", hash = "sha256:a7a1c985a0340785fa70eee8524305f2a329debe542d877dc0f206e18332d528"},
-    {file = "pymunk-6.4.0-pp39-pypy39_pp73-macosx_10_9_x86_64.whl", hash = "sha256:73f8b3ca9948519dcc96989fbebd458b525f6a3eb5492f96fef64f07b61ad22b"},
-    {file = "pymunk-6.4.0-pp39-pypy39_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ad32a32fe508d5bb1c2c0b6446dba32cfb812688bc2b7cf4780a24e68b9a2d16"},
-    {file = "pymunk-6.4.0-pp39-pypy39_pp73-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:098dfc52d8c1ecb4108ef345f3d4526a7adfef8eaa5148b250ad5a1754580675"},
-    {file = "pymunk-6.4.0-pp39-pypy39_pp73-win_amd64.whl", hash = "sha256:6453475e46414d2e1d71314dcb565ce51caa195b0f7bf1714453e9f1012ee970"},
-    {file = "pymunk-6.4.0.zip", hash = "sha256:60dcd9ff0433e6ce49e5cb577a4368d0592c4685f4deb644d705c882161c724e"},
-]
-
-[package.dependencies]
-cffi = ">=1.15.0"
-
-[package.extras]
-dev = ["aafigure", "matplotlib", "pygame", "pyglet (<2.0.0)", "sphinx", "wheel"]
 
 [[package]]
 name = "pyparsing"
@@ -2400,9 +2332,11 @@ files = [
 
 [package.dependencies]
 colorama = {version = "*", markers = "sys_platform == \"win32\""}
+exceptiongroup = {version = ">=1.0.0rc8", markers = "python_version < \"3.11\""}
 iniconfig = "*"
 packaging = "*"
 pluggy = ">=0.12,<2.0"
+tomli = {version = ">=1.0.0", markers = "python_version < \"3.11\""}
 
 [package.extras]
 testing = ["argcomplete", "attrs (>=19.2.0)", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "setuptools", "xmlschema"]
@@ -2431,27 +2365,6 @@ files = [
     {file = "python-json-logger-2.0.7.tar.gz", hash = "sha256:23e7ec02d34237c5aa1e29a070193a4ea87583bb4e7f8fd06d3de8264c4b2e1c"},
     {file = "python_json_logger-2.0.7-py3-none-any.whl", hash = "sha256:f380b826a991ebbe3de4d897aeec42760035ac760345e57b812938dc8b35e2bd"},
 ]
-
-[[package]]
-name = "pytiled-parser"
-version = "2.2.0"
-description = "A library for parsing JSON formatted Tiled Map Editor maps and tilesets."
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "pytiled_parser-2.2.0-py3-none-any.whl", hash = "sha256:655e2964d39b4d1f703e6b4e8aabef3ab88735e7e258256de8330153a5826357"},
-    {file = "pytiled_parser-2.2.0.tar.gz", hash = "sha256:7a60b319545db7e3d9ffdb73d1ea613e11a8217c11547bd50e3424decb7d40a3"},
-]
-
-[package.dependencies]
-attrs = ">=18.2.0"
-typing-extensions = "*"
-
-[package.extras]
-build = ["build"]
-docs = ["furo", "myst-parser", "sphinx", "sphinx-sitemap"]
-tests = ["black", "flake8", "isort (>=4.2.5,<5)", "mypy", "pytest", "pytest-cov"]
-zstd = ["zstd (==1.4.8.1)"]
 
 [[package]]
 name = "pytz"
@@ -3075,6 +2988,17 @@ files = [
 ]
 
 [[package]]
+name = "tomli"
+version = "2.0.1"
+description = "A lil' TOML parser"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
+    {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
+]
+
+[[package]]
 name = "tomlkit"
 version = "0.12.1"
 description = "Style preserving TOML library"
@@ -3343,5 +3267,5 @@ files = [
 
 [metadata]
 lock-version = "2.0"
-python-versions = ">=3.11,<3.13"
-content-hash = "c50083f0d5c39cdd706e4dd3faf17e7118c48d0c3b6947bf02ab6bb8a2c7d410"
+python-versions = ">=3.10,<3.13"
+content-hash = "ae4c5510dd8375c80e5a87c968adbee61fb2b4c27b553ed3c0677b2f9912460a"

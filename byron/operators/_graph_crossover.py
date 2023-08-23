@@ -71,6 +71,6 @@ def bunch_random_crossover(p1: Individual, p2: Individual, strength=1.0) -> list
         offspring.genome.add_edge(ed[0], first_locus, **ed[1])
     # offspring._Individual__COUNTER == max(offspring.genome.nodes)
 
-    offspring.genome.graph["node_count"] = max(offspring.genome.nodes) + 1
+    offspring.genome.graph['node_count'] = max(offspring.genome.nodes) + 1
 
     return [offspring]

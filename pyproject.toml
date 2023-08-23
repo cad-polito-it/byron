@@ -10,7 +10,7 @@
 
 [tool.poetry]
 name = "byron"
-version = "0.8a1.dev12"
+version = "0.8a1.dev13"
 description = "Multi-purpose extensible self-adaptive optimizer and fuzzer"
 authors = [
     "Giovanni Squillero <giovanni.squillero@polito.it>",
@@ -34,7 +34,7 @@ classifiers = [
 ]
 # homepage = "https://squillero.github.io/byron/"
 repository = "https://github.com/cad-polito-it/byron"
-documentation = "https://github.com/cad-polito-it/byron/tree/pre-alpha/examples/"
+documentation = "https://github.com/cad-polito-it/byron/tree/alpha/examples/"
 keywords = [
     "Aritificial Intelligence",
     "Evolutionary Computation",
@@ -43,7 +43,6 @@ keywords = [
 ]
 
 [tool.poetry.dependencies]
-arcade = { version = "^2.6.17", extras = ["plot"] }
 joblib = { version = "^1.3.2", extras = ["run"] }
 matplotlib = { version = "^3.7.2", extras = ["plot"] }
 networkx = "^3.1"
@@ -97,7 +96,7 @@ max-line-length = 120
 source-roots = ['src']
 
 [bumpver]
-current_version = "0.8a1.dev12"
+current_version = "0.8a1.dev13"
 version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
 commit_message = "Bump version to {new_version}"
 commit = false

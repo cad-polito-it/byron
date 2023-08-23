@@ -51,8 +51,8 @@ from byron.classes.selement import *
 
 
 def add_node(G: nx.MultiDiGraph) -> int:
-    node_id = G.graph["node_count"]
-    G.graph["node_count"] += 1
+    node_id = G.graph['node_count']
+    G.graph['node_count'] += 1
     G.add_node(node_id)
     return node_id
 

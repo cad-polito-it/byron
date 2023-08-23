@@ -365,7 +365,7 @@ class Individual(Paranoid):
 
         # ==[check nodes (semantic)]=========================================
         assert all(
-            n < self._genome.graph["node_count"] for n in self._genome
+            n < self._genome.graph['node_count'] for n in self._genome
         ), f"{PARANOIA_VALUE_ERROR}: Invalid 'node_count' attribute ({self._genome.graph['node_count']})"
 
         assert all(
@@ -401,6 +401,12 @@ class Individual(Paranoid):
         ), f"{PARANOIA_VALUE_ERROR}: Inconsistent keys in structural edges"
 
         return True
+
+    def consolidate_genome(self) -> None:
+        self._genome = nx.convert_node_labels_to_integers(self._genome)
+        fasten_subtree_parameters(NodeReference(self._genome, NODE_ZERO))
+        self._genome.graph['node_count'] = len(self._genome)
+        self.run_paranoia_checks()
 
     def describe(
         self,
