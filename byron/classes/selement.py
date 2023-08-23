@@ -26,7 +26,7 @@
 
 __all__ = ['SElement', 'SElementMeta']
 
-from typing import Optional, Callable, Sequence
+from typing import Callable, Sequence, Optional
 from collections import defaultdict
 import re
 from uuid import uuid1 as generate_uuid
@@ -41,7 +41,7 @@ class SElementMeta(type):
     BYRON_CLASS_ID: str
     BYRON_CLASS_NAME: str
     BYRON_CLASS_TAGS: tuple[str]
-    FORCED_PARENT: Optional[type | str]
+    FORCED_PARENT: type | str | None
 
     _counters = defaultdict(int)
 

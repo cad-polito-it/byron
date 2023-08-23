@@ -28,7 +28,7 @@
 __all__ = ['ParameterABC', 'ParameterNumericABC', 'ParameterArrayABC', 'ParameterStructuralABC', 'ParameterSharedABC']
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional
+from typing import Any
 
 from networkx.classes import MultiDiGraph
 
@@ -101,7 +101,7 @@ class ParameterStructuralABC(ParameterABC):
 
     __slots__ = []  # Preventing the automatic creation of __dict__
 
-    _node_reference: Optional[NodeReference]
+    _node_reference: NodeReference | None
 
     def __init__(self):
         super().__init__()

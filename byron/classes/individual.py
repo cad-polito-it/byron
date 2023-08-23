@@ -29,7 +29,7 @@
 
 __all__ = ['Individual', 'Lineage', 'Age']
 
-from typing import Any, Callable, Optional
+from typing import Any, Callable
 from itertools import chain
 from copy import deepcopy, copy
 import operator
@@ -61,7 +61,7 @@ from byron.classes.readymade_macros import MacroZero
 
 @dataclass(frozen=True, slots=True)
 class Lineage:
-    operator: Optional[Callable]
+    operator: Callable | None
     parents: tuple
 
     def __str__(self):
@@ -110,8 +110,8 @@ class Individual(Paranoid):
     __COUNTER: int = 0
 
     _genome: nx.classes.MultiDiGraph
-    _fitness: Optional[FitnessABC]
-    _lineage: Optional[Lineage]
+    _fitness: FitnessABC | None
+    _lineage: Lineage | None
     _age: Age
     _str: str
 

@@ -27,7 +27,8 @@
 
 __all__ = ["vanilla_ea"]
 
-from typing import Any, Optional
+from typing import Optional
+
 from time import perf_counter_ns, process_time_ns
 from datetime import timedelta
 

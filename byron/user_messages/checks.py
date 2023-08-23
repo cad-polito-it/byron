@@ -29,7 +29,6 @@ __all__ = ["check_valid_type", "check_valid_types", "check_value_range", "check_
 
 from numbers import Number
 from collections.abc import Collection
-from typing import Optional
 
 from .messaging import logger
 from .exception import *
@@ -77,7 +76,7 @@ def check_valid_types(obj, *valid_types: type, subclass: bool = False) -> bool:
     raise ByronError(PARANOIA_TYPE_ERROR)
 
 
-def check_value_range(val: Number, min_: Optional[Number] = None, max_: Optional[Number] = None) -> bool:
+def check_value_range(val: Number, min_: Number | None = None, max_: Number | None = None) -> bool:
     """Checks that `val` is in the half-open range [min_, max_)."""
     if min_ is not None and val < min_:
         logger.error("ValueError: %s < %s (min)", repr(val), repr(min_))
@@ -88,7 +87,7 @@ def check_value_range(val: Number, min_: Optional[Number] = None, max_: Optional
     return True
 
 
-def check_valid_length(obj: Collection, min_length: Optional[int] = None, max_length: Optional[int] = None) -> bool:
+def check_valid_length(obj: Collection, min_length: int | None = None, max_length: int | None = None) -> bool:
     """Checks that `len(obj)` is in the half-open range [min_, max_)."""
     if min_length is not None and len(obj) < min_length:
         logger.error("ValueError: incorrect length: len(%s) < %s", repr(obj), repr(min_length))

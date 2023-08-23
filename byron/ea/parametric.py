@@ -27,7 +27,6 @@
 
 __all__ = ["parametric_ea"]
 
-from typing import Optional
 
 from byron.operators import *
 from byron.sys import *
@@ -54,7 +53,7 @@ def parametric_ea(
     mu: int = 10,
     lambda_: int = 20,
     max_generation: int = 100,
-    max_fitness: Optional[FitnessABC] = None,
+    max_fitness: FitnessABC | None = None,
     top_best: int = None,
     lifespan: int = None,
     operators: list = None,
