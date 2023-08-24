@@ -187,7 +187,7 @@ class Individual(Paranoid):
         return list(nx.dfs_preorder_nodes(self.structure_tree))
 
     @property
-    def top_frame(self) -> FrameABC:
+    def top_frame(self) -> type[FrameABC]:
         return self._genome.graph['top_frame']
 
     @property
@@ -207,7 +207,6 @@ class Individual(Paranoid):
         """Set the new Individual's genome (ie. the underlying NetworkX MultiDiGraph)."""
         self._genome = new_genome
         self._fitness = None
-        assert self.run_paranoia_checks()
 
     @property
     def lineage(self):
@@ -381,6 +380,28 @@ class Individual(Paranoid):
         assert isinstance(self._genome.nodes[0]['_selement'], MacroZero), f"{PARANOIA_TYPE_ERROR}: Incorrect NodeZero"
 
         # ==[check structural parameter]=====================================
+        for node in (n for n, t in self._genome.nodes(data='_type') if t == MACRO_NODE):
+            for p_name, p_type in (
+                (p, P)
+                for p, P in self._genome.nodes[node]['_selement'].parameter_types.items()
+                if issubclass(P, ParameterStructuralABC)
+            ):
+                assert (
+                    sum(
+                        1
+                        for u, v, k in self._genome.out_edges(node, keys=True)
+                        if k == self._genome.nodes[node][p_name].key
+                    )
+                    == 1
+                ), f"{PARANOIA_VALUE_ERROR}: Problem with parameter '{p_name}' {p_type}"
+            keys = [
+                self._genome.nodes[node][p].key
+                for p, P in self._genome.nodes[node]['_selement'].parameter_types.items()
+                if issubclass(P, ParameterStructuralABC)
+            ]
+            for key in (k for u, v, k, t in self._genome.out_edges(node, data='_type', keys=True) if t == LINK):
+                assert key in keys, f"{PARANOIA_VALUE_ERROR}: Unknown key {key} in none {node}"
+
         assert all(
             p._node_reference == NodeReference(self._genome, n)
             for n in self._genome

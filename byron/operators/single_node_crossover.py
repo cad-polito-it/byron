@@ -39,26 +39,37 @@ from byron.user_messages import *
 
 
 @genetic_operator(num_parents=2)
-def single_node_crossover(parent1: Individual, parent2: Individual):
+def single_target_node_crossover(parent1: Individual, parent2: Individual):
+    assert parent1.run_paranoia_checks()
+    assert parent2.run_paranoia_checks()
     common_selements = {k: v for k, v in group_selements([parent1, parent2], only_targets=True).items() if len(v) == 2}
     if not common_selements:
         raise ByronOperatorFailure
     target = rrandom.choice(list(common_selements.keys()))
     node1 = rrandom.choice(common_selements[target][parent1])
     node2 = rrandom.choice(common_selements[target][parent2])
-    offspring = nx.compose(parent1.genome, parent2.genome)
-    node1_fanin = offspring.in_edges(node1, data='_type', keys=True)
-    node2_fanin = offspring.in_edges(node2, data='_type', keys=True)
-    node1_parent_link = rrandom.choice([(u, v, k, t) for u, v, k, t in node1_fanin if t != FRAMEWORK])
-    node2_parent_link = rrandom.choice([(u, v, k, t) for u, v, k, t in node2_fanin if t == node1_parent_link[3]])
-
-    offspring.remove_edge(node1_parent_link[0], node1_parent_link[1], node1_parent_link[2])
-    offspring.remove_edge(node2_parent_link[0], node2_parent_link[1], node2_parent_link[2])
-    offspring.add_edge(node1_parent_link[0], node2_parent_link[1], node1_parent_link[2], _type=node1_parent_link[3])
-    discard_useless_components(offspring)
-
-    if not get_structure_tree(offspring):
+    new_genome = nx.compose(deepcopy(parent1.genome), deepcopy(parent2.genome))
+    node1_fanin = new_genome.in_edges(node1, data='_type', keys=True)
+    node2_fanin = new_genome.in_edges(node2, data='_type', keys=True)
+    try:
+        node1_parent_link = rrandom.choice([(u, v, k, t) for u, v, k, t in node1_fanin if t != FRAMEWORK])
+        node2_parent_link = rrandom.choice([(u, v, k, t) for u, v, k, t in node2_fanin if t == node1_parent_link[3]])
+    except:
         raise ByronOperatorFailure
 
-    Node.reset_labels(offspring)
-    return [Individual(parent1.top_frame, offspring)]
+    new_genome.remove_edge(node1_parent_link[0], node1_parent_link[1], node1_parent_link[2])
+    new_genome.remove_edge(node2_parent_link[0], node2_parent_link[1], node2_parent_link[2])
+    new_genome.add_edge(node1_parent_link[0], node2_parent_link[1], node1_parent_link[2], _type=node1_parent_link[3])
+    new_genome.add_edge(node2_parent_link[0], node1_parent_link[1], node2_parent_link[2], _type=node1_parent_link[3])
+    discard_useless_components(new_genome)
+
+    if not get_structure_tree(new_genome):
+        raise ByronOperatorFailure
+
+    Node.reset_labels(new_genome)
+    new_individual = Individual(parent1.top_frame, new_genome)
+    assert new_individual.run_paranoia_checks()
+
+    assert parent1.run_paranoia_checks()
+    assert parent2.run_paranoia_checks()
+    return [new_individual]

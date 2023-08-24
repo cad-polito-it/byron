@@ -132,7 +132,8 @@ def vanilla_ea(
             op = rrandom.choice(ops)
             parents = list()
             for _ in range(op.num_parents):
-                parents.append(tournament_selection(population, 1))
+                parent = tournament_selection(population, 1)
+                parents.append(parent)
             new_individuals += op(*parents)
 
         if not new_individuals:

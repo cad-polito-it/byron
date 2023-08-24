@@ -44,11 +44,15 @@ class ParameterABC(SElement, Paranoid):
 
     __slots__ = []  # Preventing the automatic creation of __dict__
 
-    COUNTER = 0
+    __LAST_BYRON_PARAMETER: int = 0
+
+    @staticmethod
+    def generate_new_key():
+        ParameterABC.__LAST_BYRON_PARAMETER += 1
+        return ParameterABC.__LAST_BYRON_PARAMETER
 
     def __init__(self):
-        ParameterStructuralABC.COUNTER += 1
-        self._key = ParameterStructuralABC.COUNTER
+        self._key = ParameterABC.generate_new_key()
         self._value = None
 
     def __eq__(self, other: 'ParameterABC') -> bool:
@@ -113,6 +117,12 @@ class ParameterStructuralABC(ParameterABC):
         assert check_valid_type(node_reference.node, int)
         assert node_reference.node in node_reference.graph
         self._node_reference = node_reference
+        old_value = self.value
+        if old_value:
+            self.value = None
+        self._key = ParameterABC.generate_new_key()
+        if old_value:
+            self.value = old_value
 
     def unfasten(self):
         self._node_reference = None

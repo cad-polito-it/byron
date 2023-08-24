@@ -50,4 +50,6 @@ class Node(int):
         """Set Graph node labels to unique numbers"""
         new_labels = {k: Node() for k in G.nodes if k != NODE_ZERO}
         nx.relabel_nodes(G, new_labels, copy=False)
+        for k, v in new_labels.items():
+            G.nodes[v]['%old_label'] = k
         fasten_subtree_parameters(NodeReference(G, NODE_ZERO))

@@ -102,18 +102,10 @@ def _global_reference(
             else:
                 target = rrandom.choice(potential_targets, self.value, sigma=strength)
             if target is None:
-                new_node_reference = unroll_selement(self._target_frame, self._node_reference.graph)
-
-                parent = NODE_ZERO
-
-                self._node_reference.graph.add_edge(parent, new_node_reference.node, _type=FRAMEWORK)
-                initialize_subtree(new_node_reference)
-
-                # second and last try
-                if strength == 1.0:
-                    target = rrandom.choice(self.get_potential_targets(add_none=False))
-                else:
-                    target = rrandom.choice(self.get_potential_targets(add_none=False), self.value, sigma=strength)
+                new_node = unroll_selement(self._target_frame, self._node_reference.graph)
+                self._node_reference.graph.add_edge(NODE_ZERO, new_node.node, _type=FRAMEWORK)
+                initialize_subtree(new_node)
+                target = new_node.node
 
             if not target:
                 raise ByronOperatorFailure
