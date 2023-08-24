@@ -33,6 +33,7 @@ from .identifiable import *
 from .individual import *
 from .macro import *
 from .monitor import *
+from .node import *
 from .node_reference import *
 from .node_view import *
 from .parameter import *

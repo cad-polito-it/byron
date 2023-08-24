@@ -90,7 +90,7 @@ class NodeView:
         )
 
     @cached_property
-    def structure_tree(self) -> nx.DiGraph:
+    def tree(self) -> nx.DiGraph:
         tree = nx.DiGraph()
         tree.add_nodes_from(self.ref.graph.nodes)
         tree.add_edges_from((u, v) for u, v, k in self.ref.graph.edges(data="_type") if k == FRAMEWORK)

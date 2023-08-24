@@ -26,17 +26,18 @@
 # v1 / April 2023 / Squillero (GX)
 
 __all__ = [
-    "add_node",
-    "get_predecessor",
-    "get_siblings",
-    "get_successors",
-    "set_successors_order",
-    "get_node_color_dict",
-    "_get_first_macro",
-    "get_all_macros",
-    "get_all_frames",
-    "get_all_parameters",
+    '_get_first_macro',
+    'discard_useless_components',
     'fasten_subtree_parameters',
+    'get_all_frames',
+    'get_all_macros',
+    'get_all_parameters',
+    'get_node_color_dict',
+    'get_predecessor',
+    'get_siblings',
+    'get_successors',
+    'set_successors_order',
+    'get_structure_tree',
 ]
 
 from collections.abc import Sequence
@@ -48,13 +49,6 @@ from byron.classes.parameter import ParameterABC, ParameterStructuralABC
 from byron.classes.selement import *
 
 # =[PUBLIC FUNCTIONS]===================================================================================================
-
-
-def add_node(G: nx.MultiDiGraph) -> int:
-    node_id = G.graph['node_count']
-    G.graph['node_count'] += 1
-    G.add_node(node_id)
-    return node_id
 
 
 def get_successors(ref: NodeReference) -> list[int]:
@@ -204,3 +198,24 @@ def fasten_subtree_parameters(node_reference: NodeReference):
         if isinstance(_[0], ParameterStructuralABC)
     ):
         p.fasten(NodeReference(node_reference.graph, n))
+
+
+def discard_useless_components(G: nx.MultiDiGraph) -> None:
+    """Removes unconnected and unreached components"""
+    H = nx.Graph()
+    H.add_edges_from(G.edges(keys=False))
+    H.remove_node(NODE_ZERO)
+    u, v = next((u, v) for u, v in G.edges(0))
+    H.add_edge(u, v)
+    for ccomp in list(nx.connected_components(H)):
+        if NODE_ZERO not in ccomp:
+            G.remove_nodes_from(ccomp)
+
+
+def get_structure_tree(G: nx.MultiDiGraph) -> nx.DiGraph | None:
+    tree = nx.DiGraph()
+    tree.add_nodes_from(G.nodes)
+    tree.add_edges_from((u, v) for u, v, k in G.edges(data="_type") if k == FRAMEWORK)
+    if not nx.is_branching(tree) or not nx.is_weakly_connected(tree):
+        return None
+    return tree

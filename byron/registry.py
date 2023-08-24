@@ -33,32 +33,33 @@ from typing import Callable
 from dataclasses import dataclass
 
 from functools import wraps
-from inspect import signature
 import weakref
-from copy import copy
-import shelve
-from pickle import HIGHEST_PROTOCOL
-from collections import namedtuple
 
-from byron.user_messages.checks import *
-from byron.user_messages import *
 from byron.global_symbols import *
+from byron.user_messages import *
 from byron.classes.individual import Individual, Lineage
+from byron.classes.frame import FrameABC
 from byron.classes.fitness import *
 from byron import fitness
 from byron.fitness_log import *
+from byron.classes import monitor
 
 FAMILYTREE_FILENAME = 'genealogy.db'
 FITNESS_LOG_FILENAME = 'fitness.db'
 
 
-def _genetic_operator_proto(*, strength=1.0) -> list[Individual] | None:
-    """Example of signature for a genetic operator"""
+def _genetic_operator_mutation_proto(parent: Individual, strength=1.0) -> list[Individual] | None:
+    """Example of signature for a mutation genetic operator"""
     raise NotImplementedError
 
 
-def _initializer_proto(top_frame) -> list[Individual] | None:
-    """Example of signature for a genetic operator"""
+def _genetic_operator_xover_proto(p1: Individual, p2: Individual) -> list[Individual] | None:
+    """Example of signature for a crossover genetic operator"""
+    raise NotImplementedError
+
+
+def _genetic_operator_initializer_proto(top_frame: FrameABC) -> list[Individual] | None:
+    """Example of signature for an initializer genetic operator"""
     raise NotImplementedError
 
 
@@ -147,17 +148,16 @@ def genetic_operator(*, num_parents: int = 1):
     assert num_parents is None or check_value_range(num_parents, 1)
 
     def decorator(func):
-        if num_parents is None:
-            assert set(p.name for p in signature(_initializer_proto).parameters.values()) == set(
-                p.name for p in signature(func).parameters.values()
-            ), f"TypeError: invalid signature for a population initializer '{func.__name__}{signature(func)}'"
-        else:
-            assert set(p.name for p in signature(_genetic_operator_proto).parameters.values()) <= set(
-                p.name for p in signature(func).parameters.values()
-            ), f"TypeError: invalid signature for a genetic operator '{func.__name__}{signature(func)}'"
-
+        @monitor.failure_rate
         @wraps(func)
-        def wrapper(*args: Individual, **kwargs):
+        def wrapper(*args: Individual | FrameABC, **kwargs):
+            assert all(
+                i.__class__ == args[0].__class__ for i in args
+            ), f"{PARANOIA_VALUE_ERROR}: Can't mate different objects: {args}"
+            assert all(
+                not isinstance(i, Individual) or i.top_frame == args[0].top_frame for i in args
+            ), f"{PARANOIA_VALUE_ERROR}: Can't mate individuals with different top_frame: {args}"
+
             wrapper.stats.calls += 1
 
             try:

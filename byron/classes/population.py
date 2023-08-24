@@ -60,10 +60,6 @@ class Population:
         else:
             self._memory = None
 
-    # def get_new_node(self) -> int:
-    #    self._node_count += 1
-    #    return self._node_count
-
     @property
     def top_frame(self):
         return self._top_frame

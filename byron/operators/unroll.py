@@ -32,6 +32,7 @@ import networkx as nx
 from byron.global_symbols import *
 
 from byron.classes import monitor
+from byron.classes.node import Node
 from byron.classes.node_reference import *
 from byron.classes.individual import Individual
 from byron.classes.selement import SElement
@@ -119,7 +120,8 @@ def _recursive_unroll(top: type[SElement], G: nx.classes.MultiDiGraph) -> int:
 
 
 def _unroll_frame(frame_class: type[FrameABC], G: nx.classes.MultiDiGraph) -> int:
-    node_id = add_node(G)
+    node_id = Node()
+    G.add_node(node_id)
 
     frame_instance = frame_class()
     G.nodes[node_id]["_type"] = FRAME_NODE
@@ -132,7 +134,8 @@ def _unroll_frame(frame_class: type[FrameABC], G: nx.classes.MultiDiGraph) -> in
 
 
 def _unroll_macro(macro_class: type[Macro], G: nx.classes.MultiDiGraph) -> int:
-    node_id = add_node(G)
+    node_id = Node()
+    G.add_node(node_id)
 
     macro_instance = macro_class()
     G.nodes[node_id]["_type"] = MACRO_NODE

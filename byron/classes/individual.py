@@ -49,14 +49,15 @@ from byron.global_symbols import *
 from byron.classes.byron import Byron
 from byron.classes.dump import *
 from byron.classes.fitness import FitnessABC
-from byron.classes.paranoid import Paranoid
-from byron.classes.value_bag import ValueBag
+from byron.classes.frame import FrameABC
+from byron.classes.macro import Macro
+from byron.classes.node import *
 from byron.classes.node_reference import NodeReference
 from byron.classes.node_view import NodeView
-from byron.classes.macro import Macro
-from byron.classes.frame import FrameABC
 from byron.classes.parameter import ParameterABC, ParameterStructuralABC
+from byron.classes.paranoid import Paranoid
 from byron.classes.readymade_macros import MacroZero
+from byron.classes.value_bag import ValueBag
 
 
 @dataclass(frozen=True, slots=True)
@@ -107,7 +108,7 @@ class Individual(Paranoid):
     Individuals are managed by a `Population` class.
     """
 
-    __COUNTER: int = 0
+    __LAST_BYRON_INDIVIDUAL: int = 0
 
     _genome: nx.classes.MultiDiGraph
     _fitness: FitnessABC | None
@@ -119,11 +120,14 @@ class Individual(Paranoid):
 
     from ._individual_as import as_forest, as_lgp, _draw_forest, _draw_multipartite
 
-    def __init__(self, top_frame: type[FrameABC]) -> None:
-        Individual.__COUNTER += 1
-        self._id = Individual.__COUNTER
-        self._genome = nx.MultiDiGraph(node_count=NODE_ZERO + 1, top_frame=top_frame)
-        self._genome.add_node(NODE_ZERO, _selement=MacroZero(), _type=MACRO_NODE)
+    def __init__(self, top_frame: type[FrameABC], genome: nx.MultiDiGraph | None = None) -> None:
+        Individual.__LAST_BYRON_INDIVIDUAL += 1
+        self._id = Individual.__LAST_BYRON_INDIVIDUAL
+        if genome:
+            self._genome = genome
+        else:
+            self._genome = nx.MultiDiGraph(top_frame=top_frame)
+            self._genome.add_node(NODE_ZERO, _selement=MacroZero(), _type=MACRO_NODE)
         self._fitness = None
         self._str = ''
         self._lineage = None
@@ -161,20 +165,20 @@ class Individual(Paranoid):
     @property
     def valid(self) -> bool:
         return all(
-            self.genome.nodes[n]["_selement"].is_valid(NodeView(NodeReference(self._genome, n))) for n in self._genome
+            self.genome.nodes[n]['_selement'].is_valid(NodeView(NodeReference(self._genome, n))) for n in self._genome
         )
 
     @property
-    def clone(self) -> "Individual":
+    def clone(self) -> 'Individual':
         scratch = self._fitness, self._lineage
         self._fitness, self._lineage = None, None
         I = deepcopy(self)
-        I.__class__ = Individual
-        Individual.__COUNTER += 1
-        I._id = Individual.__COUNTER
+        Individual.__LAST_BYRON_INDIVIDUAL += 1  # TODO: [GX] Use a custom baseclass!
+        I._id = Individual.__LAST_BYRON_INDIVIDUAL
         self._fitness, self._lineage = scratch
         I._age = Age()
         I._lineage = Lineage(None, (self,))
+        Node.reset_labels(I.genome)
         return I
 
     @property
@@ -197,6 +201,13 @@ class Individual(Paranoid):
         """Individual's genome (ie. the underlying NetworkX MultiDiGraph)."""
         # TODO: Add paranoia check?
         return self._genome
+
+    @genome.setter
+    def genome(self, new_genome: nx.classes.MultiDiGraph):
+        """Set the new Individual's genome (ie. the underlying NetworkX MultiDiGraph)."""
+        self._genome = new_genome
+        self._fitness = None
+        assert self.run_paranoia_checks()
 
     @property
     def lineage(self):
@@ -301,27 +312,22 @@ class Individual(Paranoid):
     @property
     def structure_tree(self) -> nx.classes.DiGraph:
         """A tree with the structure tree of the individual (ie. only edges of `kind=FRAMEWORK`)."""
-        if self.is_finalized:
-            return self._cached_structure_tree
         return self._structure_tree()
 
     @cached_property
     def _cached_structure_tree(self) -> nx.classes.DiGraph:
+        # TODO: [GX] Understand why caching doesn't work with nx...
         return self._structure_tree()
 
-    def _structure_tree(self) -> nx.classes.DiGraph:
-        tree = nx.DiGraph()
-        tree.add_nodes_from(self._genome.nodes)
-        tree.add_edges_from((u, v) for u, v, k in self._genome.edges(data="_type") if k == FRAMEWORK)
-        assert nx.is_branching(tree) and nx.is_weakly_connected(
-            tree
-        ), f"{PARANOIA_VALUE_ERROR}: Structure of {self!r} is not a valid tree"
+    def _structure_tree(self) -> nx.DiGraph:
+        tree = get_structure_tree(self._genome)
+        assert tree, f"{PARANOIA_VALUE_ERROR}: Structure of {self!r} is not a valid tree"
         return tree
 
     #######################################################################
     # PUBLIC METHODS
+
     def run_paranoia_checks(self) -> bool:
-        logger.debug(f"run_paranoia_checks: Checking {self}")
         assert self.valid, f"{PARANOIA_VALUE_ERROR}: Individual {self!r} is not valid"
 
         # ==[check genome (structural)]======================================
@@ -364,10 +370,6 @@ class Individual(Paranoid):
         assert len(tree_edges) == len(set(tree_edges)), "ValueError (paranoia check): duplicated framework edge"
 
         # ==[check nodes (semantic)]=========================================
-        assert all(
-            n < self._genome.graph["node_count"] for n in self._genome
-        ), f"{PARANOIA_VALUE_ERROR}: Invalid 'node_count' attribute ({self._genome.graph['node_count']})"
-
         assert all(
             '_selement' in d for n, d in self._genome.nodes(data=True)
         ), f"{PARANOIA_VALUE_ERROR}: Missing '_selement'"

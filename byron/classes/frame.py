@@ -36,8 +36,6 @@ from byron.classes.paranoid import Paranoid
 
 
 class FrameABC(SElement, Paranoid):
-    _registered_names = set()
-
     def __init__(self):
         super().__init__()
         self._checks = list()
@@ -62,12 +60,6 @@ class FrameABC(SElement, Paranoid):
     @property
     def name(cls):
         return cls.__name__
-
-    @staticmethod
-    def register_name(name: str) -> bool:
-        assert name not in FrameABC._registered_names, f"{PARANOIA_VALUE_ERROR}: Frame name {name!r} already exists."
-        FrameABC._registered_names.add(name)
-        return True
 
     @property
     def shannon(self) -> list[int]:

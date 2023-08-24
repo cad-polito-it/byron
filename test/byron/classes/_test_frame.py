@@ -45,14 +45,3 @@ def test_frame_dump_method():
 def test_frame_is_valid():
     frame_instance = FrameConcrete()
     assert frame_instance.is_valid(None) == True
-
-
-def test_frame_name():
-    assert FrameConcrete.name == 'FrameConcrete'
-
-
-def test_frame_register_name():
-    FrameConcrete._registered_names = set()
-    assert FrameConcrete.register_name('TestName') == True
-    with pytest.raises(AssertionError):
-        FrameConcrete.register_name('TestName')

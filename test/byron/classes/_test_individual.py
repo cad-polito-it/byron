@@ -98,7 +98,6 @@
 #     unroll(individual, frame2)
 
 #     assert individual.grammar_tree == nx.DiGraph()
-#     assert individual.genome == nx.MultiDiGraph(node_count=1, top_frame=frame1)
 #     assert individual.G == individual.genome
 #     assert individual.fitness == None
 

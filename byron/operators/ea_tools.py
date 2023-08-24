@@ -27,7 +27,8 @@
 
 __all__ = [
     'merge_individuals',
-    'group_macros_on_classpath',
+    'group_selements',
+    'group_selements_on_classpath',
     'group_parameters_on_macro',
     'group_parameters_on_classpath',
 ]
@@ -36,6 +37,7 @@ import networkx as nx
 
 from typing import Sequence
 from collections import defaultdict
+from functools import partial
 
 from byron.global_symbols import *
 from byron.classes.individual import Individual
@@ -47,12 +49,50 @@ from byron.classes.selement import SElement
 from byron.operators.unroll import *
 
 
-def group_macros_on_classpath(
-    individuals: Sequence[Individual],
+def _parent(G: nx.MultiDiGraph, n: int) -> int:
+    return next((u for u, v, t in G.in_edges(n, data='_type') if t == FRAMEWORK), NODE_ZERO)
+
+
+def _is_head(G: nx.MultiDiGraph, n: int) -> bool:
+    n = _parent(G, n)
+    while G.nodes[n]['_type'] != MACRO_NODE:
+        n = _parent(G, n)
+    return isinstance(G.nodes[n]['_selement'], MacroZero)
+
+
+def _is_target(G: nx.MultiDiGraph, n: int) -> bool:
+    return G.in_degree(n) > 1
+
+
+def group_selements(
+    individuals: Sequence[Individual], only_targets: bool = False, only_heads: bool = False
 ) -> dict[tuple[SElement], dict[Individual, list[int]]]:
     """Group macros"""
-    groups = defaultdict(lambda: defaultdict(list))
 
+    se_filters = list()
+    if only_targets:
+        se_filters.append(lambda G, n: _is_target(G, n))
+    if only_heads:
+        se_filters.append(lambda G, n: _is_head(G, n))
+    filter_ = lambda G, n: all(f(G, n) for f in se_filters)
+
+    groups = defaultdict(lambda: defaultdict(list))
+    for ind in individuals:
+        for node in filter(lambda n: filter_(ind.genome, n), ind.genome.nodes):
+            groups[ind.genome.nodes[node]['_selement'].__class__][ind].append(node)
+    if MacroZero in groups:
+        del groups[MacroZero]
+    # remove entries with empty values
+    groups = {macro: {p: v for p, v in values.items() if v} for macro, values in groups.items()}
+    return {k: v for k, v in groups.items() if v}
+
+
+def group_selements_on_classpath(
+    individuals: Sequence[Individual],
+) -> dict[tuple[SElement], dict[Individual, list[int]]]:
+    """Group macros with same classpath"""
+
+    groups = defaultdict(lambda: defaultdict(list))
     for ind in individuals:
         for node, path in nx.single_source_dijkstra_path(ind.structure_tree, 0).items():
             groups[tuple(ind.genome.nodes[v]['_selement'].__class__ for v in path)][ind].append(node)

@@ -35,12 +35,13 @@ from byron.classes.frame import FrameABC
 from byron.framework.macro import macro
 from byron.classes.parameter import ParameterABC
 from byron.classes.population import Population
+from byron.classes.individual import Individual
 from byron.operators.initializers import *
 from byron.classes.readymade_macros import MacroZero
 
 
 def as_text(
-    element: type[SElement] | ParameterABC,
+    element: Individual | type[SElement] | ParameterABC,
     *,
     seed: int | None = 42,
     node_info: bool = True,
@@ -67,18 +68,23 @@ def as_text(
             p8=element,
         )
         node_info = False
+        individual = _generate_random_individual(frame, seed=seed)
     elif isinstance(element, type) and issubclass(element, SElement):
-        frame = element
+        individual = _generate_random_individual(element, seed=seed)
+    elif isinstance(element, Individual):
+        individual = element
     else:
         raise NotImplementedError(f"{__name__}.as_text({element!r})")
-    individual = _generate_random_individual(frame, seed=seed)
 
     if extra_parameters is None:
         extra_parameters = dict()
     parameters = DEFAULT_EXTRA_PARAMETERS | DEFAULT_OPTIONS | extra_parameters
     if node_info:
         parameters |= {'$dump_node_info': True}
+
+    individual.genome.nodes[NODE_ZERO]['$omit_from_dump'] = True
     dump = individual.dump(parameters)
+    del individual.genome.nodes[NODE_ZERO]['$omit_from_dump']
     if notebook_mode:
         print(dump)
         return None
@@ -87,14 +93,14 @@ def as_text(
 
 
 def as_lgp(
-    frame: type[SElement],
+    element: type[SElement] | Individual,
     *,
     seed: int | None = 42,
 ):
-    if not isinstance(frame, type) or not issubclass(frame, FrameABC):
-        raise NotImplementedError(f"{__name__}.as_lgp({frame!r})")
-
-    individual = _generate_random_individual(frame, seed=seed)
+    if isinstance(element, Individual):
+        individual = element
+    else:
+        individual = _generate_random_individual(element, seed=seed)
     if notebook_mode:
         return individual.as_lgp()
     else:
@@ -102,14 +108,14 @@ def as_lgp(
 
 
 def as_forest(
-    frame: type[SElement],
+    element: type[SElement] | Individual,
     *,
     seed: int | None = 42,
 ):
-    if not isinstance(frame, type) or not issubclass(frame, FrameABC):
-        raise NotImplementedError(f"{__name__}.as_forest({frame!r})")
-
-    individual = _generate_random_individual(frame, seed=seed)
+    if isinstance(element, Individual):
+        individual = element
+    else:
+        individual = _generate_random_individual(element, seed=seed)
     if notebook_mode:
         return individual.as_forest()
     else:
@@ -127,7 +133,6 @@ def _generate_random_individual(
     random_individuals = []
     while not random_individuals:
         random_individuals = random_individual(frame)
-    random_individuals[0].genome.nodes[NODE_ZERO]['$omit_from_dump'] = True
 
     rrandom.state = rrandom_state
     return random_individuals[0]

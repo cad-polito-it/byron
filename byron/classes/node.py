@@ -25,30 +25,29 @@
 # =[ HISTORY ]===============================================================
 # v1 / August 2023 / Squillero (GX)
 
-__all__ = ['array_parameter_uniform_crossover_choosy']
+__all__ = ['Node']
 
-from byron.user_messages import *
-from byron.classes import *
-from byron.registry import *
-from byron.randy import rrandom
-from .ea_tools import *
+import networkx as nx
 
-# unfussy vs. chosy
+from byron.tools.graph import fasten_subtree_parameters
+from byron.global_symbols import NODE_ZERO
+from byron.classes.node_reference import NodeReference
 
 
-@genetic_operator(num_parents=2)
-def array_parameter_uniform_crossover_choosy(parent1: Individual, parent2: Individual) -> list['Individual']:
-    offspring = parent1.clone
+class Node(int):
+    r"""Simple helper to guarantee Node ids uniqueness"""
+    __slots__ = []
+    __LAST_BYRON_NODE = 0
 
-    groups = group_parameters_on_classpath([offspring, parent2], parameter_type=ParameterArrayABC)
-    suitable_groups = {k: v for k, v in groups.items() if len(v) == 2}
-    if not suitable_groups:
-        raise ByronOperatorFailure
+    def __new__(cls, node_id: int or None = None):
+        if node_id is not None:
+            return int.__new__(cls, node_id)
+        Node.__LAST_BYRON_NODE += 1
+        return int.__new__(cls, Node.__LAST_BYRON_NODE)
 
-    path = rrandom.choice(list(suitable_groups.keys()))
-    array_in_offspring = rrandom.choice(groups[path][offspring])
-    array_in_parent2 = rrandom.choice(groups[path][parent2])
-    new_value = [rrandom.choice([p1, p2]) for p1, p2 in zip(array_in_offspring.value, array_in_parent2.value)]
-    array_in_offspring.value = ''.join(new_value)
-
-    return [offspring]
+    @staticmethod
+    def reset_labels(G: nx.Graph) -> None:
+        """Set Graph node labels to unique numbers"""
+        new_labels = {k: Node() for k in G.nodes if k != NODE_ZERO}
+        nx.relabel_nodes(G, new_labels, copy=False)
+        fasten_subtree_parameters(NodeReference(G, NODE_ZERO))

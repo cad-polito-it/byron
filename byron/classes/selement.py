@@ -173,11 +173,11 @@ class SElement(metaclass=SElementMeta):
         r"""Checks the validity of a `NodeReference` and internal attributes"""
         return all(f(node) for f in self.__class__.NODE_CHECKS)
 
-    def _is_valid_debug(self, node: 'NodeReference') -> None:
+    def _is_valid_debug(self, node_ref: 'NodeReference') -> None:
         check_result = True
         for f in self.__class__.NODE_CHECKS:
-            if not f(node):
-                logger.info(f"NodeChecks: Failed check on genome 0x{id(node.genome):x}: {f.__qualname__}({node})")
+            if not f(node_ref):
+                logger.info(f"{PARANOIA_SYSTEM_ERROR}: Failed check {f.__qualname__}({node_ref})")
                 check_result = False
         return check_result
 

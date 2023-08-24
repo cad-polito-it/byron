@@ -29,19 +29,26 @@ __all__ = ["sequence", "alternative", "bunch"]
 
 from collections import abc
 from typing import Sequence
+from functools import partial
 
 from byron.global_symbols import *
 from byron.user_messages import *
 from byron.classes.selement import SElement
 from byron.classes.frame import *
 from byron.classes.macro import Macro
+from byron.classes.node_reference import NodeReference
 from byron.framework.macro import macro
 from byron.framework.utilities import cook_selement_list
 from byron.randy import rrandom
 
 
 def alternative(
-    alternatives: abc.Collection[type[SElement]], *, name: str | None = None, extra_parameters: dict = None, **kwargs
+    alternatives: abc.Collection[type[SElement]],
+    *,
+    name: str | None = None,
+    max_instances: int | None = None,
+    extra_parameters: dict = None,
+    **kwargs,
 ) -> type[FrameABC]:
     r"""Creates the class for a frame that can have alternative forms.
 
@@ -61,6 +68,8 @@ def alternative(
         the possible alternatives.
     name : str, optional
         the name of the frame.
+    max_instances : int, optional
+        maximum number of instances of the given frame
     extra_parameters : dict, optional
         dictionary of parameters.
 
@@ -99,6 +108,7 @@ def alternative(
     class T(FrameAlternative, FrameABC):
         ALTERNATIVES = tuple(cooked_alternatives)
         EXTRA_PARAMETERS = dict(extra_parameters) if extra_parameters else dict()
+        MAX_INSTANCES = max_instances
 
         def __init__(self):
             super().__init__()
@@ -106,6 +116,9 @@ def alternative(
         @property
         def successors(self):
             return [rrandom.choice(T.ALTERNATIVES)]
+
+    if max_instances:
+        T.add_node_check(partial(_check_instance_number, max_instances=max_instances))
 
     if name:
         T._patch_info(custom_class_id=name)
@@ -116,13 +129,19 @@ def alternative(
 
 
 def sequence(
-    seq: abc.Sequence[type[SElement] | str], *, name: str | None = None, extra_parameters: dict = None, **kwargs
+    seq: abc.Sequence[type[SElement] | str],
+    *,
+    name: str | None = None,
+    max_instances: int | None = None,
+    extra_parameters: dict = None,
+    **kwargs,
 ) -> type[FrameABC]:
     cooked_seq = cook_selement_list(seq)
 
     class T(FrameSequence, FrameABC):
         SEQUENCE = tuple(cooked_seq)
         EXTRA_PARAMETERS = dict(extra_parameters) if extra_parameters else dict()
+        MAX_INSTANCES = max_instances
 
         def __init__(self):
             super().__init__()
@@ -130,6 +149,9 @@ def sequence(
         @property
         def successors(self):
             return T.SEQUENCE
+
+    if max_instances:
+        T.add_node_check(partial(_check_instance_number, max_instances=max_instances))
 
     if name:
         T._patch_info(custom_class_id=name)
@@ -146,6 +168,7 @@ def bunch(
     size: tuple[int, int] | int = 1,
     *,
     name: str | None = None,
+    max_instances: int | None = None,
     weights: Sequence[int] | None = None,
     extra_parameters: dict = None,
     **kwargs,
@@ -192,6 +215,7 @@ def bunch(
         SIZE = size
         POOL = tuple(sum(([m] * w for m, w in zip(pool, weights)), start=list()))
         EXTRA_PARAMETERS = dict(extra_parameters) if extra_parameters else dict()
+        MAX_INSTANCES = max_instances
 
         __slots__ = []  # Preventing the automatic creation of __dict__
 
@@ -203,10 +227,9 @@ def bunch(
             n_macros = rrandom.random_int(T.SIZE[0], T.SIZE[1])
             return [rrandom.choice(T.POOL) for _ in range(n_macros)]
 
-    def check_out_degree(nr):
-        return nr.out_degree >= size[0] and nr.out_degree < size[1]
-
-    T.add_node_check(check_out_degree)
+    T.add_node_check(partial(_check_out_degree, min_=size[0], max_=size[1]))
+    if max_instances:
+        T.add_node_check(partial(_check_instance_number, max_instances=max_instances))
 
     # White parentheses: ⦅ ⦆  (U+2985, U+2986)
     if name:
@@ -219,3 +242,14 @@ def bunch(
         T._patch_info(name='MacroBunch#')
 
     return T
+
+
+def _check_instance_number(node_ref: NodeReference, max_instances: int):
+    return (
+        len([se for n, se in node_ref.graph.nodes(data='_selement') if type(se) == type(node_ref.selement)])
+        <= max_instances
+    )
+
+
+def _check_out_degree(node_ref: NodeReference, min_: int, max_: int):
+    return min_ <= node_ref.out_degree < max_
