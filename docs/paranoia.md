@@ -77,7 +77,7 @@ import byron
 * :-1: All the code must be packed into one single cell
 * :-1: Byron will not detect Jupyter anymore
 
-### :bomb: Tamper with the bytecode cache
+### Tamper with the bytecode cache :bomb:
 
 :warning: This hack may cause your system to become unstable and provide incorrect results. You acknowledge that you are solely responsible for any harm or damage that may result.
 
