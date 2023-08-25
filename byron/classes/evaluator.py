@@ -242,6 +242,9 @@ class PythonEvaluator(EvaluatorABC):
 
     def evaluate_population(self, population: Population) -> None:
         individuals = [(i, I, self.cook(population.dump_individual(i))) for i, I in population.not_finalized]
+        if not individuals:
+            logger.debug(f"PythonEvaluator: All individuals have already been finalized")
+            return
 
         if self._max_workers == 1 or not self._backend:
             # Simple, sequential, Python evaluator
@@ -398,6 +401,9 @@ class MakefileEvaluator(EvaluatorABC):
             if not g.is_finalized:
                 indexes.append(i)
                 phenotypes.append(self.cook(population.dump_individual(i)))
+        if not indexes:
+            logger.debug(f"MakefileEvaluator: All individuals have already been finalized")
+            return
 
         with ThreadPoolExecutor(max_workers=self._max_workers, thread_name_prefix="byron$") as pool:
             for i, result in zip(indexes, pool.map(self._evaluate, phenotypes)):
@@ -473,6 +479,9 @@ class ScriptEvaluator(EvaluatorABC):
 
     def evaluate_population(self, population: Population) -> None:
         individuals = population.not_finalized
+        if not individuals:
+            logger.debug(f"ScriptEvaluator: All individuals have already been finalized")
+            return
         files = list()
         for idx, ind in individuals:
             self._fitness_calls += 1
@@ -630,6 +639,9 @@ class ParallelScriptEvaluator(EvaluatorABC):
             if not g.is_finalized:
                 indexes.append(i)
                 phenotypes.append(self.cook(population.dump_individual(i)))
+        if not indexes:
+            logger.debug(f"ParallelScriptEvaluator: All individuals have already been finalized")
+            return
 
         with ThreadPoolExecutor(max_workers=self._max_workers, thread_name_prefix="byron$") as pool:
             for i, result in zip(indexes, pool.map(self._evaluate, phenotypes)):

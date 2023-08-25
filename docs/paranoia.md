@@ -1,5 +1,10 @@
 # PARANOID MODE
 
+> All day long I think of things  
+> But nothing seems to satisfy  
+> Think I'll lose my mind if I don't  
+> Find something to pacify  
+> 
 > Can you help me occupy my brain?  
 > Oh, yeah  
 
@@ -72,9 +77,9 @@ import byron
 * :-1: All the code must be packed into one single cell
 * :-1: Byron will not detect Jupyter anymore
 
-### Tamper with the bytecode cache
+### :bomb: Tamper with the bytecode cache
 
-:warning: This hack may cause your system to become unstable and/or provide incorrect results. You acknowledge that you are solely responsible for any harm or damage that may result from it.
+:warning: This hack may cause your system to become unstable and provide incorrect results. You acknowledge that you are solely responsible for any harm or damage that may result.
 
 * Generate the optimized bytecode (e.g., run `python -O -m pytest`)
 * Locate all the folders that contain compiled bytecode (e.g., `**/__pycache__`)

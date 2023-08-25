@@ -164,15 +164,9 @@ def genetic_operator(*, num_parents: int = 1):
                 offspring = func(*args, **kwargs)
             except ByronOperatorFailure:
                 offspring = list()
-
-            if offspring is None:
-                offspring = []
-            elif isinstance(offspring, Individual):
-                deprecation_warning(
-                    f"Genetic operators should return list[Individual]: found {func.__qualname__} -> Individual",
-                    stacklevel_offset=0,
-                )
-                offspring = [offspring]
+            else:
+                if offspring is None:
+                    offspring = []
 
             assert all(
                 isinstance(i, Individual) for i in offspring

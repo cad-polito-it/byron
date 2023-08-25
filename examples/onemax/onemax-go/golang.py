@@ -28,7 +28,6 @@ def framework():
 
     # standard
     main_prologue = byron.f.macro('package main\nfunc evolved_function() uint64 {{')
-    main_prologue.baptize('prologue')
     imath = byron.f.macro(
         '{var} {op}= {num}',
         var=byron.f.global_reference(variable, creative_zeal=1),
@@ -42,12 +41,16 @@ def framework():
         var2=(byron.f.global_reference(variable)),
         var3=(byron.f.global_reference(variable)),
     )
+    # NOTE[GX]: in macro definition "name='prologue'"" would be considered an (illegal) parameter
+    main_epilogue = byron.f.macro('return {var}\n}}', var=byron.f.global_reference(variable))
+    main_prologue.baptize('prologue')
+    main_epilogue.baptize('epilogue')
 
     # proc
     subs_prologue = byron.f.macro('func {_node}(foo uint64) uint64 {{', _label='')
     subs_math = byron.f.macro('foo {op}= {num}', op=math_op, num=int64)
     subs_epilogue = byron.f.macro('return foo\n}}')
-    subs = byron.f.sequence([subs_prologue, byron.f.bunch([subs_math], size=2), subs_epilogue])
+    subs = byron.f.sequence([subs_prologue, byron.f.bunch([subs_math], size=2), subs_epilogue], name='function')
 
     call = byron.f.macro(
         '{var1} = {sub}({var2})',
@@ -56,6 +59,5 @@ def framework():
         var2=byron.f.global_reference(variable),
     )
 
-    code = byron.f.bunch([imath, vmath, call], size=5)
-    main_epilogue = byron.f.macro('return {var}\n}}', var=byron.f.global_reference(variable))
+    code = byron.f.bunch([imath, vmath, call], size=5, name='body')
     return byron.f.sequence((main_prologue, code, main_epilogue), max_instances=1)

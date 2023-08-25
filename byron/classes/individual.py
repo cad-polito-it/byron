@@ -327,8 +327,6 @@ class Individual(Paranoid):
     # PUBLIC METHODS
 
     def run_paranoia_checks(self) -> bool:
-        assert self.valid, f"{PARANOIA_VALUE_ERROR}: Individual {self!r} is not valid"
-
         # ==[check genome (structural)]======================================
         assert self.genome == self._genome, f"{PARANOIA_VALUE_ERROR}: Panic!"
         assert self.genome == self.G, f"{PARANOIA_VALUE_ERROR}: Panic!"

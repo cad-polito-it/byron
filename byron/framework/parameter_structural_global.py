@@ -102,10 +102,14 @@ def _global_reference(
             else:
                 target = rrandom.choice(potential_targets, self.value, sigma=strength)
             if target is None:
+                # get_all_macros(G, root=f, data=False, node_id=True)
                 new_node = unroll_selement(self._target_frame, self._node_reference.graph)
                 self._node_reference.graph.add_edge(NODE_ZERO, new_node.node, _type=FRAMEWORK)
                 initialize_subtree(new_node)
-                target = new_node.node
+                if first_macro:
+                    target = get_all_macros(new_node.graph, root=new_node.node, data=False, node_id=True)[0]
+                else:
+                    target = new_node.node
 
             if not target:
                 raise ByronOperatorFailure

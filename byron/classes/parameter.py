@@ -145,7 +145,7 @@ class ParameterStructuralABC(ParameterABC):
     def value(self):
         assert (
             self.is_fastened
-        ), f"{PARANOIA_VALUE_ERROR}: Attempt to retrieve the value of an unfastened structural parameter"
+        ), f"{PARANOIA_VALUE_ERROR}: Attempt to access the value of an unfastened structural parameter"
         if self._node_reference is None:
             return None
         return next(
@@ -154,8 +154,13 @@ class ParameterStructuralABC(ParameterABC):
         )
 
     @value.setter
-    def value(self, target_node):
+    def value(self, target):
         old_target_node = self.value
+        if isinstance(target, NodeReference):
+            target_node = target.node
+            assert target.graph == self._node_reference.graph, f"{PARANOIA_VALUE_ERROR}: Graph mismatch"
+        else:
+            target_node = target
         if old_target_node is not None:
             self._node_reference.graph.remove_edge(self._node_reference.node, old_target_node, self.key)
         if target_node is not None:
