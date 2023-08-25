@@ -1,12 +1,12 @@
 # PARANOID MODE
 
-> All day long I think of things  
-> But nothing seems to satisfy  
-> Think I'll lose my mind if I don't  
-> Find something to pacify  
+> *All day long I think of things*  
+> *But nothing seems to satisfy*  
+> *Think I'll lose my mind if I don't*  
+> *Find something to pacify*  
 > 
-> Can you help me occupy my brain?  
-> Oh, yeah  
+> *Can you help me occupy my brain?*  
+> *Oh, yeah*  
 
 In **production**, Byron is typically run from a non-interactive script, for example on a server with ssh access. In this context, performance is critical, while verbosity should be minimal. During **setup**, on the other hand, the user needs to check the various parameters and the coherence of the constraints. Here, speed is not essential, while warnings and hints can be quite useful. 
 
