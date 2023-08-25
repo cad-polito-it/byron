@@ -36,7 +36,7 @@ from byron.randy import rrandom
 from byron.global_symbols import *
 
 from byron.classes.parameter import ParameterStructuralABC
-from byron.operators.unroll import *
+from byron.operators.graph_tools import *
 from byron.classes.selement import SElement, SElementMeta
 from byron.tools.names import *
 

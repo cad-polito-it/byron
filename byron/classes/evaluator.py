@@ -180,10 +180,10 @@ class PythonEvaluator(EvaluatorABC):
     The `backend` parameters select the type of parallelism: ``None`` for sequential evaluation, ```thread_pool```
     for threads, ``'joblib'`` for processes.
 
-    Use option `strip_phenotypes` (see :py:class:`classes.evaluator.EvaluatorABC`) to convert the phenotype into a
+    Use option `strip_phenotypes` (see :py:class:`byron.classes.evaluator.EvaluatorABC`) to convert the phenotype into a
     single-line string.
 
-    Use option `max_workers` (see :py:class:`classes.evaluator.EvaluatorABC`) to set the maximum number of concurrent
+    Use option `max_workers` (see :py:class:`byron.classes.evaluator.EvaluatorABC`) to set the maximum number of concurrent
     threads or processes.
 
     Examples
@@ -207,6 +207,10 @@ class PythonEvaluator(EvaluatorABC):
 
     def __init__(self, fitness_function: Callable[[str], FitnessABC], backend: str | None = None, **kwargs) -> None:
         r"""
+        Notes
+        -----
+        See :py:class:`byron.classes.evaluator.PythonEvaluator` for more information
+
         Parameters
         ----------
         fitness_function
@@ -214,7 +218,7 @@ class PythonEvaluator(EvaluatorABC):
         backend
             Parallelization backend. Possible values are ``None`` or `'thread_pool'` or `'joblib'`
         kwargs
-            Extra parameters for :class:`classes.evaluator.EvaluatorABC` (ie. `strip_phenotypes`, `max_workers`)
+            Extra parameters for :class:`byron.classes.evaluator.EvaluatorABC` (ie. `strip_phenotypes`, `max_workers`)
         """
 
         super().__init__(**kwargs)
@@ -243,7 +247,7 @@ class PythonEvaluator(EvaluatorABC):
     def evaluate_population(self, population: Population) -> None:
         individuals = [(i, I, self.cook(population.dump_individual(i))) for i, I in population.not_finalized]
         if not individuals:
-            logger.debug(f"PythonEvaluator: All individuals have already been finalized")
+            logger.debug(f"PythonEvaluator: All individuals in the population have already been finalized")
             return
 
         if self._max_workers == 1 or not self._backend:
@@ -292,10 +296,10 @@ class MakefileEvaluator(EvaluatorABC):
     *   `makefile`: Name of the Makefile itself
     *   `timeout`: Number of seconds to wait for make completion (default: 60, use ``None`` to wait indefinitely)
 
-    Use option `strip_phenotypes` (see :py:class:`classes.evaluator.EvaluatorABC`) to convert the phenotype into a
+    Use option `strip_phenotypes` (see :py:class:`byron.classes.evaluator.EvaluatorABC`) to convert the phenotype into a
     single-line string.
 
-    Use option `max_workers` (see :py:class:`classes.evaluator.EvaluatorABC`) to set the maximum number of concurrent
+    Use option `max_workers` (see :py:class:`byron.classes.evaluator.EvaluatorABC`) to set the maximum number of concurrent
     threads or processes.
 
     References
@@ -341,7 +345,7 @@ class MakefileEvaluator(EvaluatorABC):
         timeout
             Seconds to wait for make completion (``None`` indefinitely)
         kwargs
-            Extra parameters for :class:`classes.evaluator.EvaluatorABC` (ie. `strip_phenotypes`, `max_workers`)
+            Extra parameters for :class:`byron.classes.evaluator.EvaluatorABC` (ie. `strip_phenotypes`, `max_workers`)
         """
         super().__init__(**kwargs)
         self._filename = filename
@@ -402,7 +406,7 @@ class MakefileEvaluator(EvaluatorABC):
                 indexes.append(i)
                 phenotypes.append(self.cook(population.dump_individual(i)))
         if not indexes:
-            logger.debug(f"MakefileEvaluator: All individuals have already been finalized")
+            logger.debug(f"MakefileEvaluator: All individuals in the population have already been finalized")
             return
 
         with ThreadPoolExecutor(max_workers=self._max_workers, thread_name_prefix="byron$") as pool:
@@ -432,10 +436,10 @@ class ScriptEvaluator(EvaluatorABC):
         individual. Default is "phenotype_{i:x}.txt"
     *   `timeout`: Maximum number of seconds to wait for the script. Use ``None`` to disable timeout.
 
-    Use option `strip_phenotypes` (see :py:class:`classes.evaluator.EvaluatorABC`) to convert the phenotype into a
+    Use option `strip_phenotypes` (see :py:class:`byron.classes.evaluator.EvaluatorABC`) to convert the phenotype into a
     single-line string.
 
-    Use option `max_workers` (see :py:class:`classes.evaluator.EvaluatorABC`) to set the maximum number of concurrent
+    Use option `max_workers` (see :py:class:`byron.classes.evaluator.EvaluatorABC`) to set the maximum number of concurrent
     threads or processes.
 
     References
@@ -466,7 +470,7 @@ class ScriptEvaluator(EvaluatorABC):
         filename_format
             F-string for building phenotype file names
         kwargs
-            Extra parameters for :class:`classes.evaluator.EvaluatorABC` (ie. `strip_phenotypes`, `max_workers`)
+            Extra parameters for :class:`byron.classes.evaluator.EvaluatorABC` (ie. `strip_phenotypes`, `max_workers`)
         """
         super().__init__(**kwargs)
         self._script_name = script_name
@@ -480,7 +484,7 @@ class ScriptEvaluator(EvaluatorABC):
     def evaluate_population(self, population: Population) -> None:
         individuals = population.not_finalized
         if not individuals:
-            logger.debug(f"ScriptEvaluator: All individuals have already been finalized")
+            logger.debug(f"ScriptEvaluator: All individuals in the population have already been finalized")
             return
         files = list()
         for idx, ind in individuals:
@@ -540,10 +544,10 @@ class ParallelScriptEvaluator(EvaluatorABC):
     *   `makefile`: Name of the Makefile itself
     *   `timeout`: Number of seconds to wait for make completion (default: 60, use ``None`` to wait indefinitely)
 
-    Use option `strip_phenotypes` (see :py:class:`classes.evaluator.EvaluatorABC`) to convert the phenotype into a
+    Use option `strip_phenotypes` (see :py:class:`byron.classes.evaluator.EvaluatorABC`) to convert the phenotype into a
     single-line string.
 
-    Use option `max_workers` (see :py:class:`classes.evaluator.EvaluatorABC`) to set the maximum number of concurrent
+    Use option `max_workers` (see :py:class:`byron.classes.evaluator.EvaluatorABC`) to set the maximum number of concurrent
     threads or processes.
 
     References
@@ -590,7 +594,7 @@ class ParallelScriptEvaluator(EvaluatorABC):
         default_result
             Default result if the script returns non-zero exit status
         kwargs
-            Extra parameters for :class:`classes.evaluator.EvaluatorABC` (ie. `strip_phenotypes`, `max_workers`)
+            Extra parameters for :class:`byron.classes.evaluator.EvaluatorABC` (ie. `strip_phenotypes`, `max_workers`)
         """
         super().__init__(**kwargs)
         self._script = script
@@ -640,7 +644,7 @@ class ParallelScriptEvaluator(EvaluatorABC):
                 indexes.append(i)
                 phenotypes.append(self.cook(population.dump_individual(i)))
         if not indexes:
-            logger.debug(f"ParallelScriptEvaluator: All individuals have already been finalized")
+            logger.debug(f"ParallelScriptEvaluator: All individuals in the population have already been finalized")
             return
 
         with ThreadPoolExecutor(max_workers=self._max_workers, thread_name_prefix="byron$") as pool:

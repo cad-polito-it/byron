@@ -38,8 +38,7 @@ from byron.user_messages import *
 # unfussy vs. chosy
 
 
-@genetic_operator(num_parents=2)
-def single_target_node_crossover(parent1: Individual, parent2: Individual):
+def _generic_node_crossover(parent1: Individual, parent2: Individual, link_type: str):
     assert parent1.run_paranoia_checks()
     assert parent2.run_paranoia_checks()
     common_selements = {k: v for k, v in group_selements([parent1, parent2], only_targets=True).items() if len(v) == 2}
@@ -52,7 +51,7 @@ def single_target_node_crossover(parent1: Individual, parent2: Individual):
     node1_fanin = new_genome.in_edges(node1, data='_type', keys=True)
     node2_fanin = new_genome.in_edges(node2, data='_type', keys=True)
     try:
-        node1_parent_link = rrandom.choice([(u, v, k, t) for u, v, k, t in node1_fanin if t != FRAMEWORK])
+        node1_parent_link = rrandom.choice([(u, v, k, t) for u, v, k, t in node1_fanin if t == link_type])
         node2_parent_link = rrandom.choice([(u, v, k, t) for u, v, k, t in node2_fanin if t == node1_parent_link[3]])
     except:
         raise ByronOperatorFailure
@@ -73,3 +72,13 @@ def single_target_node_crossover(parent1: Individual, parent2: Individual):
     assert parent1.run_paranoia_checks()
     assert parent2.run_paranoia_checks()
     return [new_individual]
+
+
+@genetic_operator(num_parents=2)
+def linked_node_crossover(parent1: Individual, parent2: Individual):
+    return _generic_node_crossover(parent1, parent2, LINK)
+
+
+@genetic_operator(num_parents=2)
+def leaf_crossover(parent1: Individual, parent2: Individual):
+    return _generic_node_crossover(parent1, parent2, FRAMEWORK)

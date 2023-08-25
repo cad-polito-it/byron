@@ -27,6 +27,6 @@
 
 from .ea_tools import *
 from .initializers import *
-from .mutation import *
-from .parameter_crossover import *
-from .single_node_crossover import *
+from .mutations import *
+from .parameter_crossovers import *
+from .single_node_crossovers import *

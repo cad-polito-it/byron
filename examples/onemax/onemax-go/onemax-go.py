@@ -18,9 +18,15 @@ import byron
 import golang
 
 
+@byron.fitness_function
+def dummy_fitness(text):
+    return len(text)
+
+
 def main():
     top_frame = golang.framework()
 
+    # evaluator = byron.evaluator.PythonEvaluator(dummy_fitness)
     evaluator = byron.evaluator.ScriptEvaluator('./evaluate-all.sh', filename_format="individual{i:06}.go")
     # evaluator = byron.evaluator.ParallelScriptEvaluator(
     #     'go', 'onemax.go', other_required_files=('main.go',), flags=('run',), timeout=10, default_result='-1'
@@ -33,7 +39,7 @@ def main():
         max_generation=100,
         mu=50,
         lambda_=20,
-        max_fitness=byron.fitness.make_fitness(64.0),
+        max_fitness=64.0,
     )
 
     byron.logger.info("[b]POPULATION[/b]")

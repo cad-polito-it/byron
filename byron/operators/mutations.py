@@ -26,7 +26,7 @@
 # v1 / June 2023 / Squillero (GX)
 
 from byron.global_symbols import *
-from byron.operators.unroll import *
+from byron.operators.graph_tools import *
 from byron.user_messages import *
 from byron.classes import *
 from byron.registry import *

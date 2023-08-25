@@ -114,7 +114,7 @@ from byron.tools.entropy import *
 
 __welcome__ = (
     f'[bold]This is Byron v{__version__.rsplit(".", maxsplit=1)[0]} "[italic]{__codename__}[/italic]"[/]\n'
-    + f"[bold]© 2023 G. Squillero & A. Tonda — Licensed under Apache-2.0[/]"
+    + f"[bold](c) 2023 G. Squillero & A. Tonda — Licensed under Apache-2.0[/]"
 )
 
 

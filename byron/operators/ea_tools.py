@@ -45,7 +45,7 @@ from byron.classes.node_reference import *
 from byron.classes.parameter import ParameterABC
 from byron.classes.readymade_macros import MacroZero
 from byron.classes.selement import SElement
-from byron.operators.unroll import *
+from byron.operators.graph_tools import *
 
 
 def _parent(G: nx.MultiDiGraph, n: int) -> int:

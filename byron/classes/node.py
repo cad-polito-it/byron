@@ -46,7 +46,7 @@ class Node(int):
         return int.__new__(cls, Node.__LAST_BYRON_NODE)
 
     @staticmethod
-    def reset_labels(G: nx.Graph) -> None:
+    def reset_labels(G: nx.MultiDiGraph) -> None:
         """Set Graph node labels to unique numbers"""
         new_labels = {k: Node() for k in G.nodes if k != NODE_ZERO}
         nx.relabel_nodes(G, new_labels, copy=False)

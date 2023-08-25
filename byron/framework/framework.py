@@ -118,7 +118,7 @@ def alternative(
             return [rrandom.choice(T.ALTERNATIVES)]
 
     if max_instances:
-        T.add_node_check(partial(_check_instance_number, max_instances=max_instances))
+        T.add_node_check(partial(_check_instances_number, max_instances=max_instances))
 
     if name:
         T._patch_info(custom_class_id=name)
@@ -151,7 +151,7 @@ def sequence(
             return T.SEQUENCE
 
     if max_instances:
-        T.add_node_check(partial(_check_instance_number, max_instances=max_instances))
+        T.add_node_check(partial(_check_instances_number, max_instances=max_instances))
 
     if name:
         T._patch_info(custom_class_id=name)
@@ -229,7 +229,7 @@ def bunch(
 
     T.add_node_check(partial(_check_out_degree, min_=size[0], max_=size[1]))
     if max_instances:
-        T.add_node_check(partial(_check_instance_number, max_instances=max_instances))
+        T.add_node_check(partial(_check_instances_number, max_instances=max_instances))
 
     # White parentheses: ⦅ ⦆  (U+2985, U+2986)
     if name:
@@ -244,7 +244,7 @@ def bunch(
     return T
 
 
-def _check_instance_number(node_ref: NodeReference, max_instances: int):
+def _check_instances_number(node_ref: NodeReference, max_instances: int):
     return (
         len([se for n, se in node_ref.graph.nodes(data='_selement') if type(se) == type(node_ref.selement)])
         <= max_instances

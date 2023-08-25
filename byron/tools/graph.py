@@ -205,11 +205,11 @@ def discard_useless_components(G: nx.MultiDiGraph) -> None:
     H = nx.Graph()
     H.add_edges_from(G.edges(keys=False))
     H.remove_node(NODE_ZERO)
-    u, v = next((u, v) for u, v in G.edges(0))
-    H.add_edge(u, v)
-    for ccomp in list(nx.connected_components(H)):
-        if NODE_ZERO not in ccomp:
-            G.remove_nodes_from(ccomp)
+    node_zero, first_tree = next((u, v) for u, v in G.edges(NODE_ZERO))
+    H.add_edge(node_zero, first_tree)
+    for nodes in list(nx.connected_components(H)):
+        if NODE_ZERO not in nodes:
+            G.remove_nodes_from(nodes)
 
 
 def get_structure_tree(G: nx.MultiDiGraph) -> nx.DiGraph | None:
