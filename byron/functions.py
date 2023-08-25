@@ -58,7 +58,7 @@ def mutate(parameter: ParameterABC, /, strength: float) -> None:
         or counter < 100
         or strength < 0.01
         or performance_warning(
-            f"Failed to mutate {parameter.__class__.__name__} with strength {strength} ({counter:,} failed attempts)",
+            f"Failed to mutate {parameter!r} with strength {strength} ({counter:,} failed attempts)",
             stacklevel_offset=2,
         )
     )

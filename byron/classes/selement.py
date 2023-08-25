@@ -177,7 +177,7 @@ class SElement(metaclass=SElementMeta):
         check_result = True
         for f in self.__class__.NODE_CHECKS:
             if not f(node_ref):
-                logger.info(f"{PARANOIA_SYSTEM_ERROR}: Failed check on {node_ref} ({f})")
+                logger.info(f"is_valid: Failed check on {node_ref}: {f}")
                 check_result = False
         return check_result
 

@@ -24,7 +24,7 @@ def framework():
     int64 = byron.f.integer_parameter(0, 2**64)
     math_op = byron.f.choice_parameter(['+', '-', '*', '/', '&', '^', '|'])
     variable = byron.f.macro('var {_node} uint64', _label='')
-    variable.force_parent('prologue')
+    # variable.force_parent('prologue')
 
     # standard
     main_prologue = byron.f.macro('package main\nfunc evolved_function() uint64 {{')
@@ -50,7 +50,7 @@ def framework():
     subs_prologue = byron.f.macro('func {_node}(foo uint64) uint64 {{', _label='')
     subs_math = byron.f.macro('foo {op}= {num}', op=math_op, num=int64)
     subs_epilogue = byron.f.macro('return foo\n}}')
-    subs = byron.f.sequence([subs_prologue, byron.f.bunch([subs_math], size=2), subs_epilogue], name='function')
+    subs = byron.f.sequence([subs_prologue, byron.f.bunch([subs_math], size=(2, 10)), subs_epilogue], name='function')
 
     call = byron.f.macro(
         '{var1} = {sub}({var2})',
@@ -59,5 +59,8 @@ def framework():
         var2=byron.f.global_reference(variable),
     )
 
-    code = byron.f.bunch([imath, vmath, call], size=5, name='body')
-    return byron.f.sequence((main_prologue, code, main_epilogue), max_instances=1)
+    few_default_vars = byron.f.bunch([variable], size=2)
+    # NOTE[GX]: Force all newly created variables to appear after the few default ones
+    variable.force_parent(few_default_vars)
+    code = byron.f.bunch([imath, vmath, call], weights=(3, 3, 1), size=(2, 20), name='body')
+    return byron.f.sequence((main_prologue, few_default_vars, code, main_epilogue), max_instances=1)

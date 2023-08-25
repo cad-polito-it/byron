@@ -44,6 +44,7 @@ from collections.abc import Sequence
 import networkx as nx
 
 from byron.global_symbols import *
+from byron.user_messages import *
 from byron.classes.node_reference import NodeReference
 from byron.classes.parameter import ParameterABC, ParameterStructuralABC
 from byron.classes.selement import *

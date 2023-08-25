@@ -248,7 +248,7 @@ class Individual(Paranoid):
             value << i.fitness or not value.is_distinguishable(i.fitness) for i in self.lineage.parents
         ):
             self._lineage.operator.stats.failures += 1
-        logger.debug(f"Individual: Fitness of {self} is {value}")
+        logger.debug(f"Individual: Fitness of {self}/{self.lineage} is {value}")
 
     @property
     def as_message(self) -> list[int]:
