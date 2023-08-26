@@ -39,6 +39,7 @@ from collections import defaultdict
 from functools import partial
 
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 from byron.classes.individual import Individual
 from byron.classes.macro import Macro
 from byron.classes.node_reference import *
@@ -64,12 +65,12 @@ def _is_target(G: nx.MultiDiGraph, n: int) -> bool:
 
 
 def group_selements(
-    individuals: Sequence[Individual], choosy: bool = False, only_targets: bool = False, only_heads: bool = False
+    individuals: Sequence[Individual], choosy: bool = False, only_direct_targets: bool = False, only_heads: bool = False
 ) -> dict[tuple[SElement], dict[Individual, list[int]]]:
     """Group macros"""
 
     partial_filters = list()
-    if only_targets:
+    if only_direct_targets:
         partial_filters.append(lambda G, n: _is_target(G, n))
     if only_heads:
         partial_filters.append(lambda G, n: _is_head(G, n))

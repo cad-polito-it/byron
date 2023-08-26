@@ -32,6 +32,7 @@ from typing import Sequence, Any
 from math import isclose
 
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 from byron.classes.fitness import FitnessABC
 from byron.user_messages import *
 

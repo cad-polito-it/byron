@@ -26,6 +26,7 @@
 # v1 / June 2023 / Squillero (GX)
 
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 from byron.operators.graph_tools import *
 from byron.user_messages import *
 from byron.classes import *
@@ -76,7 +77,7 @@ def add_macro_to_bunch(parent: Individual, strength=1.0) -> list['Individual']:
     if not candidates:
         raise ByronOperatorFailure
     node = rrandom.choice(candidates)
-    successors = get_successors(NodeReference(G, node))
+    successors = list(get_successors(NodeReference(G, node)))
     new_macro_type = rrandom.choice(G.nodes[node]["_selement"].POOL)
     new_macro_reference = unroll_selement(new_macro_type, G)
     G.add_edge(node, new_macro_reference.node, _type=FRAMEWORK)

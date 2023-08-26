@@ -34,6 +34,7 @@ import networkx as nx
 from byron.user_messages import *
 from byron.randy import rrandom
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 
 from byron.classes.parameter import ParameterStructuralABC
 from byron.operators.graph_tools import *
@@ -114,7 +115,7 @@ def _global_reference(
             if not target:
                 raise ByronOperatorFailure
             self.value = target
-            for ccomp in list(nx.weakly_connected_components(self.graph)):
+            for ccomp in tuple(nx.weakly_connected_components(self.graph)):
                 if NODE_ZERO not in ccomp:
                     self.self.graph.remove_nodes_from(ccomp)
 

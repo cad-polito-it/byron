@@ -30,6 +30,7 @@ from functools import cache
 
 from byron.user_messages import *
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 
 from byron.classes.parameter import ParameterStructuralABC
 from byron.classes.node_reference import NodeReference

@@ -33,6 +33,7 @@ from typing import Callable, Any
 from copy import copy
 
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 from byron.user_messages import *
 from byron.classes.selement import SElement
 from byron.classes.fitness import FitnessABC
@@ -80,16 +81,16 @@ class Population:
     def generation(self, value):
         self._generation = value
 
-    def __iter__(self) -> tuple[int, "Individual"]:
+    def __iter__(self) -> tuple[int, 'Individual']:
         return enumerate(self._individuals)
 
     @property
-    def not_finalized(self):
-        return list(filter(lambda x: not x[1].is_finalized, enumerate(self._individuals)))
+    def not_finalized_individuals(self):
+        return tuple(filter(lambda x: not x[1].finalized, enumerate(self._individuals)))
 
     @property
-    def finalized(self):
-        return list(filter(lambda x: x[1].is_finalized, enumerate(self._individuals)))
+    def finalized_individuals(self):
+        return tuple(filter(lambda x: x[1].finalized, enumerate(self._individuals)))
 
     @property
     def entropy(self):

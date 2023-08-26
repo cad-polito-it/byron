@@ -44,6 +44,7 @@ from collections.abc import Sequence
 import networkx as nx
 
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 from byron.user_messages import *
 from byron.classes.node_reference import NodeReference
 from byron.classes.parameter import ParameterABC, ParameterStructuralABC
@@ -52,16 +53,16 @@ from byron.classes.selement import *
 # =[PUBLIC FUNCTIONS]===================================================================================================
 
 
-def get_successors(ref: NodeReference) -> list[int]:
+def get_successors(ref: NodeReference) -> tuple[int]:
     G = ref.graph
-    return [v for u, v, d in G.out_edges(ref.node, data="_type") if d == FRAMEWORK]
+    return tuple(v for u, v, d in G.out_edges(ref.node, data="_type") if d == FRAMEWORK)
 
 
 def get_predecessor(ref: NodeReference) -> int:
     return next((u for u, v, k in ref.graph.in_edges(ref.node, data="_type") if k == FRAMEWORK), 0)
 
 
-def get_siblings(ref: NodeReference) -> list[int]:
+def get_siblings(ref: NodeReference) -> tuple[int]:
     """
     Returns the list of all successors of node's only predecessor. That is, the node itself and its siblings.
 
@@ -79,7 +80,7 @@ def get_siblings(ref: NodeReference) -> list[int]:
 def set_successors_order(ref: NodeReference, new_order: Sequence[int]) -> None:
     assert check_valid_type(new_order, Sequence)
     G = ref.graph
-    current = list((u, v, k) for u, v, k, d in G.out_edges(ref.node, keys=True, data="_type") if d == FRAMEWORK)
+    current = tuple((u, v, k) for u, v, k, d in G.out_edges(ref.node, keys=True, data="_type") if d == FRAMEWORK)
     assert all(k == 0 for u, v, k in current), f"ValueError: Found a FRAMEWORK edge with key != 0."
     assert {v for u, v, k in current} == set(
         new_order
@@ -107,28 +108,28 @@ def get_node_color_dict(G: nx.MultiDiGraph) -> dict[int, int]:
 
 def get_all_frames(
     G: nx.classes.MultiDiGraph, root: int | None = None, *, data: bool = True, node_id: bool = False
-) -> list:
+) -> tuple:
     node_lst = _get_node_list(G, root=root, type_=FRAME_NODE)
     if data:
-        data_lst = [G.nodes[n]["_selement"] for n in node_lst]
+        data_lst = tuple(G.nodes[n]["_selement"] for n in node_lst)
     if data and node_id:
-        return list(zip(data_lst, node_lst))
+        return tuple(zip(data_lst, node_lst))
     elif data and not node_id:
         return data_lst
     elif not data and node_id:
         return node_lst
     else:
-        raise []
+        raise tuple()
 
 
 def get_all_macros(
     G: nx.classes.MultiDiGraph, root: int | None = None, *, data: bool = True, node_id: bool = False
-) -> list:
+) -> tuple:
     node_lst = _get_node_list(G, root=root, type_=MACRO_NODE)
     if data:
-        data_lst = [G.nodes[n]["_selement"] for n in node_lst]
+        data_lst = tuple(G.nodes[n]["_selement"] for n in node_lst)
     if data and node_id:
-        return list(zip(data_lst, node_lst))
+        return tuple(zip(data_lst, node_lst))
     elif data and not node_id:
         return data_lst
     elif not data and node_id:
@@ -137,7 +138,7 @@ def get_all_macros(
         raise NotImplementedError
 
 
-def get_all_parameters(G: nx.classes.MultiDiGraph, root: int | None = None, *, node_id: bool = False) -> list:
+def get_all_parameters(G: nx.classes.MultiDiGraph, root: int | None = None, *, node_id: bool = False) -> tuple:
     r"""Returns all parameters of all macro instances
 
     Parameters
@@ -158,19 +159,19 @@ def get_all_parameters(G: nx.classes.MultiDiGraph, root: int | None = None, *, n
     """
 
     if node_id:
-        return [
+        return tuple(
             (p, n)
             for n in _get_node_list(G, root=root, type_=None)
             for p in G.nodes[n].values()
             if isinstance(p, ParameterABC)
-        ]
+        )
     else:
-        return [
+        return tuple(
             p
             for n in _get_node_list(G, root=root, type_=None)
             for p in G.nodes[n].values()
             if isinstance(p, ParameterABC)
-        ]
+        )
 
 
 # =[PRIVATE FUNCTIONS]==================================================================================================
@@ -181,15 +182,15 @@ def _get_first_macro(root: int, G: nx.MultiDiGraph, T: nx.DiGraph) -> int:
     return next((n for n in nx.dfs_preorder_nodes(T, root) if G.nodes[n]["_type"] == MACRO_NODE), None)
 
 
-def _get_node_list(G: nx.classes.MultiDiGraph, *, root: int, type_: str | None) -> list[int]:
+def _get_node_list(G: nx.classes.MultiDiGraph, *, root: int, type_: str | None) -> tuple[int]:
     """Get all nodes, or some nodes through dfs"""
     if root is None:
-        return list(n for n in G.nodes if type_ is None or G.nodes[n]["_type"] == type_)
+        return tuple(n for n in G.nodes if type_ is None or G.nodes[n]["_type"] == type_)
     else:
         tree = nx.classes.DiGraph()
         tree.add_nodes_from(G.nodes)
         tree.add_edges_from((u, v) for u, v, k in G.edges(data="_type") if k == FRAMEWORK)
-        return list(n for n in nx.dfs_preorder_nodes(tree, root) if type_ is None or G.nodes[n]["_type"] == type_)
+        return tuple(n for n in nx.dfs_preorder_nodes(tree, root) if type_ is None or G.nodes[n]["_type"] == type_)
 
 
 def fasten_subtree_parameters(node_reference: NodeReference):

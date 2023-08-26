@@ -21,6 +21,7 @@ from scipy.stats import truncnorm
 
 from byron.user_messages import *
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 
 __all__ = ["Randy"]
 

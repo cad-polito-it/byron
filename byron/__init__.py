@@ -35,6 +35,10 @@ from byron.functions import *
 
 # noinspection PyUnresolvedReferences
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
+
+# noinspection PyUnresolvedReferences
+from byron.classes.node import NODE_ZERO
 
 # noinspection PyUnresolvedReferences
 from byron import user_messages
@@ -89,9 +93,6 @@ from byron.fitness_log import *
 
 # noinspection PyUnresolvedReferences
 from byron.sys import SYSINFO as sysinfo
-
-# noinspection PyUnresolvedReferences
-from byron.tools.node_to_string import node_to_str
 
 # noinspection PyUnresolvedReferences
 from byron.tools.graph import fasten_subtree_parameters

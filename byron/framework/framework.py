@@ -32,6 +32,7 @@ from typing import Sequence
 from functools import partial
 
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 from byron.user_messages import *
 from byron.classes.selement import SElement
 from byron.classes.frame import *

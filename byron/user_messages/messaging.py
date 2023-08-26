@@ -41,6 +41,7 @@ import time
 import warnings
 
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 
 BASE_STACKLEVEL = 3
 

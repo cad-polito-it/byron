@@ -10,16 +10,16 @@
 # Copyright 2023 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
-import byron.global_symbols as symbols
+import byron
 
 
 def test_framework():
-    assert 'framework' == symbols.FRAMEWORK
+    assert 'framework' == byron.FRAMEWORK
 
 
 def test_link():
-    assert 'link' == symbols.LINK
+    assert 'link' == byron.LINK
 
 
-def test_node():
-    assert 0 == symbols.NODE_ZERO
+def test_node_zero():
+    assert 0 == byron.NODE_ZERO

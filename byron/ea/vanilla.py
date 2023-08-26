@@ -100,7 +100,7 @@ def vanilla_ea(
     byron_logger.info("VanillaEA: 🍦 [b]VanillaEA started[/] ┈ %s", _elapsed(start, process=True))
 
     SElement.is_valid = SElement._is_valid_debug
-    population = Population(top_frame, extra_parameters=population_extra_parameters, memory=True)
+    population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
 
     # Initialize population
     ops0 = [op for op in get_operators() if op.num_parents is None]
@@ -114,6 +114,10 @@ def vanilla_ea(
     population.sort()
     best = population[0]
     _new_best(population, evaluator)
+
+    silent_pause = 1
+    if notebook_mode:
+        silent_pause = 5
 
     byron_logger.info("VanillaEA: End of initialization ┈ %s", _elapsed(start, steps=evaluator.fitness_calls))
 
@@ -152,7 +156,7 @@ def vanilla_ea(
             _new_best(population, evaluator)
 
         byron_logger.hesitant_log(
-            1,
+            silent_pause,
             LOGGING_INFO,
             f"VanillaEA: End of generation %s (𝐻: {population.entropy:.4f}) ┈ %s",
             population.generation,

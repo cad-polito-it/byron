@@ -39,7 +39,6 @@ __all__ = [
     'LINK',
     'FRAME_NODE',
     'MACRO_NODE',
-    'NODE_ZERO',
     'BYRON_TAG',
     'GENETIC_OPERATOR',
     'FITNESS_FUNCTION',
@@ -64,8 +63,8 @@ import sys
 from collections import defaultdict
 import multiprocessing
 
-__version__ = "0.8a1.dev16"
-__date__ = "25-08-2023"
+__version__ = "0.8a1.dev18"
+__date__ = "26-08-2023"
 __codename__ = "Don Juan"
 __author__ = "Giovanni Squillero and Alberto Tonda"
 __copyright__ = "Copyright (c) 2023 Giovanni Squillero and Alberto Tonda"
@@ -137,6 +136,7 @@ LOGGING_INFO = logging.INFO
 LOGGING_WARNING = logging.WARNING
 LOGGING_ERROR = logging.ERROR
 
+# NODE_ZERO = Node(0) defined in class.node
 FRAMEWORK = 'framework'
 LINK = 'link'
 FRAME_NODE = 'frame'
@@ -145,13 +145,13 @@ SEQUENCE_FRAME = 'sequence'
 ALTERNATIVE_FRAME = 'alternative'
 MACRO_BUNCH_FRAME = 'bunch'
 BNF_FRAME = 'bunch'
-NODE_ZERO = 0
 BYRON_TAG = 'To have joy, one must share it'
 GENETIC_OPERATOR = 'genetic_operator'
 FITNESS_FUNCTION = 'fitness_function'
 PARANOIA_TYPE_ERROR = 'TypeError (paranoia check)'
 PARANOIA_VALUE_ERROR = 'ValueError (paranoia check)'
 PARANOIA_SYSTEM_ERROR = 'SystemError (paranoia check)'
+
 
 DEFAULT_OPTIONS = {
     '$dump_node_info': False,

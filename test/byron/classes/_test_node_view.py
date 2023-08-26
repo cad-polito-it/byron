@@ -60,15 +60,15 @@ def test_nodeview_predecessor(sample_graph):
     ref = byron.classes.NodeReference(sample_graph, 1)
     node_view = byron.classes.NodeView(ref)
 
-    assert node_view.predecessor.id == 0
+    assert node_view.parent.id == 0
 
 
 def test_nodeview_successors(sample_graph):
     ref = byron.classes.NodeReference(sample_graph, 0)
     node_view = byron.classes.NodeView(ref)
 
-    assert len(node_view.successors) == 1
-    assert node_view.successors[0].id == 1
+    assert len(node_view.children) == 1
+    assert node_view.children[0].id == 1
 
 
 def test_nodeview_links(sample_graph):

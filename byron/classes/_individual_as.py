@@ -32,8 +32,8 @@ import networkx as nx
 
 from byron.tools.graph import *
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 from byron.classes.node_reference import NodeReference
-from byron.tools.node_to_string import node_to_str
 
 if matplotlib_available:
     import matplotlib.pyplot as plt
@@ -190,7 +190,7 @@ def _draw_forest(self, zoom) -> None:
 
     ##############################################################################
     # Draw links
-    T.remove_edges_from(list(T.edges))
+    T.remove_edges_from(tuple(T.edges))
     T.add_edges_from(
         (u, v)
         for u, v, k in self.G.edges(data="_type")
@@ -205,7 +205,7 @@ def _draw_forest(self, zoom) -> None:
         ax=ax,
     )
 
-    T.remove_edges_from(list(T.edges))
+    T.remove_edges_from(tuple(T.edges))
     T.add_edges_from(
         (u, v) for u, v, k in self.G.edges(data="_type") if k == LINK and T.nodes[u]["depth"] != T.nodes[v]["depth"]
     )
@@ -266,12 +266,12 @@ def _draw_multipartite(self, zoom: int) -> None:
     labels = dict()
     for n in [_ for _ in pos if self.genome.nodes[n]['_type'] == MACRO_NODE]:
         pos[n] = (pos[n][0], pos[n][1])
-        d = node_to_str(NodeReference(self.genome, n))
+        d = NodeReference(self.genome, n).safe_dump
         labels[n] = '     ' + d.split('\n')[0].strip() + (' …' if '\n' in d else '')
     nx.draw_networkx_labels(G, pos, horizontalalignment='left', labels=labels)
 
     # draw "local" references
-    G.remove_edges_from(list(G.edges))
+    G.remove_edges_from(tuple(G.edges))
     for s in sub_graphs:
         G.add_edges_from((u, v) for u, v, k in self.G.edges(data="_type") if k == LINK and u in s and v in s)
     nx.draw_networkx_edges(
@@ -285,7 +285,7 @@ def _draw_multipartite(self, zoom: int) -> None:
         ax=ax,
     )
     # draw "global" references
-    G.remove_edges_from(list(G.edges))
+    G.remove_edges_from(tuple(G.edges))
     for s in sub_graphs:
         G.add_edges_from(
             (u, v)

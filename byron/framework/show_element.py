@@ -30,6 +30,7 @@ __all__ = ['as_text', 'as_lgp', 'as_forest']
 from byron.randy import rrandom
 from byron.sys import *
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 from byron.classes.selement import SElement
 from byron.classes.frame import FrameABC
 from byron.framework.macro import macro

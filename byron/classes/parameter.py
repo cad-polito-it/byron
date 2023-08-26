@@ -33,6 +33,7 @@ from typing import Any
 from networkx.classes import MultiDiGraph
 
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 from byron.user_messages import *
 from byron.classes.selement import SElement
 from byron.classes.paranoid import Paranoid
@@ -171,7 +172,7 @@ class ParameterStructuralABC(ParameterABC):
 
     def __format__(self, format_spec):
         target = self.value
-        return "n" + format(self.value, format_spec) if target is not None else "*UNSET*"
+        return format(self.value, format_spec) if target is not None else "*UNSET*"
 
     def is_correct(self, obj: Any) -> bool:
         assert check_valid_type(obj, int)

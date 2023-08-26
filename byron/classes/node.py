@@ -25,13 +25,9 @@
 # =[ HISTORY ]===============================================================
 # v1 / August 2023 / Squillero (GX)
 
-__all__ = ['Node']
+__all__ = ['Node', 'NODE_ZERO']
 
 import networkx as nx
-
-from byron.tools.graph import fasten_subtree_parameters
-from byron.global_symbols import NODE_ZERO
-from byron.classes.node_reference import NodeReference
 
 
 class Node(int):
@@ -45,11 +41,20 @@ class Node(int):
         Node.__LAST_BYRON_NODE += 1
         return int.__new__(cls, Node.__LAST_BYRON_NODE)
 
+    def __repr__(self):
+        return f'n{int(self)}'
+
     @staticmethod
     def reset_labels(G: nx.MultiDiGraph) -> None:
         """Set Graph node labels to unique numbers"""
+        from byron.tools.graph import fasten_subtree_parameters
+        from byron.classes.node_reference import NodeReference
+
         new_labels = {k: Node() for k in G.nodes if k != NODE_ZERO}
         nx.relabel_nodes(G, new_labels, copy=False)
         for k, v in new_labels.items():
             G.nodes[v]['%old_label'] = k
         fasten_subtree_parameters(NodeReference(G, NODE_ZERO))
+
+
+NODE_ZERO = Node(0)

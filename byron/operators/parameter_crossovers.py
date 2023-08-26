@@ -45,7 +45,7 @@ def array_parameter_uniform_crossover_choosy(parent1: Individual, parent2: Indiv
     if not suitable_groups:
         raise ByronOperatorFailure
 
-    path = rrandom.choice(list(suitable_groups.keys()))
+    path = rrandom.choice(tuple(suitable_groups.keys()))
     array_in_offspring = rrandom.choice(groups[path][offspring])
     array_in_parent2 = rrandom.choice(groups[path][parent2])
     new_value = [rrandom.choice([p1, p2]) for p1, p2 in zip(array_in_offspring.value, array_in_parent2.value)]

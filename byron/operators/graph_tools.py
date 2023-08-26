@@ -30,6 +30,7 @@ __all__ = ['unroll_individual', 'unroll_selement', 'initialize_subtree', 'fasten
 import networkx as nx
 
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 
 from byron.classes import monitor
 from byron.classes.node import Node
@@ -59,7 +60,7 @@ def unroll_individual(individual: Individual, top: type[FrameABC]) -> int | None
 
     assert check_valid_types(individual, Individual)
     assert check_valid_types(top, FrameABC, Macro, subclass=True)
-    assert not individual.is_finalized, f"{PARANOIA_VALUE_ERROR}: Individual is finalized"
+    assert not individual.finalized, f"{PARANOIA_VALUE_ERROR}: Individual is finalized"
 
     G = individual.genome
     new_node_reference = unroll_selement(top, G)

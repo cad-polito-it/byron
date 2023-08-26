@@ -44,6 +44,7 @@ import tempfile
 from concurrent.futures import ThreadPoolExecutor
 
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 
 if joblib_available:
     import joblib
@@ -54,6 +55,7 @@ from byron.fitness import make_fitness
 from byron.classes.population import Population
 from byron.registry import *
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 
 
 @dataclass(kw_only=True, slots=True)
@@ -245,7 +247,9 @@ class PythonEvaluator(EvaluatorABC):
             raise NotImplementedError
 
     def evaluate_population(self, population: Population) -> None:
-        individuals = [(i, I, self.cook(population.dump_individual(i))) for i, I in population.not_finalized]
+        individuals = [
+            (i, I, self.cook(population.dump_individual(i))) for i, I in population.not_finalized_individuals
+        ]
         if not individuals:
             logger.debug(f"PythonEvaluator: All individuals in the population have already been finalized")
             return
@@ -402,7 +406,7 @@ class MakefileEvaluator(EvaluatorABC):
         indexes = list()
         phenotypes = list()
         for i, g in population:
-            if not g.is_finalized:
+            if not g.finalized:
                 indexes.append(i)
                 phenotypes.append(self.cook(population.dump_individual(i)))
         if not indexes:
@@ -482,7 +486,7 @@ class ScriptEvaluator(EvaluatorABC):
         return f"{self.__class__.__name__}❬{self._script_name}❭"
 
     def evaluate_population(self, population: Population) -> None:
-        individuals = population.not_finalized
+        individuals = population.not_finalized_individuals
         if not individuals:
             logger.debug(f"ScriptEvaluator: All individuals in the population have already been finalized")
             return
@@ -640,7 +644,7 @@ class ParallelScriptEvaluator(EvaluatorABC):
         indexes = list()
         phenotypes = list()
         for i, g in population:
-            if not g.is_finalized:
+            if not g.finalized:
                 indexes.append(i)
                 phenotypes.append(self.cook(population.dump_individual(i)))
         if not indexes:

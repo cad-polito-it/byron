@@ -15,7 +15,7 @@ import byron
 
 def silly_check(nr):
     values = list()
-    for s in nr.successors:
+    for s in nr.children:
         values.append(s.p.num)  # lazy fingers: s.p.num
     return sorted(values, reverse=True) == values
 

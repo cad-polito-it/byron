@@ -40,12 +40,14 @@ import networkx as nx
 from byron.user_messages import *
 from byron.user_messages.messaging import logger as byron_logger
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 from byron.tools.graph import *
 
 if matplotlib_available:
     import matplotlib.pyplot as plt
 
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 from byron.classes.byron import Byron
 from byron.classes.dump import *
 from byron.classes.fitness import FitnessABC
@@ -138,7 +140,7 @@ class Individual(Paranoid):
 
     def __str__(self):
         # return f"𝕚{self._id}" + " | " + str(hash(self.as_message)) + ' | ' + str(self.structure_tree)
-        return f"{'𝐢' if self.is_finalized else '𝕚'}{self._id}"
+        return f"{'𝐢' if self.finalized else '𝕚'}{self._id}"
 
     def __eq__(self, other) -> bool:
         return (
@@ -159,7 +161,7 @@ class Individual(Paranoid):
         return self._id
 
     @property
-    def is_finalized(self) -> bool:
+    def finalized(self) -> bool:
         return self._fitness is not None
 
     @property
@@ -182,9 +184,14 @@ class Individual(Paranoid):
         return I
 
     @property
-    def dfs_nodes(self) -> list[int]:
+    def nodes(self) -> tuple[int]:
         """Return all node indexes in reliable order."""
-        return list(nx.dfs_preorder_nodes(self.structure_tree))
+        return tuple(nx.dfs_preorder_nodes(self.structure_tree))
+
+    @property
+    def nx_nodes(self):
+        """Mirror NetworkX's nodes"""
+        return self._genome.nodes
 
     @property
     def top_frame(self) -> type[FrameABC]:
@@ -225,13 +232,13 @@ class Individual(Paranoid):
     @property
     def fitness(self) -> FitnessABC:
         """The fitness of the individual."""
-        assert self.is_finalized, f"{PARANOIA_VALUE_ERROR}: Individual not marked as final, fitness value not set"
+        assert self.finalized, f"{PARANOIA_VALUE_ERROR}: Individual not marked as final, fitness value not set"
         return self._fitness
 
     def _check_fitness(self, value) -> bool:
         check_valid_types(value, FitnessABC)
         assert (
-            not self.is_finalized
+            not self.finalized
         ), f"{PARANOIA_VALUE_ERROR}: Individual marked as final, fitness value already set to {self._fitness}"
         return True
 
@@ -265,7 +272,7 @@ class Individual(Paranoid):
     @property
     def macros(self) -> list[Macro]:
         """Return all macro instances in unreliable order."""
-        if self.is_finalized:
+        if self.finalized:
             return self._cached_macros
         return self._macros()
 
@@ -281,7 +288,7 @@ class Individual(Paranoid):
     @property
     def frames(self) -> list[FrameABC]:
         """Return all frame instances in unreliable order."""
-        if self.is_finalized:
+        if self.finalized:
             return self._cached_frames
         return self._frames()
 
@@ -297,7 +304,7 @@ class Individual(Paranoid):
     @property
     def parameters(self) -> list[ParameterABC]:
         """Return all parameter instances in unreliable order."""
-        if self.is_finalized:
+        if self.finalized:
             return self._cached_parameters
         return self._parameters()
 
@@ -331,6 +338,10 @@ class Individual(Paranoid):
         assert self.genome == self._genome, f"{PARANOIA_VALUE_ERROR}: Panic!"
         assert self.genome == self.G, f"{PARANOIA_VALUE_ERROR}: Panic!"
 
+        assert all(
+            isinstance(n, Node) for n in self._genome.nodes
+        ), f"{PARANOIA_TYPE_ERROR}: Genome index not a Byron Node"
+
         assert self.genome == self._genome, f"{PARANOIA_VALUE_ERROR}: Panic: genome != _genome"
         assert nx.is_weakly_connected(
             self._genome
@@ -353,8 +364,8 @@ class Individual(Paranoid):
         )
 
         # ==[check genome (fitness)]=========================================
-        assert (self._fitness is None and not self.is_finalized) or (
-            self._fitness is not None and self.is_finalized
+        assert (self._fitness is None and not self.finalized) or (
+            self._fitness is not None and self.finalized
         ), "Value Error (paranoia check): Mismatch fitness and is_finalized"
 
         # ==[check edges (semantic)]=========================================

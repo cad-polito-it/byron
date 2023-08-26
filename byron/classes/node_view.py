@@ -34,11 +34,13 @@ from functools import cached_property
 import networkx as nx
 
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 from byron.user_messages import *
 from byron.classes.value_bag import ValueBag
 from byron.classes.node_reference import NodeReference
 from byron.classes.selement import SElement
 from byron.classes.parameter import ParameterABC
+from byron.classes.node import Node
 
 from byron.tools.graph import *
 
@@ -53,7 +55,26 @@ class NodeView:
     ref: NodeReference
 
     def __str__(self) -> str:
-        return f"n{self.node}"
+        return str(self.node)
+
+    @property
+    def safe_dump(self):
+        if self.ref.graph.nodes[self.ref.node]['_type'] == MACRO_NODE:
+            extra_parameters = DEFAULT_EXTRA_PARAMETERS | self.ref.graph.nodes[self.ref.node]
+            extra_parameters |= {'_node': NodeView(self.ref)}
+            dumped = None
+            while dumped is None:
+                try:
+                    dumped = self.ref.graph.nodes[self.ref.node]['_selement'].dump(ValueBag(extra_parameters))
+                except KeyError as k:
+                    if k.args[0] in extra_parameters:
+                        return '?'
+                    extra_parameters[k.args[0]] = '{' + k.args[0] + '}'
+                except Exception as e:
+                    return f'{e}'
+        else:
+            dumped = str(self.ref.graph.nodes[self.ref.node]['_selement'].__class__)
+        return dumped
 
     @property
     def graph(self) -> nx.classes.MultiDiGraph:
@@ -97,14 +118,14 @@ class NodeView:
         return tree
 
     @cached_property
-    def predecessor(self) -> 'NodeView':
-        """NodeView of the predecessor in the structure tree"""
-        predecessor = next((u for u, v, k in self.ref.graph.in_edges(self.ref.node, data="_type") if k == FRAMEWORK), 0)
-        return NodeView(NodeReference(self.ref.graph, predecessor))
+    def parent(self) -> 'NodeView':
+        """NodeView of the parent in the structure tree"""
+        parent = next((u for u, v, k in self.ref.graph.in_edges(self.ref.node, data="_type") if k == FRAMEWORK), 0)
+        return NodeView(NodeReference(self.ref.graph, parent))
 
-    @cached_property
-    def successors(self) -> list['NodeView']:
-        """NodeView of all direct successors in the structure tree"""
+    @property
+    def children(self) -> list['NodeView']:
+        """NodeViews of all children in the structure tree"""
         return [
             NodeView(NodeReference(self.ref.graph, v))
             for u, v, d in self.ref.graph.out_edges(self.ref.node, data="_type")
@@ -112,7 +133,7 @@ class NodeView:
         ]
 
     @cached_property
-    def path(self) -> list['NodeView']:
+    def path(self) -> tuple['NodeView']:
         """List of NodeView of the nodes in the path from top-frame to node"""
         path = list()
         node = self.ref.node
@@ -120,7 +141,7 @@ class NodeView:
             path.append(NodeView(NodeReference(self.ref.graph, node)))
             node = next(u for u, v, k in self.ref.graph.in_edges(node, data="_type") if k == FRAMEWORK)
         path.append(NodeView(NodeReference(self.ref.graph, node)))
-        return list(reversed(path))
+        return tuple(reversed(path))
 
     @cached_property
     def out_degree(self):
@@ -131,47 +152,6 @@ class NodeView:
     def fields(self):
         return sorted(k for k in self.__dir__() if k[0] != '_')
 
-
-# class Old_NodeView:
-#        elif item == "links":
-#
-#            self.__dict__[item] = sorted(
-#                (u, v, k)
-#                for u, v, k in chain(G.out_edges(id, data="_type"), G.in_edges(id, data="_type"))
-#                if k != FRAMEWORK
-#            )
-#        elif item == "index":
-#            # Index of a node id among the successors
-#            return lambda n: self._successor_ids.index(n)
-#        elif item == "name":
-#            # Name of the SElement inside a node
-#            self.__dict__[item] = G.nodes[id]["_selement"].__class__.__name__
-#        elif item == "pathname":
-#            return ".".join(f"n{_}" for _ in self.path[1:])
-#        elif item == "out_degree":
-#            # Global out degree (fanout)
-#            self.__dict__[item] = len(G.out_edges(id, data="_type"))
-#        elif item == "in_degree":
-#            # Global in degree (fanin)
-#            self.__dict__[item] = len(G.in_edges(id, data="_type"))
-#        elif item.endswith("_out_degree"):
-#            # Out degree from a specific type of edges
-#            tag, _ = item.split("_", maxsplit=1)
-#            self.__dict__[item] = sum(1 for u, v, k in G.out_edges(id, data="_type") if k == tag)
-#        elif item.endswith("_in_degree"):
-#            # In degree from a specific type of edges
-#            tag, _ = item.split("_", maxsplit=1)
-#            self.__dict__[item] = sum(1 for u, v, k in G.in_edges(id, data="_type") if k == tag)
-#        elif item == "all_edges":
-#            self.__dict__[item] = sorted(
-#                [(u, v, k) for u, v, k in G.in_edges(id, data="_type")]
-#                + [(u, v, k) for u, v, k in G.out_edges(id, data="_type")]
-#            )
-#        else:
-#            raise KeyError(f"Unknown property: {item!r}")
-#
-#        return self.__dict__[item]
-#
-#    def __setattr__(self, key, value):
-#        raise NotImplementedError(f"{self!r} is read only.")
-#
+    @staticmethod
+    def make(G: nx.MultiDiGraph, n: int | Node) -> 'NodeView':
+        return NodeView(NodeReference(G, Node(n)))

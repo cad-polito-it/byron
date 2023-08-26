@@ -32,6 +32,7 @@ import re
 from uuid import uuid1 as generate_uuid
 
 from byron.global_symbols import *
+from byron.classes.node import NODE_ZERO
 from byron.user_messages import *
 
 
@@ -177,7 +178,7 @@ class SElement(metaclass=SElementMeta):
         check_result = True
         for f in self.__class__.NODE_CHECKS:
             if not f(node_ref):
-                logger.info(f"is_valid: Failed check on {node_ref}: {f}")
+                logger.debug(f"is_valid: Failed check on {node_ref}: {f}")
                 check_result = False
         return check_result
 
