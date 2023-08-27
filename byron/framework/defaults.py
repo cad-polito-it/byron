@@ -27,7 +27,7 @@
 # =[ HISTORY ]===============================================================
 # v1 / August 2023 / Squillero (GX)
 
-__all__ = ['set_parameter', 'set_option']
+__all__ = ['set_global_parameter', 'set_global_option']
 
 from typing import Any
 import re
@@ -37,7 +37,7 @@ from byron.classes.node import NODE_ZERO
 from byron.global_symbols import DEFAULT_EXTRA_PARAMETERS, DEFAULT_OPTIONS
 
 
-def set_parameter(key: str, value: Any) -> None:
+def set_global_parameter(key: str, value: Any) -> None:
     r"""Set the global default for a framework parameter
 
     Parameters name always start with underscore. The are f-strings and may contain variables (eg.
@@ -60,7 +60,7 @@ def set_parameter(key: str, value: Any) -> None:
     DEFAULT_EXTRA_PARAMETERS[key] = value
 
 
-def set_option(key: str, value: Any) -> None:
+def set_global_option(key: str, value: Any) -> None:
     r"""Set the global default for a framework option
 
     Options name always start with dollar ``$``. They are boolean. The default for options is ``False``.

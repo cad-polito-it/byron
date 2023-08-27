@@ -129,16 +129,11 @@ def node_crossover_choosy(parent1: Individual, parent2: Individual):
     return _generic_node_crossover(parent1, parent2, choosy=True, link_type=LINK)
 
 
-# @genetic_operator(num_parents=2)
+@genetic_operator(num_parents=2)
 def node_crossover_unfussy(parent1: Individual, parent2: Individual):
     return _generic_node_crossover(parent1, parent2, choosy=False, link_type=LINK)
 
 
-# @genetic_operator(num_parents=2)
+@genetic_operator(num_parents=2)
 def leaf_crossover_unfussy(parent1: Individual, parent2: Individual):
-    return _generic_node_crossover(parent1, parent2, choosy=False, link_type=FRAMEWORK)
-
-
-# @genetic_operator(num_parents=2)
-def leaf_crossover_choosy(parent1: Individual, parent2: Individual):
     return _generic_node_crossover(parent1, parent2, choosy=True, link_type=FRAMEWORK)

@@ -28,12 +28,14 @@
 __all__ = ['ParameterABC', 'ParameterNumericABC', 'ParameterArrayABC', 'ParameterStructuralABC', 'ParameterSharedABC']
 
 from abc import ABC, abstractmethod
+from itertools import chain
 from typing import Any
+from functools import lru_cache
 
+import networkx as nx
 from networkx.classes import MultiDiGraph
 
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
 from byron.user_messages import *
 from byron.classes.selement import SElement
 from byron.classes.paranoid import Paranoid

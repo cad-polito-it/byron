@@ -32,23 +32,28 @@ __all__ = [
     'get_all_frames',
     'get_all_macros',
     'get_all_parameters',
+    'get_dfs_subtree',
     'get_node_color_dict',
+    'get_parent_frame_dictionary',
     'get_predecessor',
     'get_siblings',
-    'get_successors',
-    'set_successors_order',
     'get_structure_tree',
+    'get_successors',
+    'make_digraph',
+    'set_successors_order',
 ]
 
 from collections.abc import Sequence
+from functools import lru_cache
+from collections import deque
+
 import networkx as nx
 
 from byron.global_symbols import *
-from byron.classes.node import NODE_ZERO
+from byron.classes.node import *
 from byron.user_messages import *
 from byron.classes.node_reference import NodeReference
 from byron.classes.parameter import ParameterABC, ParameterStructuralABC
-from byron.classes.selement import *
 
 # =[PUBLIC FUNCTIONS]===================================================================================================
 
@@ -182,14 +187,12 @@ def _get_first_macro(root: int, G: nx.MultiDiGraph, T: nx.DiGraph) -> int:
     return next((n for n in nx.dfs_preorder_nodes(T, root) if G.nodes[n]["_type"] == MACRO_NODE), None)
 
 
-def _get_node_list(G: nx.classes.MultiDiGraph, *, root: int, type_: str | None) -> tuple[int]:
+def _get_node_list(G: nx.classes.MultiDiGraph, *, root: int, type_: str | None) -> tuple:
     """Get all nodes, or some nodes through dfs"""
     if root is None:
         return tuple(n for n in G.nodes if type_ is None or G.nodes[n]["_type"] == type_)
     else:
-        tree = nx.classes.DiGraph()
-        tree.add_nodes_from(G.nodes)
-        tree.add_edges_from((u, v) for u, v, k in G.edges(data="_type") if k == FRAMEWORK)
+        tree = make_digraph(tuple(G.nodes), tuple((u, v) for u, v, k in G.edges(data="_type") if k == FRAMEWORK))
         return tuple(n for n in nx.dfs_preorder_nodes(tree, root) if type_ is None or G.nodes[n]["_type"] == type_)
 
 
@@ -215,9 +218,42 @@ def discard_useless_components(G: nx.MultiDiGraph) -> None:
 
 
 def get_structure_tree(G: nx.MultiDiGraph) -> nx.DiGraph | None:
-    tree = nx.DiGraph()
-    tree.add_nodes_from(G.nodes)
-    tree.add_edges_from((u, v) for u, v, k in G.edges(data="_type") if k == FRAMEWORK)
+    tree = make_digraph(tuple(G.nodes), tuple((u, v) for u, v, k in G.edges(data="_type") if k == FRAMEWORK))
     if not nx.is_branching(tree) or not nx.is_weakly_connected(tree):
         return None
     return tree
+
+
+def get_parent_frame_dictionary(genome: nx.MultiDiGraph) -> dict:
+    @lru_cache(1024)
+    def get_parent_frame_dictionary_cached(G, nodes_list) -> dict:
+        tree = make_digraph(tuple(G.nodes), tuple((u, v) for u, v, k in G.edges(data="_type") if k == FRAMEWORK))
+        assert nx.is_branching(tree) and nx.is_weakly_connected(tree), f"{PARANOIA_SYSTEM_ERROR}: Not a valid genome"
+        parent_frames = dict()
+        for node, path in nx.single_source_dijkstra_path(tree, NODE_ZERO).items():
+            parent_frames[node] = tuple(G.nodes[n]['_selement'].__class__ for n in path)
+        return parent_frames
+
+    return get_parent_frame_dictionary_cached(genome, tuple(genome.nodes))
+
+
+@lru_cache(1024)
+def make_digraph(nodes, edges):
+    tree = nx.DiGraph()
+    tree.add_nodes_from(nodes)
+    tree.add_edges_from(edges)
+    return tree
+
+
+def get_dfs_subtree(G: nx.MultiDiGraph, root: Node):
+    subtree = list()
+    queue = deque([root])
+    index = 0
+    while queue:
+        node = deque.pop()
+        for new_node in reversed(v for u, v, k in G.out_edges(node, data='_kind') if k == FRAMEWORK):
+            if G.nodes[new_node]['_type'] == MACRO_NODE:
+                subtree.append(new_node)
+            else:
+                queue.append(new_node)
+    return subtree

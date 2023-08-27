@@ -14,8 +14,8 @@ import byron
 
 
 def framework():
-    byron.f.set_parameter('_comment', '//')
-    byron.f.set_option('$dump_node_info', False)
+    byron.f.set_global_parameter('_comment', '//')
+    byron.f.set_global_option('$dump_node_info', False)
 
     # The parameter '{_byron}' can be used to get information on the current system. Available fields are:
     # 'version', 'system', 'machine', 'python', and 'networkx'

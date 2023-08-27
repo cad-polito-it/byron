@@ -270,50 +270,50 @@ class Individual(Paranoid):
     # CACHED PROPERTIED
 
     @property
-    def macros(self) -> list[Macro]:
+    def macros(self) -> tuple[Macro]:
         """Return all macro instances in unreliable order."""
         if self.finalized:
             return self._cached_macros
         return self._macros()
 
     @cached_property
-    def _cached_macros(self) -> list[Macro]:
+    def _cached_macros(self) -> tuple[Macro]:
         return self._macros()
 
-    def _macros(self) -> list[Macro]:
-        return [
+    def _macros(self) -> tuple[Macro]:
+        return tuple(
             self._genome.nodes[n]["_selement"] for n in self._genome if self._genome.nodes[n]["_type"] == MACRO_NODE
-        ]
+        )
 
     @property
-    def frames(self) -> list[FrameABC]:
+    def frames(self) -> tuple[FrameABC]:
         """Return all frame instances in unreliable order."""
         if self.finalized:
             return self._cached_frames
         return self._frames()
 
     @cached_property
-    def _cached_frames(self) -> list[FrameABC]:
+    def _cached_frames(self) -> tuple[FrameABC]:
         return self._frames()
 
-    def _frames(self) -> list[FrameABC]:
-        return [
+    def _frames(self) -> tuple[FrameABC]:
+        return tuple(
             self._genome.nodes[n]["_selement"] for n in self._genome if self._genome.nodes[n]["_type"] == FRAME_NODE
-        ]
+        )
 
     @property
-    def parameters(self) -> list[ParameterABC]:
+    def parameters(self) -> tuple[ParameterABC]:
         """Return all parameter instances in unreliable order."""
         if self.finalized:
             return self._cached_parameters
         return self._parameters()
 
     @cached_property
-    def _cached_parameters(self) -> list[ParameterABC]:
+    def _cached_parameters(self) -> tuple[ParameterABC]:
         return self._parameters()
 
-    def _parameters(self) -> list[ParameterABC]:
-        return [p for n in self._genome for p in self._genome.nodes[n].values() if isinstance(p, ParameterABC)]
+    def _parameters(self) -> tuple[ParameterABC]:
+        return tuple(p for n in self._genome for p in self._genome.nodes[n].values() if isinstance(p, ParameterABC))
 
     @property
     def structure_tree(self) -> nx.classes.DiGraph:
@@ -503,9 +503,9 @@ class Individual(Paranoid):
             extra_parameters = DEFAULT_EXTRA_PARAMETERS | DEFAULT_OPTIONS
 
         # =[Flatten the graph into a list of nodes]==========================
-        tree = nx.DiGraph()
-        tree.add_nodes_from(self._genome.nodes)
-        tree.add_edges_from((u, v) for u, v, k in self._genome.edges(data="_type") if k == FRAMEWORK)
+        tree = make_digraph(
+            tuple(self._genome.nodes), tuple((u, v) for u, v, k in self._genome.edges(data="_type") if k == FRAMEWORK)
+        )
 
         for node in list(v for _, v in tree.edges(NODE_ZERO) if self.genome.nodes[v]['_selement'].FORCED_PARENT):
             target = self.genome.nodes[node]['_selement'].FORCED_PARENT

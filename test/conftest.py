@@ -9,7 +9,10 @@
 ################################## ' ######################################
 # Copyright 2023 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
+
 import pytest
+
+from collections import defaultdict
 
 
 def pytest_addoption(parser):
@@ -27,3 +30,9 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if "avoidable" in item.keywords:
             item.add_marker(skip_avoidable)
+
+
+@pytest.fixture(scope='module')
+def individuals():
+    _individuals = defaultdict(list)
+    yield _individuals

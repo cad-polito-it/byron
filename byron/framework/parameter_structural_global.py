@@ -6,6 +6,7 @@
 # |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
+import functools
 
 # Copyright 2023 Giovanni Squillero and Alberto Tonda
 #
@@ -26,7 +27,7 @@
 # v1 / April 2023 / Squillero (GX)
 
 from itertools import chain
-from functools import cache
+from functools import cache, lru_cache
 from numbers import Number
 
 import networkx as nx
@@ -38,9 +39,7 @@ from byron.classes.node import NODE_ZERO
 
 from byron.classes.parameter import ParameterStructuralABC
 from byron.operators.graph_tools import *
-from byron.classes.selement import SElement, SElementMeta
-from byron.tools.names import *
-
+from byron.classes.selement import SElement
 from byron.tools.graph import *
 
 __all__ = ["global_reference"]
@@ -63,20 +62,16 @@ def _global_reference(
             self._target_frame = target_frame
 
         def get_potential_targets(self, add_none=True):
-            G = self._node_reference.graph
-            suitable_frames = [
-                n for n in nx.dfs_preorder_nodes(G) if G.nodes[n]['_selement'].__class__ == self._target_frame
-            ]
+            parent_frames = get_parent_frame_dictionary(self._node_reference.graph)
             if first_macro:
-                targets = list(
-                    chain.from_iterable(
-                        get_all_macros(G, root=f, data=False, node_id=True)[:1] for f in suitable_frames
-                    )
-                )
+                # TODO: This code sucks
+                targets = list()
+                first_macros = set()
+                for n, p in parent_frames.items():
+                    if p[:-1] not in first_macros:
+                        targets.append(n)
             else:
-                targets = list(
-                    chain.from_iterable(get_all_macros(G, root=f, data=False, node_id=True) for f in suitable_frames)
-                )
+                targets = list(n for n, p in parent_frames.items() if target_frame in p)
 
             if not add_none:
                 pass
@@ -109,6 +104,7 @@ def _global_reference(
                 initialize_subtree(new_node)
                 if first_macro:
                     target = get_all_macros(new_node.graph, root=new_node.node, data=False, node_id=True)[0]
+                    # TODO[GX]: Use the new get_dfs_subtree
                 else:
                     target = new_node.node
 
