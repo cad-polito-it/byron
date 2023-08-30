@@ -10,7 +10,7 @@
 
 [tool.poetry]
 name = "byron"
-version = "0.8a1.dev23"
+version = "0.8a1.dev25"
 description = "Multi-purpose extensible self-adaptive optimizer and fuzzer"
 authors = [
     "Giovanni Squillero <giovanni.squillero@polito.it>",
@@ -103,7 +103,7 @@ max-line-length = 120
 source-roots = ['src']
 
 [bumpver]
-current_version = "0.8a1.dev23"
+current_version = "0.8a1.dev25"
 version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
 commit_message = "Bump version to {new_version}"
 commit = false
@@ -115,6 +115,10 @@ push = false
     '^current_version = "{pep440_version}"$',
 ]
 "README.md" = [
+    "\\[Version: {pep440_version}\\]",
+    "version-{pep440_version}-orange"
+]
+"docs/pypi.md" = [
     "\\[Version: {pep440_version}\\]",
     "version-{pep440_version}-orange"
 ]
