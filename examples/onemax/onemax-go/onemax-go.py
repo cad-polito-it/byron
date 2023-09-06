@@ -26,10 +26,10 @@ def dummy_fitness(text):
 def main():
     top_frame = golang.framework()
 
-    # evaluator = byron.evaluator.ScriptEvaluator('./evaluate-all.sh', filename_format="individual{i:06}.go")
-    evaluator = byron.evaluator.ParallelScriptEvaluator(
-        'go', 'onemax.go', other_required_files=('main.go',), flags=('run',), timeout=30, default_result='-1'
-    )
+    evaluator = byron.evaluator.ScriptEvaluator('./evaluate-all.sh', filename_format="individual{i:06}.go")
+    # evaluator = byron.evaluator.ParallelScriptEvaluator(
+    #    'go', 'onemax.go', other_required_files=('main.go',), flags=('run',), timeout=30, default_result='-1'
+    # )
     evaluator = byron.evaluator.PythonEvaluator(dummy_fitness)
 
     byron.f.set_global_option('$dump_node_info', True)

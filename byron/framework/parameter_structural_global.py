@@ -32,6 +32,7 @@ from numbers import Number
 
 import networkx as nx
 
+from byron.classes import NodeReference
 from byron.user_messages import *
 from byron.randy import rrandom
 from byron.global_symbols import *
@@ -71,7 +72,11 @@ def _global_reference(
                     if p[:-1] not in first_macros:
                         targets.append(n)
             else:
-                targets = list(n for n, p in parent_frames.items() if target_frame in p)
+                targets = list(
+                    n
+                    for n, p in parent_frames.items()
+                    if target_frame in p and self._node_reference.graph.nodes[n]['_type'] == MACRO_NODE
+                )
 
             if not add_none:
                 pass
@@ -110,7 +115,11 @@ def _global_reference(
 
             if not target:
                 raise ByronOperatorFailure
-            self.value = target
+            self.value = next(
+                n
+                for n in nx.dfs_preorder_nodes(self._node_reference.graph, target)
+                if self._node_reference.graph.nodes[n]['_type'] == MACRO_NODE
+            )
             for ccomp in tuple(nx.weakly_connected_components(self.graph)):
                 if NODE_ZERO not in ccomp:
                     self.self.graph.remove_nodes_from(ccomp)

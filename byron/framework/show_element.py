@@ -77,15 +77,17 @@ def as_text(
     else:
         raise NotImplementedError(f"{__name__}.as_text({element!r})")
 
+    individual = individual.canonic_representation
+
     if extra_parameters is None:
         extra_parameters = dict()
     parameters = DEFAULT_EXTRA_PARAMETERS | DEFAULT_OPTIONS | extra_parameters
     if node_info:
         parameters |= {'$dump_node_info': True}
-
     individual.genome.nodes[NODE_ZERO]['$omit_from_dump'] = True
     dump = individual.dump(parameters)
     del individual.genome.nodes[NODE_ZERO]['$omit_from_dump']
+
     if notebook_mode:
         print(dump)
         return None
@@ -102,6 +104,7 @@ def as_lgp(
         individual = element
     else:
         individual = _generate_random_individual(element, seed=seed)
+    individual = individual.canonic_representation
     if notebook_mode:
         return individual.as_lgp()
     else:
@@ -117,6 +120,7 @@ def as_forest(
         individual = element
     else:
         individual = _generate_random_individual(element, seed=seed)
+    individual = individual.canonic_representation
     if notebook_mode:
         return individual.as_forest()
     else:

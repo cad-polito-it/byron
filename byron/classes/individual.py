@@ -33,7 +33,6 @@ from typing import Any, Callable
 from itertools import chain
 from copy import deepcopy, copy
 import operator
-from functools import cached_property
 
 import networkx as nx
 
@@ -184,6 +183,12 @@ class Individual(Paranoid):
         return I
 
     @property
+    def canonic_representation(self) -> 'Individual':
+        I = self.clone
+        I._genome = Node.relabel_to_canonic_form(I._genome)
+        return I
+
+    @property
     def nodes(self) -> tuple[int]:
         """Return all node indexes in reliable order."""
         return tuple(nx.dfs_preorder_nodes(self.structure_tree))
@@ -272,15 +277,6 @@ class Individual(Paranoid):
     @property
     def macros(self) -> tuple[Macro]:
         """Return all macro instances in unreliable order."""
-        if self.finalized:
-            return self._cached_macros
-        return self._macros()
-
-    @cached_property
-    def _cached_macros(self) -> tuple[Macro]:
-        return self._macros()
-
-    def _macros(self) -> tuple[Macro]:
         return tuple(
             self._genome.nodes[n]["_selement"] for n in self._genome if self._genome.nodes[n]["_type"] == MACRO_NODE
         )
@@ -288,15 +284,6 @@ class Individual(Paranoid):
     @property
     def frames(self) -> tuple[FrameABC]:
         """Return all frame instances in unreliable order."""
-        if self.finalized:
-            return self._cached_frames
-        return self._frames()
-
-    @cached_property
-    def _cached_frames(self) -> tuple[FrameABC]:
-        return self._frames()
-
-    def _frames(self) -> tuple[FrameABC]:
         return tuple(
             self._genome.nodes[n]["_selement"] for n in self._genome if self._genome.nodes[n]["_type"] == FRAME_NODE
         )
@@ -304,28 +291,11 @@ class Individual(Paranoid):
     @property
     def parameters(self) -> tuple[ParameterABC]:
         """Return all parameter instances in unreliable order."""
-        if self.finalized:
-            return self._cached_parameters
-        return self._parameters()
-
-    @cached_property
-    def _cached_parameters(self) -> tuple[ParameterABC]:
-        return self._parameters()
-
-    def _parameters(self) -> tuple[ParameterABC]:
         return tuple(p for n in self._genome for p in self._genome.nodes[n].values() if isinstance(p, ParameterABC))
 
     @property
     def structure_tree(self) -> nx.classes.DiGraph:
         """A tree with the structure tree of the individual (ie. only edges of `kind=FRAMEWORK`)."""
-        return self._structure_tree()
-
-    @cached_property
-    def _cached_structure_tree(self) -> nx.classes.DiGraph:
-        # TODO: [GX] Understand why caching doesn't work with nx...
-        return self._structure_tree()
-
-    def _structure_tree(self) -> nx.DiGraph:
         tree = get_structure_tree(self._genome)
         assert tree, f"{PARANOIA_VALUE_ERROR}: Structure of {self!r} is not a valid tree"
         return tree

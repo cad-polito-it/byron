@@ -34,6 +34,7 @@ from byron.tools.graph import *
 from byron.global_symbols import *
 from byron.classes.node import NODE_ZERO
 from byron.classes.node_reference import NodeReference
+from byron.classes.node_view import NodeView
 
 if matplotlib_available:
     import matplotlib.pyplot as plt
@@ -144,15 +145,6 @@ def _draw_forest(self, zoom) -> None:
 
     T = self.structure_tree.copy()
 
-    # for node in list(v for _, v in T.edges(NODE_ZERO) if self.genome.nodes[v]['_selement'].FORCED_PARENT):
-    #    T.remove_edge(NODE_ZERO, node)
-    #    parent = next(
-    #        n
-    #        for n in self.genome
-    #        if self.genome.nodes[n]['_selement'].__class__ == self.genome.nodes[node]['_selement'].FORCED_PARENT
-    #    )
-    #    T.add_edge(parent, node)
-
     for n in T:
         T.nodes[n]["depth"] = len(nx.shortest_path(T, 0, n))
     height = max(T.nodes[n]["depth"] for n in T.nodes)
@@ -237,6 +229,7 @@ def _draw_multipartite(self, zoom: int) -> None:
         for n in nodes:
             G.nodes[n]["subset"] = s
     pos = nx.multipartite_layout(G)
+    # pos = {node: (-x, y) for (node, (x, y)) in pos.items()}
     colors = get_node_color_dict(self._genome)
     nodelist = list(G.nodes)
 
@@ -266,14 +259,18 @@ def _draw_multipartite(self, zoom: int) -> None:
     labels = dict()
     for n in [_ for _ in pos if self.genome.nodes[n]['_type'] == MACRO_NODE]:
         pos[n] = (pos[n][0], pos[n][1])
-        d = NodeReference(self.genome, n).safe_dump
+        d = NodeView(NodeReference(self.genome, n)).safe_dump
         labels[n] = '     ' + d.split('\n')[0].strip() + (' …' if '\n' in d else '')
     nx.draw_networkx_labels(G, pos, horizontalalignment='left', labels=labels)
 
     # draw "local" references
     G.remove_edges_from(tuple(G.edges))
     for s in sub_graphs:
-        G.add_edges_from((u, v) for u, v, k in self.G.edges(data="_type") if k == LINK and u in s and v in s)
+        G.add_edges_from(
+            (u, v)
+            for u, v, k in self.G.edges(data="_type")
+            if k == LINK and self.G.nodes[u]['_type'] == MACRO_NODE and u in s and v in s
+        )
     nx.draw_networkx_edges(
         G,
         pos,

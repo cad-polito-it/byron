@@ -56,5 +56,18 @@ class Node(int):
             G.nodes[v]['%old_label'] = k
         fasten_subtree_parameters(NodeReference(G, NODE_ZERO))
 
+    @staticmethod
+    def relabel_to_canonic_form(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
+        """Set Graph node labels to "canonic" labels"""
+        from byron.tools.graph import fasten_subtree_parameters
+        from byron.classes.node_reference import NodeReference
+
+        new_labels = {k: Node(i) for i, k in enumerate(G.nodes)}
+        G = nx.relabel_nodes(G, new_labels, copy=True)
+        for k, v in new_labels.items():
+            G.nodes[v]['%old_label'] = k
+        fasten_subtree_parameters(NodeReference(G, NODE_ZERO))
+        return G
+
 
 NODE_ZERO = Node(0)
