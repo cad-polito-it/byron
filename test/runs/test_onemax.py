@@ -9,8 +9,8 @@
 ################################## ' ######################################
 # Copyright 2023 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
-import logging
-from logging import WARNING
+
+import pytest
 import byron as byron
 
 
@@ -20,6 +20,7 @@ def fitness(genotype: str):
     return sum(b == '1' for b in genotype)
 
 
+@pytest.mark.filterwarnings("ignore:::byron")
 def test_onemax():
     macro = byron.f.macro('{v}', v=byron.f.array_parameter('01', 50))
     frame = byron.f.sequence([macro])
@@ -51,7 +52,3 @@ def test_onemax():
     byron.rrandom.seed(42)
     other_population = byron.ea.vanilla_ea(frame, evaluator, mu=10, max_generation=10)
     assert all(r[1].fitness == o[1].fitness for r, o in zip(reference_population, other_population))
-
-
-if __name__ == '__main__':
-    test_onemax()

@@ -28,6 +28,7 @@ def fitness(genotype):
 
 
 @pytest.mark.avoidable
+@pytest.mark.filterwarnings("ignore:::byron")
 def test_evaluators():
     assert os.path.exists('runs') or os.path.exists('test/runs')
     if os.path.exists('test/runs'):

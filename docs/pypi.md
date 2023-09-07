@@ -15,11 +15,19 @@ Candidate solutions are dumped as text and then evaluated by calling a user-defi
 
 **⚠️ Byron is currently in [alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Alpha) and under active development**
 
+As simple as
+
 ```
 pip install --upgrade byron
 ```
 
-Few optional dependencies can enhance Byron, but are not strictly required:
+Few optional dependencies can enhance Byron, but are not strictly required. You can get them with
+
+```
+pip install --upgrade "byron[full]"
+```
+
+or install optional modules one by one
 
 ```
 pip install --upgrade matplotlib
@@ -29,7 +37,7 @@ pip install --upgrade psutil
 
 ## Documentation
 
-Some HOWTO's and examples are available as Jupyter notebooks in the [examples directory](https://github.com/cad-polito-it/byron/tree/pre-alpha/examples/notebooks).
+None yet, but some HOWTO's and examples [are available](https://github.com/cad-polito-it/byron/tree/alpha/examples) in the repo.
 
 ## Contacts
 

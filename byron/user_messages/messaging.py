@@ -123,18 +123,22 @@ from rich import logging as rich_logging
 from rich import highlighter as rich_highlighter
 
 
-# console_formatter = logging.Formatter('%(asctime)s ▷ %(levelname)s ▷ %(name)s::%(message)s', datefmt='%H:%M:%S')
 # console_handler = logging.StreamHandler()
 # console_handler.setFormatter(console_formatter)
-console_handler = rich_logging.RichHandler(
-    log_time_format='%H:%M:%S',  # '%H:%M:%S.%f'
-    omit_repeated_times=False,
-    show_path=False,
-    markup=True,
-    highlighter=rich_highlighter.NullHighlighter(),
-    keywords=['▷'],
-)
-console_formatter = logging.Formatter('▷ %(message)s')
+if notebook_mode:
+    console_handler = logging.StreamHandler()
+    # console_formatter = logging.Formatter('%(asctime)s ▷ %(levelname)s ▷ %(name)s::%(message)s', datefmt='%H:%M:%S')
+    console_formatter = logging.Formatter('%(levelname)s ▷ %(message)s')
+else:
+    console_handler = rich_logging.RichHandler(
+        log_time_format='%H:%M:%S',  # '%H:%M:%S.%f'
+        omit_repeated_times=False,
+        show_path=False,
+        markup=True,
+        highlighter=rich_highlighter.NullHighlighter(),
+        keywords=['▷'],
+    )
+    console_formatter = logging.Formatter('▷ %(message)s')
 console_handler.setFormatter(console_formatter)
 logger.handlers = [console_handler]
 # logger.handlers = []
