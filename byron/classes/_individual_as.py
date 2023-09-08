@@ -221,7 +221,8 @@ def _draw_multipartite(self, zoom: int) -> None:
     T = self.structure_tree.copy()
     extra_heads = list()
     for node in list(v for _, v in T.edges(NODE_ZERO) if self.genome.nodes[v]['_selement'].FORCED_PARENT):
-        extra_heads.append(node)
+        if self.genome.nodes[node]['_type'] == MACRO_NODE:
+            extra_heads.append(node)
         target = self.genome.nodes[node]['_selement'].FORCED_PARENT
         T.remove_edge(NODE_ZERO, node)
         parent = next(n for n, f in self.genome.nodes(data='_selement') if f.__class__ == target)
