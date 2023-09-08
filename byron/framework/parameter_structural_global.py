@@ -63,19 +63,23 @@ def _global_reference(
             self._target_frame = target_frame
 
         def get_potential_targets(self, add_none=True):
-            parent_frames = get_parent_frame_dictionary(self._node_reference.graph)
+            tree = make_digraph(
+                tuple(self._node_reference.graph.nodes),
+                tuple((u, v) for u, v, k in self._node_reference.graph.edges(data="_type") if k == FRAMEWORK),
+            )
+            for node, path in nx.single_source_dijkstra_path(tree, NODE_ZERO).items():
+                tree.nodes[node]['_path'] = tuple(
+                    self._node_reference.graph.nodes[n]['_selement'].__class__ for n in path
+                )
+
             if first_macro:
-                # TODO: This code sucks
-                targets = list()
-                first_macros = set()
-                for n, p in parent_frames.items():
-                    if p[:-1] not in first_macros:
-                        targets.append(n)
+                valid_frames = tuple(n for n in tree.nodes if tree.nodes[n]['_path'][-1] == target_frame)
+                targets = [
+                    next(n for n in nx.dfs_preorder_nodes(tree, p) if tree.out_degree(n) == 0) for p in valid_frames
+                ]
             else:
                 targets = list(
-                    n
-                    for n, p in parent_frames.items()
-                    if target_frame in p and self._node_reference.graph.nodes[n]['_type'] == MACRO_NODE
+                    n for n in tree.nodes if target_frame in tree.nodes[n]['_path'] and tree.out_degree(n) == 0
                 )
 
             if not add_none:
@@ -107,19 +111,11 @@ def _global_reference(
                 new_node = unroll_selement(self._target_frame, self._node_reference.graph)
                 self._node_reference.graph.add_edge(NODE_ZERO, new_node.node, _type=FRAMEWORK)
                 initialize_subtree(new_node)
-                if first_macro:
-                    target = get_all_macros(new_node.graph, root=new_node.node, data=False, node_id=True)[0]
-                    # TODO[GX]: Use the new get_dfs_subtree
-                else:
-                    target = new_node.node
+                target = rrandom.choice(self.get_potential_targets(add_none=False))
 
-            if not target:
+            if target is None:
                 raise ByronOperatorFailure
-            self.value = next(
-                n
-                for n in nx.dfs_preorder_nodes(self._node_reference.graph, target)
-                if self._node_reference.graph.nodes[n]['_type'] == MACRO_NODE
-            )
+            self.value = target
             for ccomp in tuple(nx.weakly_connected_components(self.graph)):
                 if NODE_ZERO not in ccomp:
                     self.self.graph.remove_nodes_from(ccomp)

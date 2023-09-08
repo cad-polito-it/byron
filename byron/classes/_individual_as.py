@@ -218,10 +218,19 @@ def _draw_forest(self, zoom) -> None:
 def _draw_multipartite(self, zoom: int) -> None:
     """Draw individual using multipartite_layout"""
 
+    T = self.structure_tree.copy()
+    extra_heads = list()
+    for node in list(v for _, v in T.edges(NODE_ZERO) if self.genome.nodes[v]['_selement'].FORCED_PARENT):
+        extra_heads.append(node)
+        target = self.genome.nodes[node]['_selement'].FORCED_PARENT
+        T.remove_edge(NODE_ZERO, node)
+        parent = next(n for n, f in self.genome.nodes(data='_selement') if f.__class__ == target)
+        T.add_edge(parent, node)
+
     G = nx.DiGraph()
     sub_graphs = list()
-    for s, head in enumerate(n for _, n in self.structure_tree.edges(0)):
-        nodes = [n for n in nx.dfs_preorder_nodes(self.structure_tree, head) if self.G.nodes[n]["_type"] == MACRO_NODE]
+    for s, head in enumerate(n for _, n in T.edges(0)):
+        nodes = [n for n in nx.dfs_preorder_nodes(T, head) if self.G.nodes[n]["_type"] == MACRO_NODE]
         sub_graphs.append(nodes)
         G.add_nodes_from(nodes)
         for n1, n2 in zip(nodes, nodes[1:]):
@@ -241,7 +250,7 @@ def _draw_multipartite(self, zoom: int) -> None:
     ax = fig.add_subplot()
 
     # draw heads
-    heads = [s[0] for s in sub_graphs]
+    heads = [s[0] for s in sub_graphs] + extra_heads
     nx.draw_networkx_nodes(G, pos, nodelist=heads[0:1], node_size=800, node_color="gold", ax=ax)
     nx.draw_networkx_nodes(G, pos, nodelist=heads, node_size=600, node_color="yellow", ax=ax)
     nx.draw(

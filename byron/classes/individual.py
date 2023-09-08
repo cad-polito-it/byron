@@ -476,6 +476,7 @@ class Individual(Paranoid):
         tree = make_digraph(
             tuple(self._genome.nodes), tuple((u, v) for u, v, k in self._genome.edges(data="_type") if k == FRAMEWORK)
         )
+        tree = tree.copy()
 
         for node in list(v for _, v in tree.edges(NODE_ZERO) if self.genome.nodes[v]['_selement'].FORCED_PARENT):
             target = self.genome.nodes[node]['_selement'].FORCED_PARENT
