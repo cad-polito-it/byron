@@ -90,11 +90,11 @@ def as_forest(self, filename: str | None = None, *, zoom: int = 1.0, **kwargs) -
     """
 
     if filename:
-        fig = self._draw_forest(zoom)
+        fig = self.canonic_representation._draw_forest(zoom)
         fig.savefig(filename, bbox_inches='tight', **kwargs)
         plt.close()
     else:
-        self._draw_forest(zoom)
+        self.canonic_representation._draw_forest(zoom)
 
 
 def as_lgp(self, filename: str | None = None, *, zoom: int = 1.0, **kwargs) -> None:
@@ -133,11 +133,11 @@ def as_lgp(self, filename: str | None = None, *, zoom: int = 1.0, **kwargs) -> N
     """
 
     if filename:
-        fig = self._draw_multipartite(zoom)
+        fig = self.canonic_representation._draw_multipartite(zoom)
         fig.savefig(filename, bbox_inches='tight', **kwargs)
         plt.close()
     else:
-        self._draw_multipartite(zoom)
+        self.canonic_representation._draw_multipartite(zoom)
 
 
 def _draw_forest(self, zoom) -> None:

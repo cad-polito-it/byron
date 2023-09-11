@@ -149,7 +149,8 @@ class Population:
         if extra_parameters is None:
             extra_parameters = dict()
         assert extra_parameters is None or check_valid_type(extra_parameters, dict)
-        return ind.dump(self.population_extra_parameters | extra_parameters)
+        return ind.canonic_representation.dump(self.population_extra_parameters | extra_parameters)
+        # return ind.dump(self.population_extra_parameters | extra_parameters)
 
     def evaluate(self):
         raise NotImplementedError

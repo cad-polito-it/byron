@@ -4,7 +4,7 @@
 [![License: Apache 2.0](https://img.shields.io/badge/license-apache--2.0-green.svg)](https://opensource.org/licenses/Apache-2.0) 
 [![Status: Actrive](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/cad-polito-it/byron)
 ![Language: Python](https://img.shields.io/badge/language-python-blue.svg)
-![Version: 0.1.dev2](https://img.shields.io/badge/version-0.8a1.dev28-orange.svg)
+![Version: 0.1.dev2](https://img.shields.io/badge/version-0.8a1.dev29-orange.svg)
 ![Codename: Don Juan](https://img.shields.io/badge/codename-Don_Juan-pink.svg)
 [![Documentation Status](https://readthedocs.org/projects/byron/badge/?version=pre-alpha)](https://byron.readthedocs.io/en/pre-alpha/?badge=pre-alpha)
 
@@ -24,7 +24,7 @@ Candidate solutions are dumped as text and then evaluated by calling a user-defi
 * Write as few lines of code and as many lines of comments as possible (i.e., use builtins, exploit generators and list comprehension)
 * Use [pytest](https://docs.pytest.org/) and [Coverage.py](https://coverage.readthedocs.io/) for unit testing (ie. `coverage run -m pytest`)
 * Use [pylint](https://mypy-lang.org/) for basic linting and [mypy](https://mypy-lang.org/) for additional type checking
-* Be [paranoid](./PARANOIA.md) (cit. *"I need someone to show me the things"*)
+* Be [paranoid](./docs/paranoia.md) (cit. *"I need someone to show me the things"*)
 * It may be wise to contact Giovanni before trying to change anything
 
 ### Contacts

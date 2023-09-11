@@ -77,7 +77,7 @@ def as_text(
     else:
         raise NotImplementedError(f"{__name__}.as_text({element!r})")
 
-    individual = individual.canonic_representation
+    # individual = individual.canonic_representation
 
     if extra_parameters is None:
         extra_parameters = dict()
@@ -104,7 +104,7 @@ def as_lgp(
         individual = element
     else:
         individual = _generate_random_individual(element, seed=seed)
-    individual = individual.canonic_representation
+    # individual = individual.canonic_representation
     if notebook_mode:
         return individual.as_lgp()
     else:
@@ -120,7 +120,7 @@ def as_forest(
         individual = element
     else:
         individual = _generate_random_individual(element, seed=seed)
-    individual = individual.canonic_representation
+    # individual = individual.canonic_representation
     if notebook_mode:
         return individual.as_forest()
     else:
