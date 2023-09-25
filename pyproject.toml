@@ -9,120 +9,120 @@
 # SPDX-License-Identifier: Apache-2.0
 
 [tool.poetry]
-name = "byron"
-version = "0.8a1.dev29"
-description = "Multi-purpose extensible self-adaptive optimizer and fuzzer"
-authors = [
-    "Giovanni Squillero <giovanni.squillero@polito.it>",
-    "Alberto Tonda <alberto.tonda@inrae.fr>",
-]
-#maintainers = [
-#    "Giovanni Squillero <giovanni.squillero@polito.it>"
-#]
-license = "Apache-2.0"
-readme = "docs/pypi.md"
-classifiers = [
-    "Development Status :: 3 - Alpha",
-    "Intended Audience :: Information Technology",
-    "Intended Audience :: Science/Research",
-    "License :: OSI Approved :: Apache Software License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Topic :: Scientific/Engineering",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    "Topic :: Software Development :: Libraries",
-]
-# homepage = "https://squillero.github.io/byron/"
-repository = "https://github.com/cad-polito-it/byron"
-documentation = "https://github.com/cad-polito-it/byron/tree/alpha/examples/"
-keywords = [
-    "Aritificial Intelligence",
-    "Evolutionary Computation",
-    "Approximate Optimization",
-    "Fuzzer",
-]
+    name = "byron"
+    version = "0.8a1.dev29"
+    description = "Multi-purpose extensible self-adaptive optimizer and fuzzer"
+    authors = [
+        "Alberto Tonda <alberto.tonda@inrae.fr>",
+        "Giovanni Squillero <giovanni.squillero@polito.it>",
+    ]
+    #maintainers = [
+    #    "Giovanni Squillero <giovanni.squillero@polito.it>"
+    #]
+    license = "Apache-2.0"
+    readme = "docs/pypi.md"
+    classifiers = [
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Information Technology",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: Apache Software License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3",
+        "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Topic :: Scientific/Engineering",
+        "Topic :: Software Development :: Libraries",
+    ]
+    # homepage = "https://squillero.github.io/byron/"
+    repository = "https://github.com/cad-polito-it/byron"
+    documentation = "https://github.com/cad-polito-it/byron/tree/alpha/examples/"
+    keywords = [
+        "Approximate Optimization",
+        "Aritificial Intelligence",
+        "Evolutionary Computation",
+        "Fuzzer",
+    ]
 
-[tool.poetry.dependencies]
-networkx = ">=3.1"
-numpy = ">=1.23"
-python = ">=3.10,<3.13"
-scipy = ">=1.10"
-tqdm = ">=4.65"
-rich = ">=13.5"
-joblib = { version = ">=1.3", optional = true }
-psutil = { version = ">=5.9", optional = true }
-matplotlib = { version = ">=3.7", optional = true }
+    [tool.poetry.dependencies]
+        networkx   = ">=3.1"
+        numpy      = ">=1.23"
+        python     = ">=3.10,<3.13"
+        scipy      = ">=1.10"
+        tqdm       = ">=4.65"
+        rich       = ">=13.5"
+        joblib     = { version = ">=1.3", optional = true }
+        psutil     = { version = ">=5.9", optional = true }
+        matplotlib = { version = ">=3.7", optional = true }
 
-[tool.poetry.extras]
-# Use: poetry install --all-extras
-multitask = ["joblib"]
-info = ["psutil"]
-plot = ["matplotlib"]
-full = ["joblib", "psutil", "matplotlib"]
+    [tool.poetry.extras]
+        # Use: poetry install --all-extras
+        multitask = ["joblib"]
+        info      = ["psutil"]
+        plot      = ["matplotlib"]
+        full      = ["joblib", "matplotlib", "psutil"]
 
-[tool.poetry.group.dev.dependencies]
-coverage = "^7.2.7"
-ipykernel = "^6.23.3"
-jupyter = "^1.0.0"
-mypy = "^1.4.1"
-pylint = "^2.17.4"
-pytest = "^7.4.0"
-black = {extras = ["jupyter"], version = "^23.7.0"}
-seaborn = "^0.12.2"
-bumpver = "^2023.1126"
+    [tool.poetry.group.dev.dependencies]
+        coverage  = "^7.2.7"
+        ipykernel = "^6.23.3"
+        jupyter   = "^1.0.0"
+        mypy      = "^1.4.1"
+        pylint    = "^2.17.4"
+        pytest    = "^7.4.0"
+        black     = { extras = ["jupyter"], version = "^23.7.0" }
+        seaborn   = "^0.12.2"
+        bumpver   = "^2023.1126"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+    requires      = ["poetry-core"]
+    build-backend = "poetry.core.masonry.api"
 
 [tool.black]
-target-version = ['py311']
-extend-exclude = "^venv$"
-include = '(\.ipynb$|\.py$)'
-line-length = 120
-skip-string-normalization = true
+    target-version            = ['py311']
+    extend-exclude            = "^venv$"
+    include                   = '(\.ipynb$|\.py$)'
+    line-length               = 120
+    skip-string-normalization = true
 
 [tool.pytest.ini_options]
-pythonpath = ["."]
+    pythonpath = ["."]
 
 [tool.coverage.run]
-branch = true
+    branch = true
 
 [tool.coverage.report]
-include = ['byron/*']
-omit = ['test/*', '.*/*', 'venv/*']
+    include = ['byron/*']
+    omit    = ['.*/*', 'test/*', 'venv/*']
 
 [tool.mypy]
-modules = ['byron']
+    modules = ['byron']
 
 [tool.pytype]
-inputs = ['byron']
+    inputs = ['byron']
 
 [tool.pylint]
-max-line-length = 120
-source-roots = ['src']
+    max-line-length = 120
+    source-roots    = ['src']
 
-[bumpver]
-current_version = "0.8a1.dev29"
-version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
-commit_message = "Bump version to {new_version}"
-commit = false
-push = false
+[tool.bumpver]
+    current_version = "0.8a1.dev29"
+    version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
+    commit_message  = "Bump version to {new_version}"
+    commit          = true
+    push            = false
 
-[bumpver.file_patterns]
-"pyproject.toml" = [
-    '^version = "{pep440_version}"$',
-    '^current_version = "{pep440_version}"$',
-]
-"README.md" = [
-    "\\[Version: {pep440_version}\\]",
-    "version-{pep440_version}-orange"
-]
-"docs/pypi.md" = [
-    "\\[Version: {pep440_version}\\]",
-    "version-{pep440_version}-orange"
-]
-"byron/global_symbols.py" = [
-    '__version__ = "{pep440_version}"',
-    '__date__ = "0D-0M-YYYY"',
-]
+    [tool.bumpver.file_patterns]
+        "pyproject.toml" = [
+            'current_version = "{pep440_version}"',
+            'version = "{pep440_version}"$',
+        ]
+        "README.md" = [
+            "\\[Version: {pep440_version}\\]",
+            "version-{pep440_version}-orange",
+        ]
+        "docs/pypi.md" = [
+            "\\[Version: {pep440_version}\\]",
+            "version-{pep440_version}-orange",
+        ]
+        "byron/global_symbols.py" = [
+            '__date__ = "0D-0M-YYYY"',
+            '__version__ = "{pep440_version}"',
+        ]
