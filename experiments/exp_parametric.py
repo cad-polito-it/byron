@@ -36,7 +36,7 @@ def main():
     # )
 
     population = byron.ea.parametric_ea(
-        top_frame, evaluator, max_generation=5000, lambda_=20, mu= 30, max_fitness=NUM_BITS
+        top_frame, evaluator, max_generation=5000, lambda_=20, mu= 30, max_fitness=NUM_BITS, top_n=5, lifespan=100, alpha=5
     )
 
     print()
@@ -46,19 +46,3 @@ def main():
 byron.logger.setLevel(level=logging.INFO)
 
 main()
-
-# from byron.randy import rrandom
-
-# seq = [0,1,2,3,4,5,6,7,8,9]
-# p0 = 1/len(seq)
-# prob = [p0] * len(seq)
-# p1 = 0.1/(len(seq)-1)
-# prob = [p1] * len(seq)
-# prob[0] = 0.9
-# print(prob)
-# res = dict()
-# for _ in range(100):
-#     s = rrandom.weighted_choice(seq,prob)
-#     if s not in res: res[s]= 1 
-#     else: res[s] += 1
-# print(res)

@@ -148,11 +148,11 @@ def parametric_ea(top_frame: type[FrameABC],
             for _ in range(op.num_parents):
                 parents.append(tournament_selection(population, 1))
             new_individuals += op(*parents)
-
-        for i in population.individuals:
-            i.age += 1 #QUI IL PROBLEMA
-        old = [i for i in population.individuals[top_n:] if i.age > lifespan]
-        population -= old
+        if lifespan is not None:
+            for i in population.individuals:
+                i.age += 1           
+            old = [i for i in population.individuals[top_n:] if i.age.apparent_age > lifespan]
+            population -= old
         population += new_individuals
 
         evaluator(population)
