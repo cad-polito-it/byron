@@ -33,18 +33,18 @@ from typing import Callable
 from byron.operators import *
 from byron.sys import *
 from byron.classes.selement import *
-from byron.classes.population import *
+#from byron.classes.population import *
 from byron.classes.frame import *
 from byron.classes.evaluator import *
-from byron.randy import rrandom
+from byron.fitness import make_fitness
+#from byron.randy import rrandom
 from byron.user_messages import *
-
 from .selection import *
 
 
 def _new_best(population: Population, evaluator: EvaluatorABC):
     logger.info(
-        f"ParametricEA: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_birth=False)}"
+        f"ParametricEA: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
         + f" [🕓 gen: {population.generation:,} / fcalls: {evaluator.fitness_calls:,}]")
 
 
@@ -116,6 +116,7 @@ def parametric_ea(top_frame: type[FrameABC],
         stopping_conditions = list()
         stopping_conditions.append(lambda: population.generation >= max_generation)
     if max_fitness:
+        max_fitness = make_fitness(max_fitness)
         stopping_conditions.append(lambda: best.fitness == max_fitness or best.fitness >> max_fitness)
 
     # initialize population
@@ -148,7 +149,8 @@ def parametric_ea(top_frame: type[FrameABC],
                 parents.append(tournament_selection(population, 1))
             new_individuals += op(*parents)
 
-        population.aging()
+        for i in population.individuals:
+            i.age += 1 #QUI IL PROBLEMA
         old = [i for i in population.individuals[top_n:] if i.age > lifespan]
         population -= old
         population += new_individuals

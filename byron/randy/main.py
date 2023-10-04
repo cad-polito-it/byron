@@ -181,3 +181,10 @@ class Randy:
         assert self._check_saved_state()
         self._generator.shuffle(seq)
         assert self._save_state()
+
+    def weighted_choice(self, seq: Sequence[Any], p: Sequence[float]) -> Any:
+        """Returns a random element from seq using the probabilities in p."""
+        assert len(seq) == len(p), "ValueError: different number of elements in seq and weight"
+        assert math.isclose(sum(p), 1), "ValueError: weights sum not 1"
+        r = self.random_float()
+        return next(val for val, cp in ((v, sum(p[0 : i + 1])) for i, v in enumerate(seq)) if cp >= r)
