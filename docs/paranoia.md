@@ -75,7 +75,7 @@ import byron
 
 * 👍 May be used in remote Notebooks (e.g., [Google's Colab](https://colab.research.google.com/))
 * 👎 All the code must be packed into one single cell
-* 👍 Byron will not detect Jupyter anymore
+* 👎 Byron will not detect Jupyter anymore
 
 ### Tamper with the bytecode cache 💣
 
