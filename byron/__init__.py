@@ -143,7 +143,7 @@ if notebook_mode and logging.getLogger().level <= logging.WARNING and paranoia_m
         or not main_process
         or user_messages.performance_warning(
             "Paranoia checks are enabled in this notebook: performances can be significantly impaired\n"
-            + "[see https://github.com/cad-polito-it/byron/blob/alpha/docs/paranoia.md for details]"
+            + "[see https://cad-polito-it.github.io/byron/paranoia for details]"
         )
     )
 elif not notebook_mode:
@@ -152,7 +152,7 @@ elif not notebook_mode:
         or not main_process
         or user_messages.performance_warning(
             "Paranoia checks are enabled: performances can be significantly impaired — consider using '-O'\n"
-            + "[see https://github.com/cad-polito-it/byron/blob/alpha/docs/paranoia.md for details]"
+            + "[see https://cad-polito-it.github.io/byron/paranoia for details]"
         )
     )
 
