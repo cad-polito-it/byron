@@ -1,3 +1,5 @@
+# Paranoia Mode
+
 > *All day long I think of things*  
 > *But nothing seems to satisfy*  
 > *Think I'll lose my mind if I don't*  
