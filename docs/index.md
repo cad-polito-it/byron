@@ -10,7 +10,7 @@ Candidate solutions are dumped as text and then evaluated by calling a user-defi
 
 ### Installation
 
-Byron is available on [PyPi](https://en.wikipedia.org/wiki/Python_Package_Index), the source code is on [GitHub](https://github.com/cad-polito-it/byron).
+Byron is available on [PyPi](https://pypi.org/project/byron/), the source code is on [GitHub](https://github.com/cad-polito-it/byron).
 
 ### Contacts
 
