@@ -115,11 +115,9 @@
             'version = "{pep440_version}"$',
         ]
         "README.md" = [
-            "\\[Version: {pep440_version}\\]",
             "version-{pep440_version}-orange",
         ]
         "docs/pypi.md" = [
-            "\\[Version: {pep440_version}\\]",
             "version-{pep440_version}-orange",
         ]
         "docs/index.md" = [
