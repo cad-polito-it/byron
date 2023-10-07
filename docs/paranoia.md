@@ -73,13 +73,13 @@ import byron
 # Fuzzer code
 ```
 
-* :+1: May be used in remote Notebooks (e.g., [Google's Colab](https://colab.research.google.com/))
-* :-1: All the code must be packed into one single cell
-* :-1: Byron will not detect Jupyter anymore
+* 👍 May be used in remote Notebooks (e.g., [Google's Colab](https://colab.research.google.com/))
+* 👎 All the code must be packed into one single cell
+* 👍 Byron will not detect Jupyter anymore
 
-### Tamper with the bytecode cache :bomb:
+### Tamper with the bytecode cache 💣
 
-:warning: This hack may cause your system to become unstable and provide incorrect results. You acknowledge that you are solely responsible for any harm or damage that may result.
+⚠️ This hack may cause your system to become unstable and provide incorrect results. You acknowledge that you are solely responsible for any harm or damage that may result.
 
 * Generate the optimized bytecode (e.g., run `python -O -m pytest`)
 * Locate all the folders that contain compiled bytecode (e.g., `**/__pycache__`)
