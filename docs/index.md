@@ -1,4 +1,4 @@
-# Byron v0.8a1.dev35
+# Byron v0.8a1.dev36
 
 > A multi-purpose extensible self-adaptive optimizer and fuzzer
 
