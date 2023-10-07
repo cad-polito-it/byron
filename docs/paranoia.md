@@ -1,5 +1,3 @@
-# PARANOID MODE
-
 > *All day long I think of things*  
 > *But nothing seems to satisfy*  
 > *Think I'll lose my mind if I don't*  
@@ -59,7 +57,7 @@ Set [`PYTHONOPTIMIZE`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHO
 $ PYTHONOPTIMIZE=1 jupyter-notebook
 ```
 
-:warning: This will disable every single `assert` in notebooks: the behavior of other modules will be affected as well.
+⚠️ This will disable every single `assert` in notebooks: the behavior of other modules will be affected as well.
 
 ### Use magic
 
