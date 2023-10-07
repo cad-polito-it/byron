@@ -123,7 +123,7 @@
             "version-{pep440_version}-orange",
         ]
         "docs/index.md" = [
-            "Byron v{pep440_version}",
+            " v{pep440_version}",
         ]
         "byron/global_symbols.py" = [
             '__date__ = "0D-0M-YYYY"',
