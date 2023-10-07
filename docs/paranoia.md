@@ -16,7 +16,7 @@ Byron's *paranoia checks* are computationally intensive routines that thoroughly
 
 If *paranoia checks* are enabled, the user is warned of the potential, indeed almost certain, loss in performance:
 
-> Paranoia checks are enabled: performances can be significantly impaired — consider using '-O'
+> Paranoia checks are enabled: performances can be significantly impaired
 
 Possible solutions:
 
