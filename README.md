@@ -29,7 +29,7 @@ Candidate solutions are dumped as text and then evaluated by calling a user-defi
 
 ### Contacts
 
-* [Giovanni Squillero](https://github.com/squillero) [:email:](mailto:squillero@polito.it) [:house:](https://staff.polito.it/giovanni.squillero/)
+* [Giovanni Squillero](https://github.com/squillero) [:email:](mailto:giovanni.squillero@polito.it) [:house:](https://staff.polito.it/giovanni.squillero/)
 * [Alberto Tonda](https://github.com/albertotonda/) [:email:](mailto:alberto.tonda@inrae.fr) [:house:](https://www.researchgate.net/profile/Alberto_Tonda)
 
 ### Licence

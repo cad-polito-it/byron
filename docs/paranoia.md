@@ -63,7 +63,7 @@ $ PYTHONOPTIMIZE=1 jupyter-notebook
 
 ### Use magic
 
-Jupyter allows some of the IPython's [magics](https://ipython.readthedocs.io/en/stable/interactive/magics.html), and a *cell magic* (`%%`) can be used to start a Python interpreter with an optimization flag:
+Jupyter allows some of the IPython's [magics](https://ipython.readthedocs.io/en/stable/interactive/magics.html), and a *cell magic* (`%%`) can be used to start a Python interpreter with the optimization flag:
 
 ```jupyterpython
 %%python -O
