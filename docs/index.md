@@ -8,6 +8,10 @@ Byron internally encodes candidate solutions as [typed](https://rcor.me/papers/t
 
 Candidate solutions are dumped as text and then evaluated by calling a user-defined Python function or by invoking a shell script that may use external proprietary tools. Different types of parallelization are supported out of the box, from simple multithreading to the creation of temporary directories where multiple subprocesses are concurrently [spawned](https://en.wikipedia.org/wiki/Spawn_(computing)).
 
+### Installation
+
+Byron is available on [PyPi](https://en.wikipedia.org/wiki/Python_Package_Index), the source code is on [GitHub](https://github.com/cad-polito-it/byron).
+
 ### Contacts
 
 * Giovanni Squillero — <giovanni.squillero@polito.it>

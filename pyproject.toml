@@ -13,8 +13,8 @@
     version = "0.8a1.dev35"
     description = "Multi-purpose extensible self-adaptive optimizer and fuzzer"
     authors = [
-        "Alberto Tonda <alberto.tonda@inrae.fr>",
         "Giovanni Squillero <giovanni.squillero@polito.it>",
+        "Alberto Tonda <alberto.tonda@inrae.fr>",
     ]
     #maintainers = [
     #    "Giovanni Squillero <giovanni.squillero@polito.it>"
