@@ -32,9 +32,9 @@
         "Topic :: Scientific/Engineering",
         "Topic :: Software Development :: Libraries",
     ]
-    # homepage = "https://squillero.github.io/byron/"
+    homepage = "https://cad-polito-it.github.io/byron/"
     repository = "https://github.com/cad-polito-it/byron"
-    documentation = "https://github.com/cad-polito-it/byron/tree/alpha/examples/"
+    # documentation = "https://github.com/cad-polito-it/byron/tree/alpha/examples/"
     keywords = [
         "Approximate Optimization",
         "Aritificial Intelligence",
