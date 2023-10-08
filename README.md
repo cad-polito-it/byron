@@ -8,16 +8,14 @@
 ![Codename](https://img.shields.io/badge/codename-Don_Juan-pink.svg)
 [![Documentation Status](https://readthedocs.org/projects/byron/badge/?version=pre-alpha)](https://byron.readthedocs.io/en/pre-alpha/?badge=pre-alpha)
 
-Byron is an [evolutionary tool](https://en.wikipedia.org/wiki/Evolutionary_algorithm): given a problem, it first generates a set of random solutions, then iteratively improves them using the results of their evaluations together with structural information. It may be used as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization).
+Byron is an [evolutionary tool](https://en.wikipedia.org/wiki/Evolutionary_algorithm): given a problem, it first generates a set of random solutions, then iteratively improves them using the results of their evaluations together with structural information. It may be used as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization). 
 
-Byron internally encodes candidate solutions as [typed](https://rcor.me/papers/typed-graph-theory.pdf), [directed](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Directed_graph) [multigraphs](https://en.wikipedia.org/wiki/Multigraph) and can tackle problems with complex, structured constraints. For instance, it may be used to create realistic programs with loops, flow-control structures, and subroutines. Gory detail: solutions are heterogeneous [forests](https://en.wikipedia.org/wiki/Tree_(graph_theory)#Forest) with additional edges connecting leaves, possibly between different trees.
 
-Candidate solutions are dumped as text and then evaluated by calling a user-defined Python function or by invoking a shell script that may use external proprietary tools. Different types of parallelization are supported out of the box, from simple multithreading to the creation of temporary directories where multiple subprocesses are concurrently [spawned](https://en.wikipedia.org/wiki/Spawn_(computing)).
-
-:package: Byron is available on [PyPi](https://en.wikipedia.org/wiki/Python_Package_Index): check out [`https://pypi.org/project/byron/`](https://pypi.org/project/byron/) for installation and documentation. This repo is only useful if you want to hack the code.
+:package: The Python package is available on [PyPi](https://pypi.org/project/byron/); this repo is only useful if you want to hack the code. 
 
 ### TL;DR
 
+* :warning: Byron is currently in [alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Alpha) and under active development
 * The default branch is always the more stable
 * Do not clone experimental branches `exp/*` unless you know what you are doing
 * Follow this [style guide](https://github.com/squillero/style/blob/master/python.md) and keep the code formatted with [Black](https://black.readthedocs.io/en/stable/)
