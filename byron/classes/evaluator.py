@@ -299,6 +299,7 @@ class MakefileEvaluator(EvaluatorABC):
     *   `make_flags`: Flags for make. Default is just ``'-s'`` (be quiet)
     *   `makefile`: Name of the Makefile itself
     *   `timeout`: Number of seconds to wait for make completion (default: 60, use ``None`` to wait indefinitely)
+    *   `stdout_cleaner`: Callable function to clean the stdout, of the executed program, into an evaluable output if needed
 
     Use option `strip_phenotypes` (see :py:class:`byron.classes.evaluator.EvaluatorABC`) to convert the phenotype into a
     single-line string.
@@ -348,6 +349,8 @@ class MakefileEvaluator(EvaluatorABC):
             Name of the makefile
         required_files
             Files that need to be present for the makefile to work in addition to `makefile` and `filename`
+        stdout_cleaner
+            Callable function to clean the stdout
         timeout
             Seconds to wait for make completion (``None`` indefinitely)
         kwargs

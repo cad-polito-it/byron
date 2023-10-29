@@ -14,24 +14,25 @@ import byron
 
 COMMENT = '#'
 
+
 def define_frame():
-    register = byron.f.choice_parameter([f"t{n}" for n in range(4)])
-    int8 = byron.f.integer_parameter(0, 2 ** 8)
+    register = byron.f.choice_parameter(["zero", *[f"t{n}" for n in range(4)]])
+    int8 = byron.f.integer_parameter(0, 2**8)
 
     operations_rrr = byron.f.choice_parameter(['add', 'sub'])
     operations_rri = byron.f.choice_parameter(['addi'])
     op_rrr = byron.f.macro('{op} {r1}, {r2}, {r3}', op=operations_rrr, r1=register, r2=register, r3=register)
     op_rri = byron.f.macro('{op} {r1}, {r2}, {imm:#x}', op=operations_rri, r1=register, r2=register, imm=int8)
 
-    conditions = byron.f.choice_parameter(
-        ['eq', 'ne', 'ge', 'lt', 'geu', 'ltu']
-    )
+    conditions = byron.f.choice_parameter(['eq', 'ne', 'ge', 'lt', 'geu', 'ltu'])
     branch = byron.f.macro(
-        'b{cond} {r1}, {r2}, {label}', cond=conditions, r1=register, r2=register, label=byron.f.local_reference(backward=True, loop=False, forward=True)
+        'b{cond} {r1}, {r2}, {label}',
+        cond=conditions,
+        r1=register,
+        r2=register,
+        label=byron.f.local_reference(backward=True, loop=False, forward=True),
     )
-    jump = byron.f.macro(
-        'j {label}', label=byron.f.local_reference(backward=True, loop=False, forward=True)
-    )
+    jump = byron.f.macro('j {label}', label=byron.f.local_reference(backward=True, loop=False, forward=True))
 
     prologue_main = byron.f.macro(
         r"""# [prologue_main]
