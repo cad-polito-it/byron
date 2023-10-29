@@ -23,6 +23,16 @@ def define_frame():
     op_rrr = byron.f.macro('{op} {r1}, {r2}, {r3}', op=operations_rrr, r1=register, r2=register, r3=register)
     op_rri = byron.f.macro('{op} {r1}, {r2}, {imm:#x}', op=operations_rri, r1=register, r2=register, imm=int8)
 
+    conditions = byron.f.choice_parameter(
+        ['eq', 'ne', 'ge', 'lt', 'geu', 'ltu']
+    )
+    branch = byron.f.macro(
+        'b{cond} {r1}, {r2}, {label}', cond=conditions, r1=register, r2=register, label=byron.f.local_reference(backward=True, loop=False, forward=True)
+    )
+    jump = byron.f.macro(
+        'j {label}', label=byron.f.local_reference(backward=True, loop=False, forward=True)
+    )
+
     prologue_main = byron.f.macro(
         r"""# [prologue_main]
 .global _start
