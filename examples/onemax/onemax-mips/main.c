@@ -8,14 +8,14 @@
 
 #include <stdio.h>
 
-unsigned int onemax(void);
+unsigned long int onemax(void);
 
 int main(void)
 {
-    unsigned int result = onemax();
+    unsigned long int result = onemax();
 
     int fitness = 0;
-    for(unsigned int b=1; b; b <<= 1)
+    for(unsigned long int b=1; b; b <<= 1)
         fitness += !!(result & b);
     printf("%d\n", fitness);
 

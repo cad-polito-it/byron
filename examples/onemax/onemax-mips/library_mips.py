@@ -49,11 +49,14 @@ jr $ra
 
     prologue_sub = byron.f.macro(
         r"""# [prologue sub]
+.global {_node}
+{_node}
 addiu   $sp,$sp,-8
 sw      $fp,4($sp)
 move    $fp,$sp
 # [end-prologue sub]
-"""
+""",
+        _label='',  # No automatic creation of the label -- it's embedded as "{_node}:"
     )
     epilogue_sub = byron.f.macro(
         r"""# [epilogue sub]
