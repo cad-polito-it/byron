@@ -27,21 +27,20 @@ def define_frame():
     conditions = byron.f.choice_parameter(
         ['eq', 'ne', 'ge', 'lt', 'gt', 'le']
     )
-    branch = byron.f.macro(
-        'b{cond} {r1}, {r2}, {label}',cond=conditions, r1=register, r2=register, label=byron.f.local_reference(backward=True, loop=False, forward=True)
-    )
+    # branch = byron.f.macro(
+    #     'b{cond} {r1}, {r2}, {lbl}',cond=conditions, r1=register, r2=register, lbl=byron.f.local_reference(backward=True, loop=False, forward=True)
+    # ) # --> problema qui -> nodo 745 che compare due volte con due etichette diverse(?)
     prologue_main = byron.f.macro(
         r"""# [prologue main]
 .text
 .global onemax
 onemax:
-sw $31, $3
 # [end-prologue main]
 """
     )
+
     epilogue_main = byron.f.macro(
         r"""# [epilogue main]
-lw $31, $3
 jr $ra
 # [end-epilogue main]
 """
@@ -50,7 +49,7 @@ jr $ra
     prologue_sub = byron.f.macro(
         r"""# [prologue sub]
 .global {_node}
-{_node}
+{_node}:
 addiu   $sp,$sp,-8
 sw      $fp,4($sp)
 move    $fp,$sp
@@ -58,6 +57,7 @@ move    $fp,$sp
 """,
         _label='',  # No automatic creation of the label -- it's embedded as "{_node}:"
     )
+
     epilogue_sub = byron.f.macro(
         r"""# [epilogue sub]
 move    $sp,$fp
@@ -67,21 +67,26 @@ jr      $31
 # [end-epilogue sub]
 """
     )
+
     core_sub = byron.framework.bunch(
-        [op_rrr, op_rri, branch],
+      # [op_rrr, op_rri, branch],
+       [op_rrr, op_rri],
         size=(1, 5 + 1),
-        weights=[operations_rrr.NUM_ALTERNATIVES, operations_rri.NUM_ALTERNATIVES, 1],
+      #  weights=[operations_rrr.NUM_ALTERNATIVES, operations_rri.NUM_ALTERNATIVES, 1],
+        weights=[operations_rrr.NUM_ALTERNATIVES, operations_rri.NUM_ALTERNATIVES],
     )
     sub = byron.framework.sequence([prologue_sub, core_sub, epilogue_sub])
 
     jump = byron.f.macro(
-        'jal {label}', label=byron.f.global_reference(sub, creative_zeal=1, first_macro=True)
+        'j {label}', label=byron.f.global_reference(sub, creative_zeal=1, first_macro=True)
     )
 
     core_main = byron.framework.bunch(
-        [op_rrr, op_rri, branch, jump],
+     #  [op_rrr, op_rri, branch, jump],
+       [op_rrr, op_rri, jump],
         size=(10, 15 + 1),
-        weights=[operations_rrr.NUM_ALTERNATIVES, operations_rri.NUM_ALTERNATIVES, 1, 1],
+      #  weights=[operations_rrr.NUM_ALTERNATIVES, operations_rri.NUM_ALTERNATIVES, 1, 1],
+        weights=[operations_rrr.NUM_ALTERNATIVES, operations_rri.NUM_ALTERNATIVES, 1],
     )
     main = byron.framework.sequence([prologue_main, core_main, epilogue_main])
 

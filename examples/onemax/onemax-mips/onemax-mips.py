@@ -21,7 +21,7 @@ SCRIPT_NAME = {"Linux": "./evaluate_all.sh", "Darwin": "./evaluate_all.sh"}
 
 def main():
     top_frame = library.define_frame()
-
+    
     #evaluator = byron.evaluator.MakefileEvaluator('onemax.s', required_files=['main.o'], timeout=5)
     evaluator = byron.evaluator.ScriptEvaluator(SCRIPT_NAME[platform.system()], filename_format="individual{i:06}.s")
 
