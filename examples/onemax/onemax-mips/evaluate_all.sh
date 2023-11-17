@@ -10,14 +10,18 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # Compiles and runs a genome, kills it if it does not terminate swiftly
-# (GNU timeout is /opt/homebrew/bin/gtimeout on my system)
-TIMEOUT_CMD=gtimeout
+TIMEOUT_CMD=timeout
 ALLOWED_TIME=1
+re='^[0-9]+$'
 
 for file in "$@"; do
-    mipsel-linux-gnu-gcc -static onemax.s main.c -o "$file"
-    $TIMEOUT_CMD $ALLOWED_TIME qemu-mipsel onemax.out || ( cp "$file" "problem-$file"; echo -1 )
+    mipsel-linux-gnu-gcc -static "$file" main.c -o onemax.out
+    out="$($TIMEOUT_CMD $ALLOWED_TIME qemu-mipsel onemax.out)" || ( cp "$file" "problem-$file"; echo -1 )
+    if [[ $out =~ $re ]] ; then
+        echo $out
+    fi
     grep -q 'nNone' "$file" && cp "$file" "nNone-$file"
 done
+rm onemax.out
 
 exit 0
