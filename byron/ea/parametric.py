@@ -75,12 +75,18 @@ def parametric_ea(top_frame: type[FrameABC],
         The size of the population
     lambda_
         The size the offspring
+    max_generation
+        Maximum number of generation allowed
+    max_fitness
+        Fitness target
     top_n
         The size of champions population
     lifespan
         The number of generation an individual survive
     operators
         Which operators you want to use
+    end_conditions
+        List of possible conditions needed to end the evolution
     alpha
         Parameter to reduce early failure penalty for operators
     rewards
@@ -114,7 +120,7 @@ def parametric_ea(top_frame: type[FrameABC],
             ucb = mu + radius
             p_temp.append(ucb)
         base = sum(p_temp)
-        return [ p / base for p in p_temp]
+        return [ p / base for p in p_temp ]
 
 
     if end_conditions:
