@@ -60,7 +60,8 @@ def parametric_ea(top_frame: type[FrameABC],
                   operators: list[Callable] = None,
                   end_conditions: list[Callable] = None,
                   alpha: int = 10,
-                  rewards: list[float] = [0.3, 0.7]
+                  rewards: list[float] = [0.3, 0.7],
+                  population_extra_parameters: dict = None,
             ) -> Population:
 
     r"""A configurable evolutionary algorithm
@@ -133,7 +134,7 @@ def parametric_ea(top_frame: type[FrameABC],
         stopping_conditions.append(lambda: best.fitness == max_fitness or best.fitness >> max_fitness)
 
     # initialize population
-    population = Population(top_frame)
+    population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
     ops0 = take_operators(True, operators)
 
     gen0 = list()
