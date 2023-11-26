@@ -27,9 +27,9 @@ def define_frame():
     conditions = byron.f.choice_parameter(
         ['eq', 'ne', 'ge', 'lt', 'gt', 'le']
     )
-    # branch = byron.f.macro(
-    #     'b{cond} {r1}, {r2}, {lbl}',cond=conditions, r1=register, r2=register, lbl=byron.f.local_reference(backward=True, loop=False, forward=True)
-    # ) # --> problema qui -> nodo 745 che compare due volte con due etichette diverse(?)
+    branch = byron.f.macro(
+        'b{cond} {r1}, {r2}, {lbl}',cond=conditions, r1=register, r2=register, lbl=byron.f.local_reference(backward=True, loop=False, forward=True)
+    )
     prologue_main = byron.f.macro(
         r"""# [prologue main]
 .text
@@ -48,7 +48,6 @@ jr $ra
 
     prologue_sub = byron.f.macro(
         r"""# [prologue sub]
-.global {_node}
 {_node}:
 addiu   $sp,$sp,-8
 sw      $fp,4($sp)
@@ -69,11 +68,9 @@ jr      $31
     )
 
     core_sub = byron.framework.bunch(
-      # [op_rrr, op_rri, branch],
-       [op_rrr, op_rri],
+       [op_rrr, op_rri, branch],
         size=(1, 5 + 1),
-      #  weights=[operations_rrr.NUM_ALTERNATIVES, operations_rri.NUM_ALTERNATIVES, 1],
-        weights=[operations_rrr.NUM_ALTERNATIVES, operations_rri.NUM_ALTERNATIVES],
+        weights=[operations_rrr.NUM_ALTERNATIVES, operations_rri.NUM_ALTERNATIVES, 1],
     )
     sub = byron.framework.sequence([prologue_sub, core_sub, epilogue_sub])
 
@@ -82,11 +79,9 @@ jr      $31
     )
 
     core_main = byron.framework.bunch(
-     #  [op_rrr, op_rri, branch, jump],
-       [op_rrr, op_rri, jump],
+       [op_rrr, op_rri, branch, jump],
         size=(10, 15 + 1),
-      #  weights=[operations_rrr.NUM_ALTERNATIVES, operations_rri.NUM_ALTERNATIVES, 1, 1],
-        weights=[operations_rrr.NUM_ALTERNATIVES, operations_rri.NUM_ALTERNATIVES, 1],
+        weights=[operations_rrr.NUM_ALTERNATIVES, operations_rri.NUM_ALTERNATIVES, 1, 1],
     )
     main = byron.framework.sequence([prologue_main, core_main, epilogue_main])
 

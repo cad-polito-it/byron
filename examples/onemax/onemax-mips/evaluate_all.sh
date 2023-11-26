@@ -11,12 +11,12 @@
 
 # Compiles and runs a genome, kills it if it does not terminate swiftly
 TIMEOUT_CMD=timeout
-ALLOWED_TIME=1
-re='^[0-9]+$'
+ALLOWED_TIME=3
+re='^[0-9]+\n*+'
 
 for file in "$@"; do
     mipsel-linux-gnu-gcc -static "$file" main.c -o onemax.out
-    out="$($TIMEOUT_CMD $ALLOWED_TIME qemu-mipsel onemax.out)" || ( cp "$file" "problem-$file"; echo -1 )
+    out="$($TIMEOUT_CMD $ALLOWED_TIME qemu-mipsel onemax.out 2>/dev/null)" || ( cp "$file" "problem-$file"; echo -1 )
     if [[ $out =~ $re ]] ; then
         echo $out
     fi

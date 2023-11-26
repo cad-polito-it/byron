@@ -34,6 +34,7 @@ from byron.global_symbols import FRAMEWORK
 from byron.user_messages import *
 from byron.classes.macro import Macro
 from byron.classes.parameter import ParameterABC
+from byron.classes.node_reference import NodeReference
 
 
 @cache
@@ -51,6 +52,8 @@ def _macro(
         M._patch_info(name='Text#')
     else:
         M._patch_info(name='User#')
+
+    M.add_node_check(_check_parameters)
 
     return M
 
@@ -100,3 +103,7 @@ def macro(text: str, **parameters: type[ParameterABC] | str) -> type[Macro]:
             extra_parameters.append((n, p))
 
     return _macro(text, tuple(sorted(macro_parameters)), tuple(sorted(extra_parameters)))
+
+def _check_parameters(node_ref: NodeReference):
+    #skip type and _selement because you don't need to check them
+    return all(node_ref.node_attributes[p].is_correct(node_ref.node_attributes[p].value) for p in node_ref.node_attributes if p != '_type' and p != '_selement' and p != '%old_label')
