@@ -1,6 +1,6 @@
 import pytest
-from byron.classes.byron import Byron  # Corrected import statement
-
+from byron.classes.byron import Byron  
+import networkx as nx
 # def test_str_method():
 #     byron = Byron()
 #     expected_str = f'This is Byron v{Byron.__version__} "{Byron.__codename__}"'
@@ -13,7 +13,7 @@ from byron.classes.byron import Byron  # Corrected import statement
 
 def test_networkx_version():
     byron = Byron()
-    import networkx as nx
+    
     expected_nx_version = f'{nx.__version__}'
     assert byron.nx == expected_nx_version, "NetworkX version attribute does not match."
 
