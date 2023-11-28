@@ -25,11 +25,12 @@ def main():
     #evaluator = byron.evaluator.MakefileEvaluator('onemax.s', required_files=['main.o'], timeout=5)
     evaluator = byron.evaluator.ScriptEvaluator(SCRIPT_NAME[platform.system()], filename_format="individual{i:06}.s")
 
-    final_population = byron.ea.vanilla_ea(
+    final_population = byron.ea.parametric_ea(
         top_frame,
         evaluator,
-        max_generation=100,
+        max_generation=300,
         max_fitness=byron.fitness.make_fitness(64.0),
+        lifespan=5,
         population_extra_parameters={"_comment": library.COMMENT, '$dump_node_info': True},
     )
         
