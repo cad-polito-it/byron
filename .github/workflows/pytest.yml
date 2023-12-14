@@ -25,7 +25,6 @@ jobs:
       - uses: pavelzw/pytest-action@v2.2.0
         with:
           verbose: true
-          emoji: true
           job-summary: true
           click-to-expand: true
           report-title: 'Byron Test Report'
