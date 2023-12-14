@@ -21,8 +21,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: pip install pytest pytest-md networkx numpy scipy tqdm rich joblib psutil
-      - uses: pavelzw/pytest-action@v2.1.0
+      - uses: pavelzw/pytest-action@v2.2.0
         with:
-          emoji: false
           verbose: true
+          emoji: true
           job-summary: true
+          click-to-expand: true
+          report-title: 'Byron Test Report'
