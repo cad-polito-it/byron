@@ -11,15 +11,27 @@ jobs:
         python-version: ["3.10", "3.11", "3.12"]
 
     steps:
+      # check-out repo and set-up python
       - uses: szenius/set-timezone@v1.2
         with:
           timezoneLinux: "Europe/Berlin"
-      - uses: actions/checkout@v3
-      - name: Test Python ${{ matrix.python-version }}
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Set up python ${{ matrix.python-version }}
+        id: setup-python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: snok/install-poetry@v1.3.4
+      # install & configure poetry
+      - name: Install Poetry
+        uses: snok/install-poetry@v1.3.4
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+      - name: Install library
+        run: poetry install --no-interaction --all-extras
+      # test!
+      - name: Test Python ${{ matrix.python-version }}
       - run: pip install pytest-md pytest-emoji
       - uses: pavelzw/pytest-action@v2.2.0
         with:
