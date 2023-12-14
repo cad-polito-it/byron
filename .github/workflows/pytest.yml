@@ -15,17 +15,19 @@ jobs:
         with:
           timezoneLinux: "Europe/Berlin"
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        name: Test Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+      - name: Test Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: knowsuchagency/poetry-install@v2
-        env:
-          POETRY_VIRTUALENVS_CREATE: false
+        - uses: snok/install-poetry@v1.3.4
+          with:
+            installation-arguments: --all-extras
+      - run: pip install pytest-md pytest-emoji
       - uses: pavelzw/pytest-action@v2.2.0
         with:
           verbose: true
-          emoji: false
+          emoji: true
           job-summary: true
           click-to-expand: true
           report-title: 'Byron Test Report'
