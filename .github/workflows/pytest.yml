@@ -28,12 +28,12 @@ jobs:
         with:
           virtualenvs-create: true
           virtualenvs-in-project: true
-      - name: Install library
+      - name: Install library & pytest fancy extras
         run: poetry install --no-interaction --all-extras
+      - run: pip install pytest-md pytest-emoji
       # test!
       - name: Test Python ${{ matrix.python-version }}
-      - run: pip install pytest-md pytest-emoji
-      - uses: pavelzw/pytest-action@v2.2.0
+        uses: pavelzw/pytest-action@v2.2.0
         with:
           verbose: true
           emoji: true
