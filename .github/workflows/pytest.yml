@@ -20,8 +20,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - uses: snok/install-poetry@v1.3.4
-        with:
-          installation-arguments: --all-extras
       - run: pip install pytest-md pytest-emoji
       - uses: pavelzw/pytest-action@v2.2.0
         with:
