@@ -15,8 +15,8 @@ jobs:
         with:
           timezoneLinux: "Europe/Berlin"
       - uses: actions/checkout@v3
-      - name: Test Python ${{ matrix.python-version }}
       - uses: actions/setup-python@v4
+        name: Test Python ${{ matrix.python-version }}
         with:
           python-version: ${{ matrix.python-version }}
       - uses: knowsuchagency/poetry-install@v2
