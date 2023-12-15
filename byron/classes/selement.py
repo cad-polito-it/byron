@@ -3,9 +3,10 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
+# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
+
 # Copyright 2022-2023 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not

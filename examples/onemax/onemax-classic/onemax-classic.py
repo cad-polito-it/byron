@@ -4,7 +4,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
+# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 # Copyright 2023 Giovanni Squillero and Alberto Tonda
@@ -15,7 +15,7 @@ import argparse
 
 import byron
 
-NUM_BITS = 500
+NUM_BITS = 50
 
 
 @byron.fitness_function

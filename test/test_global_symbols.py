@@ -4,11 +4,11 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
+# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
-# Copyright 2023 Giovanni Squillero and Alberto Tonda
-# SPDX-License-Identifier: Apache-2.0
+
+# Copyright 2022-2023 Giovanni Squillero and Alberto Tonda
 
 import byron
 

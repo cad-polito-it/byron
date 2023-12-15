@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
+# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -95,6 +95,7 @@ class Statistics:
             + "; "
             + Statistics.nice(self.aborts, "abort")
             + "; "
+            + ('😱 ' if self.calls == self.aborts else '')
             + Statistics.nice(self.offspring, "new individual")
             + (f" (👍{self.successes:,} 👎{self.failures:,})" if self.successes or self.failures else "")
         )
