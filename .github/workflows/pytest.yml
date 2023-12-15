@@ -29,14 +29,15 @@ jobs:
           virtualenvs-create: true
           virtualenvs-in-project: true
       - run: poetry install --no-interaction --all-extras
-      - run: poetry shell
-      - run: pip install pytest-md pytest-emoji
+      # - run: poetry shell
+      # - run: pip install pytest-md pytest-emoji
       # test!
       - name: Test Python ${{ matrix.python-version }}
-        uses: pavelzw/pytest-action@v2.2.0
-        with:
-          verbose: true
-          emoji: true
-          job-summary: true
-          click-to-expand: true
-          report-title: 'Byron Test Report'
+        run: poetry run pytest -v
+        # uses: pavelzw/pytest-action@v2.2.0
+        # with:
+        #   verbose: true
+        #   emoji: true
+        #   job-summary: true
+        #   click-to-expand: true
+        #   report-title: 'Byron Test Report'
