@@ -10,7 +10,7 @@
 
 [tool.poetry]
     name = "byron"
-    version = "0.8a1.dev39"
+    version = "0.8a1.dev40"
     description = "Multi-purpose extensible self-adaptive optimizer and fuzzer"
     authors = [
         "Giovanni Squillero <giovanni.squillero@polito.it>",
@@ -104,7 +104,7 @@
     source-roots    = ['src']
 
 [tool.bumpver]
-    current_version = "0.8a1.dev39"
+    current_version = "0.8a1.dev40"
     version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
     commit_message  = "Bump version to {new_version}"
     commit          = true

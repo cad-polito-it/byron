@@ -3,7 +3,7 @@
 
 [![License](https://img.shields.io/badge/license-apache--2.0-green.svg)](https://opensource.org/licenses/Apache-2.0) 
 ![Language](https://img.shields.io/badge/language-python-blue.svg)
-![Version](https://img.shields.io/badge/version-0.8a1.dev39_(Don_Juan)-orange.svg)
+![Version](https://img.shields.io/badge/version-0.8a1.dev40_(Don_Juan)-orange.svg)
 [![GitHub last commit (alpha)](https://img.shields.io/github/last-commit/cad-polito-it/byron/alpha)](https://github.com/cad-polito-it/byron)
 [![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/cad-polito-it/byron/pytest.yml?label=pytest)
 ](https://github.com/cad-polito-it/byron/actions)
