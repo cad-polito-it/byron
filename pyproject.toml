@@ -116,7 +116,7 @@
             'version = "{pep440_version}"$',
         ]
         "README.md" = [
-            "version-{pep440_version}-orange",
+            "-{pep440_version}_",
         ]
         "docs/pypi.md" = [
             "version-{pep440_version}-orange",

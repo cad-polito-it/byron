@@ -3,11 +3,10 @@
 
 [![License](https://img.shields.io/badge/license-apache--2.0-green.svg)](https://opensource.org/licenses/Apache-2.0) 
 ![Language](https://img.shields.io/badge/language-python-blue.svg)
-![Version](https://img.shields.io/badge/version-0.8a1.dev39-orange.svg)
-![Codename](https://img.shields.io/badge/codename-Don_Juan-pink.svg)
+![Version](https://img.shields.io/badge/version-0.8a1.dev39_(Don_Juan)-orange.svg)
 [![GitHub last commit (alpha)](https://img.shields.io/github/last-commit/cad-polito-it/byron/alpha)](https://github.com/cad-polito-it/byron)
 [![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/cad-polito-it/byron/pytest.yml?label=pytest)
-]()
+](https://github.com/cad-polito-it/byron/actions)
 [![Documentation Status](https://readthedocs.org/projects/byron/badge/?version=pre-alpha)](https://byron.readthedocs.io/en/pre-alpha/?badge=pre-alpha)
 
 Byron is an [evolutionary tool](https://cad-polito-it.github.io/byron/evolution): given a problem, it first generates a set of random solutions, then iteratively improves them using the results of their evaluations together with structural information. It may be used as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization).
