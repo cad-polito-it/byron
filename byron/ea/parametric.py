@@ -164,8 +164,7 @@ def parametric_ea(top_frame: type[FrameABC],
             new_individuals += op(*parents)
             
         if lifespan is not None:
-            old = population.life_cycle(lifespan, 1, top_n)
-            population -= old
+            population.life_cycle(lifespan, 1, top_n)
         population += new_individuals
 
         evaluator(population)
