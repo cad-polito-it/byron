@@ -178,3 +178,14 @@ class Population:
             sorted_ += sorted(pareto, key=lambda i: (i.fitness, -i.id))
 
         self._individuals = sorted_
+
+    def aging(self, step: int = 1, top_n: int = None):
+        for i in self._individuals[top_n:]:
+            i.aging(step)
+
+    def elders(self, lifespan: int, top_n: int = None) -> list[Individual]:
+        return [i for i in self._individuals[top_n:] if i.age.apparent_age > lifespan]
+        
+    def life_cycle(self, lifespan: int, step: int = 1, top_n: int = None) -> list[Individual]:
+        self.aging(step, top_n)
+        return self.elders(lifespan, top_n)

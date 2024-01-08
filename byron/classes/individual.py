@@ -304,6 +304,9 @@ class Individual(Paranoid):
     #######################################################################
     # PUBLIC METHODS
 
+    def aging(self, step: int = 1):
+        self.age += step
+
     def run_paranoia_checks(self) -> bool:
         # ==[check genome (structural)]======================================
         assert self.genome == self._genome, f"{PARANOIA_VALUE_ERROR}: Panic!"

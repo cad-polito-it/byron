@@ -105,7 +105,7 @@ def parametric_ea(top_frame: type[FrameABC],
             ops = [op for op in operators_list if (op.num_parents is None) == init]
         return ops
 
-    def extimate_operator_probability(operators_list: list[Callable], iterations: int, alpha: int) -> list[float]:
+    def estimate_operator_probability(operators_list: list[Callable], iterations: int, alpha: int) -> list[float]:
         i_r = rewards[0] # reward for creating individual 
         s_r = rewards[1] # reward for creating individual better than parents
         p0 = 1 / len(operators_list)
@@ -156,16 +156,15 @@ def parametric_ea(top_frame: type[FrameABC],
         new_individuals = list()
         for _ in range(lambda_):
             count += 1
-            p = extimate_operator_probability(ops, count, alpha)
+            p = estimate_operator_probability(ops, count, alpha)
             op = rrandom.weighted_choice(ops, p)
             parents = list()
             for _ in range(op.num_parents):
                 parents.append(tournament_selection(population, 1))
             new_individuals += op(*parents)
+            
         if lifespan is not None:
-            for i in population.individuals:
-                i.age += 1           
-            old = [i for i in population.individuals[top_n:] if i.age.apparent_age > lifespan]
+            old = population.life_cycle(lifespan, 1, top_n)
             population -= old
         population += new_individuals
 
