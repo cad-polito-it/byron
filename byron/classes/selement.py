@@ -23,7 +23,7 @@
 
 # =[ HISTORY ]===============================================================
 # v1 / June 2023 / Squillero (GX)
-
+"""THE FIRST ONE IS FOR THE DEFINING CLASSES AND THE SECOND ONE IS FOR THE DEFINING METACLASS. """
 __all__ = ['SElement', 'SElementMeta']
 
 from typing import Callable, Sequence, Optional
@@ -164,7 +164,8 @@ class SElement(metaclass=SElementMeta):
         return id(self) == id(other)
 
     def __hash__(self):
-        return id()
+        return id(self)
+        #todo shouldnt this be self??
 
     @classmethod
     def add_node_check(cls, function: Callable) -> None:
