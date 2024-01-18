@@ -1,3 +1,16 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#################################|###|#####################################
+#  __                            |   |                                    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
+# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
+#       |_____|                   \|/                                     #
+################################## ' ######################################
+# Copyright 2023 Giovanni Squillero and Alberto Tonda
+# SPDX-License-Identifier: Apache-2.0
+
+
 import pytest
 from byron.classes.fitness import FitnessABC
 
@@ -54,3 +67,11 @@ def test_fitness_str():
     fitness = MyFitness(10)
     expected_str = f"{fitness._decorate()}Ƒ"  # Assuming _decorate returns a string representation of fitness.value
     assert str(fitness) == expected_str
+
+
+def test_fitness_distinguishability():
+    fitness1 = MyFitness(10)
+    fitness2 = MyFitness(20)
+    fitness3 = MyFitness(10)
+    assert fitness1.is_distinguishable(fitness2)
+    assert not fitness1.is_distinguishable(fitness3)

@@ -1,3 +1,17 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#################################|###|#####################################
+#  __                            |   |                                    #
+# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
+# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
+#       |_____|                   \|/                                     #
+################################## ' ######################################
+# Copyright 2023 Giovanni Squillero and Alberto Tonda
+# SPDX-License-Identifier: Apache-2.0
+
+
+import dataclasses
 import pytest
 import networkx as nx
 from byron.classes.node_view import NodeView
@@ -124,6 +138,20 @@ def test_make_static_method(mock_graph):
     nv = NodeView.make(mock_graph, 0)
     assert isinstance(nv, NodeView)
     assert nv.node == 0
+
+def test_safe_dump(node_view_instance):
+    dumped = node_view_instance.safe_dump
+    assert isinstance(dumped, str)
+    assert dumped == "MockSElement"  
+
+
+def test_setattr_error_handling(node_view_instance):
+    with pytest.raises(dataclasses.FrozenInstanceError):
+        node_view_instance.some_attribute = 10
+
+def test_getattr_unknown_property_error_handling(node_view_instance):
+    with pytest.raises(AttributeError):
+        _ = node_view_instance.unknown_property
 
 
 if __name__ == "__main__":
