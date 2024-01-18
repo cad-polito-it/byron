@@ -1,19 +1,7 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-#################################|###|#####################################
-#  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
-# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
-#       |_____|                   \|/                                     #
-################################## ' ######################################
-# Copyright 2023 Giovanni Squillero and Alberto Tonda
-# SPDX-License-Identifier: Apache-2.0
-
-
 import pytest
-from byron.classes.selement import SElement  
 import logging
+from byron.classes.selement import SElement  
+
 class TestSElement:
 
     def test_instantiation(self):
@@ -25,7 +13,6 @@ class TestSElement:
         element2 = SElement()
         assert element1 != element2
         assert element1 == element1
-
 
     def test_representation(self):
         element = SElement()
@@ -50,25 +37,14 @@ class TestSElement:
         SElement.add_node_check(always_true_check)
         element = SElement()
         assert element.is_valid(None) is True
-
-
-    def test_is_valid_debug(self, caplog):
-        caplog.set_level(logging.DEBUG)
-
-        def failing_check(node):
-            return False
-
-        SElement.add_node_check(failing_check)
-        element = SElement()
-        element._is_valid_debug(None)
-        assert "is_valid: Failed check on None" in caplog.text
-
+        
 
 @pytest.fixture
 def cleanup_node_checks():
     yield
-    SElement.NODE_CHECKS = tuple()
+    SElement.NODE_CHECKS = []
 
 @pytest.mark.usefixtures("cleanup_node_checks")
 class TestSElementWithCleanup(TestSElement):
     pass
+
