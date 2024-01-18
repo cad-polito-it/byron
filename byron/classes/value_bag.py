@@ -146,3 +146,6 @@ class ValueBag(dict):
     def _items(self):
         """Same as dict.items()."""
         return super().items()
+    #todo 
+    def __hash__(self):
+        return hash(tuple(sorted(self.items())))
