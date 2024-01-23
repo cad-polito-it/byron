@@ -1,7 +1,7 @@
 [![License](https://img.shields.io/badge/license-apache--2.0-green.svg)](https://opensource.org/licenses/Apache-2.0) 
 [![Status](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/cad-polito-it/byron)
 ![Language](https://img.shields.io/badge/language-python-blue.svg)
-![Version](https://img.shields.io/badge/version-0.8a1.dev40-orange.svg)
+![Version](https://img.shields.io/badge/version-0.8a1.dev41-orange.svg)
 ![Codename](https://img.shields.io/badge/codename-Don_Juan-pink.svg)
 [![Documentation Status](https://readthedocs.org/projects/byron/badge/?version=pre-alpha)](https://byron.readthedocs.io/en/pre-alpha/?badge=pre-alpha)
 
