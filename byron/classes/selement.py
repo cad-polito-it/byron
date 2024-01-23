@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -166,7 +166,7 @@ class SElement(metaclass=SElementMeta):
 
     def __hash__(self):
         return id(self)
-        #todo shouldnt this be self??
+        # todo shouldnt this be self??
 
     @classmethod
     def add_node_check(cls, function: Callable) -> None:

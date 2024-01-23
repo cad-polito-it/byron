@@ -3,7 +3,7 @@
 #  __                            |   |                                    #
 # |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
 # |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
+# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
 #       |_____|                   \|/                                     #
 ################################## ' ######################################
 
@@ -146,6 +146,7 @@ class ValueBag(dict):
     def _items(self):
         """Same as dict.items()."""
         return super().items()
-    #todo 
+
+    # todo
     def __hash__(self):
         return hash(tuple(sorted(self.items())))
