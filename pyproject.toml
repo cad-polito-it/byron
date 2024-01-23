@@ -71,6 +71,7 @@
         black     = { extras = ["jupyter"], version = "^23.7.0" }
         seaborn   = "^0.12.2"
         bumpver   = "^2023.1126"
+    ruff = "^0.1.8"
 
 [build-system]
     requires      = ["poetry-core"]
