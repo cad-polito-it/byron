@@ -1,7 +1,7 @@
 `byron` 🖋
 ==========
 
-![Version](https://img.shields.io/badge/version-0.8a1.dev41_(Don_Juan)-orange.svg)
+![Version](https://img.shields.io/badge/version-0.8a1.dev42_(Don_Juan)-orange.svg)
 [![GitHub last commit (alpha)](https://img.shields.io/github/last-commit/cad-polito-it/byron/alpha)](https://github.com/cad-polito-it/byron/pulse)
 [![License](https://img.shields.io/badge/license-apache--2.0-green.svg)](https://opensource.org/licenses/Apache-2.0) 
 [![Language](https://img.shields.io/badge/language-python-blue.svg)](https://www.python.org/)
