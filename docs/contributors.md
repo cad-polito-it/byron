@@ -1,7 +1,7 @@
 Credits
 =======
 
-Byron was made possible thanks to the contributions of many individuals. Below is a list of friends, students, and hackers who provided code, concepts, illustrations, music, or other form of support to the project.
+Below is a list of friends, students, and hackers who provided code, concepts, illustrations, music, or other form of support to the project.
 
 ## μ-Friends
 

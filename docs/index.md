@@ -8,6 +8,8 @@ Byron internally encodes candidate solutions as [typed](https://rcor.me/papers/t
 
 Candidate solutions are dumped as text and then evaluated by calling a user-defined Python function or by invoking a shell script that may use external proprietary tools. Different types of parallelization are supported out of the box, from simple multithreading to the creation of temporary directories where multiple subprocesses are concurrently [spawned](https://en.wikipedia.org/wiki/Spawn_(computing)).
 
+Byron was made possible by the contributions of [many individuals](contributors) over [many years](history). 
+
 ### Installation
 
 **⚠️ Byron is currently in [alpha](https://en.wikipedia.org/wiki/Software_release_life_cycle#Alpha) and under active development**
