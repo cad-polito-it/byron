@@ -63,7 +63,7 @@ import sys
 from collections import defaultdict
 import multiprocessing
 
-__version__ = "0.8a1.dev44"
+__version__ = "0.8a1.dev45"
 __date__ = "25-01-2024"
 __codename__ = "Don Juan"
 __author__ = "Giovanni Squillero and Alberto Tonda"
