@@ -1,10 +1,11 @@
-[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/cad-polito-it/byron/pytest.yml?label=pytest)
+[![Codename](https://img.shields.io/badge/codename-Don_Juan-pink.svg)](https://en.wikipedia.org/wiki/Don_Juan_(poem))
+[![GitHub License](https://img.shields.io/github/license/squillero/byron)](https://opensource.org/licenses/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/byron)](https://www.python.org/)
+[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/cad-polito-it/byron/pytest.yml?label=tests)
 ](https://github.com/cad-polito-it/byron/actions)
 [![Documentation Status](https://readthedocs.org/projects/byron/badge/?version=pre-alpha)](https://byron.readthedocs.io/en/pre-alpha/?badge=pre-alpha)
-[![GitHub last commit (alpha)](https://img.shields.io/github/last-commit/cad-polito-it/byron/alpha?label=github+update)](https://github.com/cad-polito-it/byron/pulse)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/byron?label=pypi+downloads)
-
-
+[![GitHub last commit (alpha)](https://img.shields.io/github/last-commit/cad-polito-it/byron/alpha?label=last+github+commit)](https://github.com/cad-polito-it/byron/pulse)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/byron?label=downloads)
 
 Byron is an [evolutionary tool](https://cad-polito-it.github.io/byron/evolution): given a problem, it first generates a set of random solutions, then iteratively improves them using the results of their evaluations together with structural information. It may be used as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization).
 

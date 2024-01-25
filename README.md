@@ -1,17 +1,15 @@
 `byron` 🖋
 ==========
 
-[![PyPI - Version](https://img.shields.io/pypi/v/byron?label=pypi+version)](https://pypi.org/project/byron/)
 [![Codename](https://img.shields.io/badge/codename-Don_Juan-pink.svg)](https://en.wikipedia.org/wiki/Don_Juan_(poem))
 [![PyPI - Status](https://img.shields.io/pypi/status/byron)](https://en.wikipedia.org/wiki/Software_release_life_cycle)
 [![GitHub License](https://img.shields.io/github/license/squillero/byron)](https://opensource.org/licenses/)
-[![GitHub last commit (alpha)](https://img.shields.io/github/last-commit/squillero/byron/alpha)](https://github.com/squillero/byron/pulse)
 [![GitHub repo size](https://img.shields.io/github/repo-size/squillero/byron)](https://github.com/squillero/byron)
-[![GitHub Repo stars](https://img.shields.io/github/stars/squillero/byron?style=flat)](https://github.com/squillero/byron)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/byron)](https://www.python.org/)
 [![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/squillero/byron/pytest.yml?label=pytest)
 ](https://github.com/squillero/byron/actions)
 [![Documentation Status](https://readthedocs.org/projects/byron/badge/?version=pre-alpha)](https://byron.readthedocs.io/en/pre-alpha/?badge=pre-alpha)
+[![PyPI - Version](https://img.shields.io/pypi/v/byron?label=pypi+version)](https://pypi.org/project/byron/)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/byron?label=pypi+downloads)](https://pypi.org/project/byron/)
 
 Byron is an [evolutionary tool](https://cad-polito-it.github.io/byron/evolution): given a problem, it first generates a set of random solutions, then iteratively improves them using the results of their evaluations together with structural information. It may be used as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization).
