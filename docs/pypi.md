@@ -1,9 +1,9 @@
-[![License](https://img.shields.io/badge/license-apache--2.0-green.svg)](https://opensource.org/licenses/Apache-2.0) 
-[![Status](https://img.shields.io/badge/status-active-brightgreen.svg)](https://github.com/cad-polito-it/byron)
-![Language](https://img.shields.io/badge/language-python-blue.svg)
-![Version](https://img.shields.io/badge/version-0.8a1.dev42-orange.svg)
-![Codename](https://img.shields.io/badge/codename-Don_Juan-pink.svg)
+[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/cad-polito-it/byron/pytest.yml?label=pytest)
+](https://github.com/cad-polito-it/byron/actions)
 [![Documentation Status](https://readthedocs.org/projects/byron/badge/?version=pre-alpha)](https://byron.readthedocs.io/en/pre-alpha/?badge=pre-alpha)
+[![GitHub last commit (alpha)](https://img.shields.io/github/last-commit/cad-polito-it/byron/alpha?label=github+update)](https://github.com/cad-polito-it/byron/pulse)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/byron?label=pypi+downloads)
+
 
 
 Byron is an [evolutionary tool](https://cad-polito-it.github.io/byron/evolution): given a problem, it first generates a set of random solutions, then iteratively improves them using the results of their evaluations together with structural information. It may be used as a coverage-driven [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) and a general-purpose [optimizer](https://en.wikipedia.org/wiki/Engineering_optimization).
@@ -18,23 +18,15 @@ As simple as
 pip install --upgrade byron
 ```
 
-Few dependencies can enhance Byron, but are not strictly required. You can get them with
+A few dependencies can enhance Byron functionalities, but are not strictly required. You can get them all with
 
 ```
 pip install --upgrade "byron[full]"
 ```
 
-or install optional modules one by one
-
-```
-pip install --upgrade matplotlib
-pip install --upgrade joblib
-pip install --upgrade psutil
-```
-
 ## Documentation
 
-None yet, but some HOWTO's and examples [are available](https://github.com/cad-polito-it/byron/tree/alpha/examples) in the repo.
+None yet, but some HOWTO's and examples [are available](https://github.com/cad-polito-it/byron/tree/alpha/examples) in the development repo.
 
 ## Contacts
 
