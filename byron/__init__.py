@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-#################################|###|#####################################
-#  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
-# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://pypi.org/project/byron/    #
-#       |_____|                   \|/                                     #
-################################## ' ######################################
+##################################@|###|##################################@#
+#   _____                          |   |                                   #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
+#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
+#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#        |_____|                    \|/                                    #
+#################################### ' #####################################
 
-# Copyright 2023 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 #
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at:
 #
 #     http://www.apache.org/licenses/LICENSE-2.0
@@ -143,7 +143,7 @@ if notebook_mode and logging.getLogger().level <= logging.WARNING and paranoia_m
         or not main_process
         or user_messages.performance_warning(
             "Paranoia checks are enabled in this notebook: performances can be significantly impaired\n"
-            + "[see https://github.com/cad-polito-it/byron/blob/alpha/docs/paranoia.md for details]"
+            + "[see https://cad-polito-it.github.io/byron/paranoia for details]"
         )
     )
 elif not notebook_mode:
@@ -152,7 +152,7 @@ elif not notebook_mode:
         or not main_process
         or user_messages.performance_warning(
             "Paranoia checks are enabled: performances can be significantly impaired — consider using '-O'\n"
-            + "[see https://github.com/cad-polito-it/byron/blob/alpha/docs/paranoia.md for details]"
+            + "[see https://cad-polito-it.github.io/byron/paranoia for details]"
         )
     )
 

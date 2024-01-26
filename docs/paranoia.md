@@ -1,4 +1,4 @@
-# PARANOID MODE
+# Paranoia Mode
 
 > *All day long I think of things*  
 > *But nothing seems to satisfy*  
@@ -16,7 +16,7 @@ Byron's *paranoia checks* are computationally intensive routines that thoroughly
 
 If *paranoia checks* are enabled, the user is warned of the potential, indeed almost certain, loss in performance:
 
-> Paranoia checks are enabled: performances can be significantly impaired — consider using '-O'
+> Paranoia checks are enabled: performances can be significantly impaired
 
 Possible solutions:
 
@@ -59,11 +59,11 @@ Set [`PYTHONOPTIMIZE`](https://docs.python.org/3/using/cmdline.html#envvar-PYTHO
 $ PYTHONOPTIMIZE=1 jupyter-notebook
 ```
 
-:warning: This will disable every single `assert` in notebooks: the behavior of other modules will be affected as well.
+⚠️ This will disable every single `assert` in notebooks: the behavior of other modules will be affected as well.
 
 ### Use magic
 
-Jupyter allows some of the IPython's [magics](https://ipython.readthedocs.io/en/stable/interactive/magics.html), and a *cell magic* (`%%`) can be used to start a Python interpreter with an optimization flag:
+Jupyter allows some of the IPython's [magics](https://ipython.readthedocs.io/en/stable/interactive/magics.html), and a *cell magic* (`%%`) can be used to start a Python interpreter with the optimization flag:
 
 ```jupyterpython
 %%python -O
@@ -73,13 +73,13 @@ import byron
 # Fuzzer code
 ```
 
-* :+1: May be used in remote Notebooks (e.g., [Google's Colab](https://colab.research.google.com/))
-* :-1: All the code must be packed into one single cell
-* :-1: Byron will not detect Jupyter anymore
+* 👍 May be used in remote Notebooks (e.g., [Google's Colab](https://colab.research.google.com/))
+* 👎 All the code must be packed into one single cell
+* 👎 Byron will not detect Jupyter anymore
 
-### Tamper with the bytecode cache :bomb:
+### Tamper with the bytecode cache 💣
 
-:warning: This hack may cause your system to become unstable and provide incorrect results. You acknowledge that you are solely responsible for any harm or damage that may result.
+⚠️ This hack may cause your system to become unstable and provide incorrect results. You acknowledge that you are solely responsible for any harm or damage that may result.
 
 * Generate the optimized bytecode (e.g., run `python -O -m pytest`)
 * Locate all the folders that contain compiled bytecode (e.g., `**/__pycache__`)

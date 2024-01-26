@@ -17,3 +17,9 @@ poetry build
 poetry publish
 ```
 
+## Coverage
+
+```
+coverage run --branch -m pytest
+coverage html
+```
