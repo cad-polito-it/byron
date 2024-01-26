@@ -39,6 +39,7 @@ from byron.classes.evaluator import *
 from byron.fitness import make_fitness
 #from byron.randy import rrandom
 from byron.user_messages import *
+from .common import take_operators
 from .selection import *
 
 from math import sqrt, log
@@ -97,13 +98,6 @@ def parametric_ea(top_frame: type[FrameABC],
     Population
         The last population
     """
-
-    def take_operators(init: bool, operators_list: list[Callable]) -> list[Callable]:
-        if operators_list is None or (flag := all((op.num_parents is not None) != init for op in operators_list)):
-            ops = [op for op in get_operators() if (op.num_parents is None) == init]
-        elif not flag:
-            ops = [op for op in operators_list if (op.num_parents is None) == init]
-        return ops
 
     def estimate_operator_probability(operators_list: list[Callable], iterations: int, alpha: int) -> list[float]:
         i_r = rewards[0] # reward for creating individual 
