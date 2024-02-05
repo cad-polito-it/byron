@@ -33,14 +33,13 @@ from typing import Callable
 from byron.operators import *
 from byron.sys import *
 from byron.classes.selement import *
-#from byron.classes.population import *
 from byron.classes.frame import *
 from byron.classes.evaluator import *
 from byron.fitness import make_fitness
-#from byron.randy import rrandom
 from byron.user_messages import *
 from .common import take_operators
 from .selection import *
+from .estimator import Estimator
 
 from math import sqrt, log
 
@@ -60,8 +59,7 @@ def parametric_ea(top_frame: type[FrameABC],
                   lifespan: int = None,
                   operators: list[Callable] = None,
                   end_conditions: list[Callable] = None,
-                  alpha: int = 10,
-                  rewards: list[float] = [0.3, 0.7],
+                  rewards: list[float] = [0.7, 0.3],
                   population_extra_parameters: dict = None,
             ) -> Population:
 
@@ -89,34 +87,13 @@ def parametric_ea(top_frame: type[FrameABC],
         Which operators you want to use
     end_conditions
         List of possible conditions needed to end the evolution
-    alpha
-        Parameter to reduce early failure penalty for operators
     rewards
-        List of rewards for a successfully created individual [0] and for an individual fitter than parents [1]
+        List of rewards for creating an individual fitter than parents [0] and for a successfully created individual [1]
     Returns
     -------
     Population
         The last population
     """
-
-    def estimate_operator_probability(operators_list: list[Callable], iterations: int, alpha: int) -> list[float]:
-        i_r = rewards[0] # reward for creating individual 
-        s_r = rewards[1] # reward for creating individual better than parents
-        p0 = 1 / len(operators_list)
-        if iterations <= alpha * len(operators_list):
-            # list of equal probability for every operator
-            return [p0] * len(operators_list)
-
-        p_temp = list()
-        # UCB1 algorithm
-        for op in operators_list:
-            mu = (op.stats.offspring*i_r + op.stats.successes*s_r)/op.stats.calls
-            radius = sqrt((2*log(max_generation)/op.stats.calls))
-            ucb = mu + radius
-            p_temp.append(ucb)
-        base = sum(p_temp)
-        return [ p / base for p in p_temp ]
-
 
     if end_conditions:
         stopping_conditions = end_conditions
@@ -126,6 +103,8 @@ def parametric_ea(top_frame: type[FrameABC],
     if max_fitness:
         max_fitness = make_fitness(max_fitness)
         stopping_conditions.append(lambda: best.fitness == max_fitness or best.fitness >> max_fitness)
+
+    ext = Estimator(max_generation, rewards, operators)
 
     # initialize population
     population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
@@ -142,16 +121,12 @@ def parametric_ea(top_frame: type[FrameABC],
     _new_best(population, evaluator)
 
     all_individuals = set()
-    ops = take_operators(False, operators)
 
     # begin evolution!
-    count = 0
     while not any(s() for s in stopping_conditions):
         new_individuals = list()
         for _ in range(lambda_):
-            count += 1
-            p = estimate_operator_probability(ops, count, alpha)
-            op = rrandom.weighted_choice(ops, p)
+            op = ext.take()
             parents = list()
             for _ in range(op.num_parents):
                 parents.append(tournament_selection(population, 1))
@@ -163,6 +138,8 @@ def parametric_ea(top_frame: type[FrameABC],
 
         evaluator(population)
         population.sort()
+
+        ext.update()
 
         all_individuals |= set(population)
 
