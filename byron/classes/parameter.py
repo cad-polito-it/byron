@@ -177,7 +177,7 @@ class ParameterStructuralABC(ParameterABC):
         return format(self.value, format_spec) if target is not None else "*UNSET*"
 
     def is_correct(self, obj: Any) -> bool:
-        #if not super().is_correct(obj): -> ParameterABC does not have a is_correct() function
+        # if not super().is_correct(obj): -> ParameterABC does not have a is_correct() function
         #    return False
         if not self.is_fastened:
             return False

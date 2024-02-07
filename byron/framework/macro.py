@@ -104,6 +104,11 @@ def macro(text: str, **parameters: type[ParameterABC] | str) -> type[Macro]:
 
     return _macro(text, tuple(sorted(macro_parameters)), tuple(sorted(extra_parameters)))
 
+
 def _check_parameters(node_ref: NodeReference):
-    #skip type and _selement because you don't need to check them
-    return all(node_ref.node_attributes[p].is_correct(node_ref.node_attributes[p].value) for p in node_ref.node_attributes if p != '_type' and p != '_selement' and p != '%old_label')
+    # skip type and _selement because you don't need to check them
+    return all(
+        node_ref.node_attributes[p].is_correct(node_ref.node_attributes[p].value)
+        for p in node_ref.node_attributes
+        if p != '_type' and p != '_selement' and p != '%old_label'
+    )

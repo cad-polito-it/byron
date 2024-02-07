@@ -19,10 +19,11 @@ import library_mips as library
 
 SCRIPT_NAME = {"Linux": "./evaluate_all.sh", "Darwin": "./evaluate_all.sh"}
 
+
 def main():
     top_frame = library.define_frame()
-    
-    #evaluator = byron.evaluator.MakefileEvaluator('onemax.s', required_files=['main.o'], timeout=5)
+
+    # evaluator = byron.evaluator.MakefileEvaluator('onemax.s', required_files=['main.o'], timeout=5)
     evaluator = byron.evaluator.ScriptEvaluator(SCRIPT_NAME[platform.system()], filename_format="individual{i:06}.s")
 
     final_population = byron.ea.parametric_ea(
@@ -33,12 +34,13 @@ def main():
         lifespan=5,
         population_extra_parameters={"_comment": library.COMMENT, '$dump_node_info': True},
     )
-        
+
     for i, I in final_population:
         I.as_lgp(f'final-individual_{I.id}.png')
         with open(f'final-individual_{I.id}.s', 'w') as out:
             out.write(final_population.dump_individual(i))
         print(I.describe(max_recursion=None))
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

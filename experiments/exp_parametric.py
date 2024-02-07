@@ -33,12 +33,13 @@ def main():
     byron.logger.info("main: Using %s", evaluator)
 
     population = byron.ea.parametric_ea(
-        top_frame, evaluator, max_generation=5000, lambda_=20, mu= 30, max_fitness=NUM_BITS, top_n=5, lifespan=100
+        top_frame, evaluator, max_generation=5000, lambda_=20, mu=30, max_fitness=NUM_BITS, top_n=5, lifespan=100
     )
 
     print()
 
     byron.sys.log_operators()
+
 
 byron.logger.setLevel(level=logging.INFO)
 

@@ -29,6 +29,7 @@ __all__ = ["parametric_ea"]
 
 
 from typing import Callable
+from inspect import signature
 
 from byron.operators import *
 from byron.sys import *
@@ -43,26 +44,29 @@ from .estimator import Estimator
 
 from math import sqrt, log
 
+
 def _new_best(population: Population, evaluator: EvaluatorABC):
     logger.info(
         f"ParametricEA: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
-        + f" [🕓 gen: {population.generation:,} / fcalls: {evaluator.fitness_calls:,}]")
+        + f" [🕓 gen: {population.generation:,} / fcalls: {evaluator.fitness_calls:,}]"
+    )
 
 
-def parametric_ea(top_frame: type[FrameABC],
-                  evaluator: EvaluatorABC,
-                  mu: int = 10,
-                  lambda_: int = 20,
-                  max_generation: int = 100,
-                  max_fitness: FitnessABC | None = None,
-                  top_n: int = 0,
-                  lifespan: int = None,
-                  operators: list[Callable] = None,
-                  end_conditions: list[Callable] = None,
-                  rewards: list[float] = [0.7, 0.3],
-                  population_extra_parameters: dict = None,
-            ) -> Population:
-
+def parametric_ea(
+    top_frame: type[FrameABC],
+    evaluator: EvaluatorABC,
+    mu: int = 10,
+    lambda_: int = 20,
+    max_generation: int = 100,
+    max_fitness: FitnessABC | None = None,
+    top_n: int = 0,
+    lifespan: int = None,
+    operators: list[Callable] = None,
+    end_conditions: list[Callable] = None,
+    rewards: list[float] = [0.7, 0.3],
+    temperature: float = 0.85,
+    population_extra_parameters: dict = None,
+) -> Population:
     r"""A configurable evolutionary algorithm
 
     Parameters
@@ -89,6 +93,8 @@ def parametric_ea(top_frame: type[FrameABC],
         List of possible conditions needed to end the evolution
     rewards
         List of rewards for creating an individual fitter than parents [0] and for a successfully created individual [1]
+    temperature
+        A all round value to tune exploration vs exploitation
     Returns
     -------
     Population
@@ -104,7 +110,7 @@ def parametric_ea(top_frame: type[FrameABC],
         max_fitness = make_fitness(max_fitness)
         stopping_conditions.append(lambda: best.fitness == max_fitness or best.fitness >> max_fitness)
 
-    ext = Estimator(max_generation, rewards, operators)
+    ext = Estimator(max_generation, rewards, operators, max_fitness, temperature)
 
     # initialize population
     population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
@@ -125,13 +131,17 @@ def parametric_ea(top_frame: type[FrameABC],
     # begin evolution!
     while not any(s() for s in stopping_conditions):
         new_individuals = list()
+        sigma = ext.sigma(population, best.fitness)
         for _ in range(lambda_):
             op = ext.take()
             parents = list()
             for _ in range(op.num_parents):
                 parents.append(tournament_selection(population, 1))
-            new_individuals += op(*parents)
-            
+            if 'strength' in signature(op).parameters:
+                new_individuals += op(*parents, strength=sigma)
+            else:
+                new_individuals += op(*parents)
+
         if lifespan is not None:
             population.life_cycle(lifespan, 1, top_n)
         population += new_individuals

@@ -14,8 +14,9 @@ import byron
 
 COMMENT = '#'
 
+
 def define_frame():
-    register = byron.f.choice_parameter([f"${x}" for x in range(4,27)])
+    register = byron.f.choice_parameter([f"${x}" for x in range(4, 27)])
     int8 = byron.f.integer_parameter(0, 2**8)
 
     operations_rrr = byron.f.choice_parameter(['add', 'sub', 'addu', 'subu'])
@@ -24,11 +25,13 @@ def define_frame():
     op_rrr = byron.f.macro('{op} {r1}, {r2}, {r3}', op=operations_rrr, r1=register, r2=register, r3=register)
     op_rri = byron.f.macro('{op} {r1}, {r2}, {imm}', op=operations_rri, r1=register, r2=register, imm=int8)
 
-    conditions = byron.f.choice_parameter(
-        ['eq', 'ne', 'ge', 'lt', 'gt', 'le']
-    )
+    conditions = byron.f.choice_parameter(['eq', 'ne', 'ge', 'lt', 'gt', 'le'])
     branch = byron.f.macro(
-        'b{cond} {r1}, {r2}, {lbl}',cond=conditions, r1=register, r2=register, lbl=byron.f.local_reference(backward=True, loop=False, forward=True)
+        'b{cond} {r1}, {r2}, {lbl}',
+        cond=conditions,
+        r1=register,
+        r2=register,
+        lbl=byron.f.local_reference(backward=True, loop=False, forward=True),
     )
     prologue_main = byron.f.macro(
         r"""# [prologue main]
@@ -68,18 +71,16 @@ jr      $31
     )
 
     core_sub = byron.framework.bunch(
-       [op_rrr, op_rri, branch],
+        [op_rrr, op_rri, branch],
         size=(1, 5 + 1),
         weights=[operations_rrr.NUM_ALTERNATIVES, operations_rri.NUM_ALTERNATIVES, 1],
     )
     sub = byron.framework.sequence([prologue_sub, core_sub, epilogue_sub])
 
-    jump = byron.f.macro(
-        'j {label}', label=byron.f.global_reference(sub, creative_zeal=1, first_macro=True)
-    )
+    jump = byron.f.macro('j {label}', label=byron.f.global_reference(sub, creative_zeal=1, first_macro=True))
 
     core_main = byron.framework.bunch(
-       [op_rrr, op_rri, branch, jump],
+        [op_rrr, op_rri, branch, jump],
         size=(10, 15 + 1),
         weights=[operations_rrr.NUM_ALTERNATIVES, operations_rri.NUM_ALTERNATIVES, 1, 1],
     )

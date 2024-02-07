@@ -104,7 +104,7 @@ def vanilla_ea(
     population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
 
     # Initialize population
-    #ops0 = [op for op in get_operators() if op.num_parents is None]
+    # ops0 = [op for op in get_operators() if op.num_parents is None]
     ops0 = take_operators(True)
     gen0 = list()
     while len(gen0) < mu:
@@ -132,7 +132,7 @@ def vanilla_ea(
 
     # Let's roll
     while not any(s() for s in stopping_conditions):
-        #ops = [op for op in get_operators() if op.num_parents is not None]
+        # ops = [op for op in get_operators() if op.num_parents is not None]
         ops = take_operators(False)
         new_individuals = list()
         for step in range(lambda_):

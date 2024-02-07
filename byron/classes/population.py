@@ -185,7 +185,7 @@ class Population:
 
     def get_elders(self, lifespan: int, top_n: int = None) -> list[Individual]:
         return [i for i in self._individuals[top_n:] if i.age.apparent_age > lifespan]
-        
+
     def life_cycle(self, lifespan: int, step: int = 1, top_n: int = None):
         self.aging(step, top_n)
         self -= self.get_elders(lifespan, top_n)
