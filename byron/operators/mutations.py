@@ -51,14 +51,17 @@ def single_parameter_mutation(parent: Individual, strength=1.0) -> list['Individ
 
 @genetic_operator(num_parents=1)
 def single_element_array_parameter_mutation(parent: Individual, strength=1.0) -> list['Individual']:
+    scale = 0.25
+    ext_mutation = 1/(scale*strength)
     offspring = parent.clone
     candidates = [p for p in offspring.parameters if isinstance(p, ParameterArrayABC)]
     if not candidates:
         raise ByronOperatorFailure
     param = rrandom.choice(candidates)
     new_value = list(param.value)
-    i = rrandom.random_int(0, len(param.value))
-    new_value[i] = rrandom.choice(param.DIGITS)
+    for _ in range(int(len(param.value)//ext_mutation)):
+        i = rrandom.random_int(0, len(param.value))
+        new_value[i] = rrandom.choice(param.DIGITS)
     param.value = ''.join(new_value)
 
     return [offspring]
@@ -78,6 +81,17 @@ def add_macro_to_bunch(parent: Individual, strength=1.0) -> list['Individual']:
         raise ByronOperatorFailure
     node = rrandom.choice(candidates)
     successors = list(get_successors(NodeReference(G, node)))
+    #TODO: [MS] RENDI TUTTO IL COMMENTO UNA FUNZIONE e concludila
+    # not_present = set([i.BYRON_CLASS_NAME for i in G.nodes[node]["_selement"].POOL]) - set([G.nodes[i]["_selement"].BYRON_CLASS_NAME for i in successors])
+    # if len(not_present) != 0:
+    #     # vuol dire che ci sono delle Macro possibili ma non usate -> usare questo se strength == 1
+    #     pass
+    # else:
+    #     # dizionario con le occorrenze di ogni macro usando shannon
+    #     frequency = dict()
+    #     for i in successors:
+    #         frequency[G.nodes[i]["_selement"].shannon] = frequency.get(G.nodes[i]["_selement"].shannon, 0) + 1
+    #         # a questo punto dovrei far scegliere in modo pesato in base alla frequenza, scalando in base a strength
     new_macro_type = rrandom.choice(G.nodes[node]["_selement"].POOL)
     new_macro_reference = unroll_selement(new_macro_type, G)
     G.add_edge(node, new_macro_reference.node, _type=FRAMEWORK)

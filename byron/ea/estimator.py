@@ -71,6 +71,7 @@ class Estimator:
         self._rewards = rewards
         self._probabilities = [(o, 1 / len(self._operators.keys())) for o in self._operators]
         self._exploit = False
+        assert temperature > 0, f"temperature must be greater then 0"
         self._temperature = temperature
 
         if isinstance(fitness, int):
@@ -86,6 +87,10 @@ class Estimator:
             self._near = None
 
     def _compute_confidence_interval(self, op, max_l) -> float:
+        if self._operators[op].operator.stats.calls == 0:
+            self._operators[op].UCB = 0
+            self._operators[op].LCB = 0
+            return max_l
         # compute confidenze radius r(a)
         conf_radius = sqrt((2 * log(self._horizon) / self._operators[op].operator.stats.calls))
         # compute mean reward mu(a)
