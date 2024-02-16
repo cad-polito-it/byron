@@ -65,6 +65,7 @@ def parametric_ea(
     end_conditions: list[Callable] = None,
     rewards: list[float] = [0.7, 0.3],
     temperature: float = 0.85,
+    entropy: bool = False,
     population_extra_parameters: dict = None,
 ) -> Population:
     r"""A configurable evolutionary algorithm
@@ -95,6 +96,8 @@ def parametric_ea(
         List of rewards for creating an individual fitter than parents [0] and for a successfully created individual [1]
     temperature
         A all round value to tune exploration vs exploitation
+    entropy
+        Use population entropy parameter to promote diversity in population. Set True only if you understand how population entropy is computed!
     Returns
     -------
     Population
@@ -131,7 +134,7 @@ def parametric_ea(
     # begin evolution!
     while not any(s() for s in stopping_conditions):
         new_individuals = list()
-        sigma = ext.sigma(population, best.fitness)
+        sigma = ext.sigma(population, best.fitness, entropy)
         for _ in range(lambda_):
             op = ext.take()
             parents = list()

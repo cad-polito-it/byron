@@ -36,6 +36,8 @@ from byron.randy import rrandom
 from byron.tools.graph import *
 
 from networkx import dfs_preorder_nodes
+from collections import Counter
+from math import ceil, floor
 
 
 @genetic_operator(num_parents=1)
@@ -51,7 +53,7 @@ def single_parameter_mutation(parent: Individual, strength=1.0) -> list['Individ
 
 @genetic_operator(num_parents=1)
 def single_element_array_parameter_mutation(parent: Individual, strength=1.0) -> list['Individual']:
-    scale = 0.25
+    scale = 0.05
     ext_mutation = 1/(scale*strength)
     offspring = parent.clone
     candidates = [p for p in offspring.parameters if isinstance(p, ParameterArrayABC)]
@@ -59,7 +61,7 @@ def single_element_array_parameter_mutation(parent: Individual, strength=1.0) ->
         raise ByronOperatorFailure
     param = rrandom.choice(candidates)
     new_value = list(param.value)
-    for _ in range(int(len(param.value)//ext_mutation)):
+    for _ in range(ceil(len(param.value)//ext_mutation)):
         i = rrandom.random_int(0, len(param.value))
         new_value[i] = rrandom.choice(param.DIGITS)
     param.value = ''.join(new_value)
@@ -69,6 +71,7 @@ def single_element_array_parameter_mutation(parent: Individual, strength=1.0) ->
 
 @genetic_operator(num_parents=1)
 def add_macro_to_bunch(parent: Individual, strength=1.0) -> list['Individual']:
+    
     offspring = parent.clone
     G = offspring.genome
     candidates = [
@@ -81,18 +84,19 @@ def add_macro_to_bunch(parent: Individual, strength=1.0) -> list['Individual']:
         raise ByronOperatorFailure
     node = rrandom.choice(candidates)
     successors = list(get_successors(NodeReference(G, node)))
-    #TODO: [MS] RENDI TUTTO IL COMMENTO UNA FUNZIONE e concludila
-    # not_present = set([i.BYRON_CLASS_NAME for i in G.nodes[node]["_selement"].POOL]) - set([G.nodes[i]["_selement"].BYRON_CLASS_NAME for i in successors])
-    # if len(not_present) != 0:
-    #     # vuol dire che ci sono delle Macro possibili ma non usate -> usare questo se strength == 1
-    #     pass
-    # else:
-    #     # dizionario con le occorrenze di ogni macro usando shannon
-    #     frequency = dict()
-    #     for i in successors:
-    #         frequency[G.nodes[i]["_selement"].shannon] = frequency.get(G.nodes[i]["_selement"].shannon, 0) + 1
-    #         # a questo punto dovrei far scegliere in modo pesato in base alla frequenza, scalando in base a strength
+    # check if any macro in the pool is not present in successors
+    not_present = set([i for i, n in enumerate(G.nodes[node]["_selement"].POOL) if n.BYRON_CLASS_NAME not in [G.nodes[i]["_selement"].BYRON_CLASS_NAME for i in successors]])
+    if len(not_present) != 0 and strength >= 0.5:
+        new_macro_type = G.nodes[node]["_selement"].POOL[rrandom.choice(list(not_present))]
+    else:
+        # take a list of the successors ordered by frequency
+        frequency_ordered = [n for n,_ in Counter([G.nodes[i]["_selement"].BYRON_CLASS_NAME for i in successors]).most_common()]
+        macro_fo = [m for m in G.nodes[node]["_selement"].POOL if m.BYRON_CLASS_NAME in frequency_ordered]
+        # randomly select a macro. The less the strength, the less the variety of macros
+        new_macro_type = rrandom.choice(macro_fo[:ceil(len(macro_fo)*strength)])
+
     new_macro_type = rrandom.choice(G.nodes[node]["_selement"].POOL)
+        
     new_macro_reference = unroll_selement(new_macro_type, G)
     G.add_edge(node, new_macro_reference.node, _type=FRAMEWORK)
     initialize_subtree(new_macro_reference)
@@ -114,13 +118,16 @@ def remove_macro_from_bunch(parent: Individual, strength=1.0) -> list['Individua
         raise ByronOperatorFailure
     frame_node = rrandom.choice(frame_candidates)
     candidates = [
-        n
+        (n, G.nodes[n]["_selement"].BYRON_CLASS_NAME)
         for n in dfs_preorder_nodes(G, frame_node)
         if isinstance(G.nodes[n]["_selement"], Macro) and G.in_degree(n) == 1
     ]
 
     if not candidates:
         raise ByronOperatorFailure
-    node = rrandom.choice(candidates)
+    
+    frequency_candidates = [c[0] for c in sorted(candidates, key = lambda x: Counter(i[1] for i in candidates)[x[1]], reverse=True)]
+
+    node = rrandom.choice(frequency_candidates[floor(len(frequency_candidates)*(1-strength)):])
     G.remove_node(node)
     return [offspring]

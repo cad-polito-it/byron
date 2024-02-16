@@ -42,7 +42,9 @@ class Estimator:
     _rewards: list[float]
     _probabilities: list[tuple]
     _near: FitnessABC | None
+    _best: FitnessABC | None
     _temperature: float
+    _max_t: float
     _exploit: bool
 
     class I:
@@ -58,7 +60,7 @@ class Estimator:
     def __init__(
         self,
         time_horizon: int,
-        rewards: list[float] = [0.7, 0.01],
+        rewards: list[float] = [0.7, 0.3],
         operators: list[Callable] = None,
         fitness: int | float | Sequence = None,
         temperature: float = 0.85,
@@ -73,6 +75,8 @@ class Estimator:
         self._exploit = False
         assert temperature > 0, f"temperature must be greater then 0"
         self._temperature = temperature
+        self._max_t = temperature
+        self._best = None
 
         if isinstance(fitness, int):
             self._near = make_fitness(ceil(fitness * temperature))
@@ -111,10 +115,10 @@ class Estimator:
         self._time += 1
 
         if self._exploit:
-            if self._temperature > self._temperature * 0.3:
-                self._temperature -= 0.1 * self._temperature
+            if self._temperature > self._max_t * 0.15:
+                self._temperature *= 0.95
             else:
-                self._temperature += 0.1 * self._temperature
+                self._temperature *= 1.05
 
         # Successive Elimination Algorithm
         max_l = 0
@@ -134,14 +138,25 @@ class Estimator:
             rrandom.weighted_choice([p[0] for p in self._probabilities], [p[1] for p in self._probabilities])
         ].operator
 
-    def sigma(self, population, actual_fitness) -> float:
+    def sigma(self, population, actual_fitness, use_entropy) -> float:
         # check fitness but also check entropy to avoid excessive reduction in diversity in the population
         if (
             self._near is not None
             and actual_fitness > self._near
-            and population.entropy >= log(len(population) // (1 - self._temperature))
         ):
-            self._exploit = True
+            if self._best is None:
+                self._best = actual_fitness
+            if self._best >= actual_fitness:
+                self._exploit = False
+            elif use_entropy:
+                # if every individual in population is different, entropy == log(len(population)) -> with temperature it's possible to tweak how many individuals (in %) need to be different
+                if population.entropy >= log(len(population) * (1 - self._temperature)):
+                    self._best = actual_fitness
+                    self._exploit = True
+            else:
+                self._best = actual_fitness
+                self._exploit = True
+                print(self._temperature)
             return self._temperature
         else:
             return 1
