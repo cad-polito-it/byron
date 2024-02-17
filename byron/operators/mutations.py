@@ -54,14 +54,14 @@ def single_parameter_mutation(parent: Individual, strength=1.0) -> list['Individ
 @genetic_operator(num_parents=1)
 def single_element_array_parameter_mutation(parent: Individual, strength=1.0) -> list['Individual']:
     scale = 0.05
-    ext_mutation = 1/(scale*strength)
+    ext_mutation = 1 / (scale * strength)
     offspring = parent.clone
     candidates = [p for p in offspring.parameters if isinstance(p, ParameterArrayABC)]
     if not candidates:
         raise ByronOperatorFailure
     param = rrandom.choice(candidates)
     new_value = list(param.value)
-    for _ in range(ceil(len(param.value)//ext_mutation)):
+    for _ in range(ceil(len(param.value) // ext_mutation)):
         i = rrandom.random_int(0, len(param.value))
         new_value[i] = rrandom.choice(param.DIGITS)
     param.value = ''.join(new_value)
@@ -71,7 +71,7 @@ def single_element_array_parameter_mutation(parent: Individual, strength=1.0) ->
 
 @genetic_operator(num_parents=1)
 def add_macro_to_bunch(parent: Individual, strength=1.0) -> list['Individual']:
-    
+
     offspring = parent.clone
     G = offspring.genome
     candidates = [
@@ -85,18 +85,26 @@ def add_macro_to_bunch(parent: Individual, strength=1.0) -> list['Individual']:
     node = rrandom.choice(candidates)
     successors = list(get_successors(NodeReference(G, node)))
     # check if any macro in the pool is not present in successors
-    not_present = set([i for i, n in enumerate(G.nodes[node]["_selement"].POOL) if n.BYRON_CLASS_NAME not in [G.nodes[i]["_selement"].BYRON_CLASS_NAME for i in successors]])
+    not_present = set(
+        [
+            i
+            for i, n in enumerate(G.nodes[node]["_selement"].POOL)
+            if n.BYRON_CLASS_NAME not in [G.nodes[i]["_selement"].BYRON_CLASS_NAME for i in successors]
+        ]
+    )
     if len(not_present) != 0 and strength >= 0.5:
         new_macro_type = G.nodes[node]["_selement"].POOL[rrandom.choice(list(not_present))]
     else:
         # take a list of the successors ordered by frequency
-        frequency_ordered = [n for n,_ in Counter([G.nodes[i]["_selement"].BYRON_CLASS_NAME for i in successors]).most_common()]
+        frequency_ordered = [
+            n for n, _ in Counter([G.nodes[i]["_selement"].BYRON_CLASS_NAME for i in successors]).most_common()
+        ]
         macro_fo = [m for m in G.nodes[node]["_selement"].POOL if m.BYRON_CLASS_NAME in frequency_ordered]
         # randomly select a macro. The less the strength, the less the variety of macros
-        new_macro_type = rrandom.choice(macro_fo[:ceil(len(macro_fo)*strength)])
+        new_macro_type = rrandom.choice(macro_fo[: ceil(len(macro_fo) * strength)])
 
     new_macro_type = rrandom.choice(G.nodes[node]["_selement"].POOL)
-        
+
     new_macro_reference = unroll_selement(new_macro_type, G)
     G.add_edge(node, new_macro_reference.node, _type=FRAMEWORK)
     initialize_subtree(new_macro_reference)
@@ -125,9 +133,11 @@ def remove_macro_from_bunch(parent: Individual, strength=1.0) -> list['Individua
 
     if not candidates:
         raise ByronOperatorFailure
-    
-    frequency_candidates = [c[0] for c in sorted(candidates, key = lambda x: Counter(i[1] for i in candidates)[x[1]], reverse=True)]
 
-    node = rrandom.choice(frequency_candidates[floor(len(frequency_candidates)*(1-strength)):])
+    frequency_candidates = [
+        c[0] for c in sorted(candidates, key=lambda x: Counter(i[1] for i in candidates)[x[1]], reverse=True)
+    ]
+
+    node = rrandom.choice(frequency_candidates[floor(len(frequency_candidates) * (1 - strength)) :])
     G.remove_node(node)
     return [offspring]

@@ -140,10 +140,7 @@ class Estimator:
 
     def sigma(self, population, actual_fitness, use_entropy) -> float:
         # check fitness but also check entropy to avoid excessive reduction in diversity in the population
-        if (
-            self._near is not None
-            and actual_fitness > self._near
-        ):
+        if self._near is not None and actual_fitness > self._near:
             if self._best is None:
                 self._best = actual_fitness
             if self._best >= actual_fitness:
