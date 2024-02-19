@@ -9,7 +9,7 @@
 #                                                                           #
 #############################################################################
 
-# Copyright 2023 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
 if [[ $1 == -f ]]; then

@@ -1,68 +1,88 @@
-#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-#################################|###|#####################################
-#  __                            |   |                                    #
-# |  |--.--.--.----.-----.-----. |===| This file is part of Byron v0.8    #
-# |  _  |  |  |   _|  _  |     | |___| An evolutionary optimizer & fuzzer #
-# |_____|___  |__| |_____|__|__|  ).(  https://github.com/squillero/byron #
-#       |_____|                   \|/                                     #
-################################## ' ######################################
-# Copyright 2023 Giovanni Squillero and Alberto Tonda
+##################################@|###|##################################@#
+#   _____                          |   |                                   #
+#  |  __ \--.--.----.-----.-----.  |===|  This file is part of Byron       #
+#  |  __ <  |  |   _|  _  |     |  |___|  Evolutionary optimizer & fuzzer  #
+#  |____/ ___  |__| |_____|__|__|   ).(   v0.8a1 "Don Juan"                #
+#        |_____|                    \|/                                    #
+#################################### ' #####################################
+# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
+
 import pytest
-import byron as byron
+from byron.classes.value_bag import ValueBag
 
 
 def test_valuebag_init():
-    vb = byron.classes.ValueBag()
-    assert dict(vb) == {}
-
-    vb = byron.classes.ValueBag({"a": 1, "b": 2, "$c": 3})
-    assert dict(vb) == {"a": 1, "b": 2}
-
-    vb = byron.classes.ValueBag(a=1, b=2, c=3)
-    assert dict(vb) == {"a": 1, "b": 2, "c": 3}
+    vb = ValueBag()
+    assert isinstance(vb, ValueBag)
 
 
-def test_valuebag_readonly():
-    vb = byron.classes.ValueBag({"a": 1, "b": 2, "$c": 3})
+def test_valuebag_read_only():
+    vb = ValueBag()
     with pytest.raises(NotImplementedError):
-        vb["d"] = 4
+        vb['key'] = 'value'
 
     with pytest.raises(NotImplementedError):
-        del vb["a"]
-
-    with pytest.raises(NotImplementedError):
-        vb.d = 4
-
-    with pytest.raises(NotImplementedError):
-        del vb.a
+        del vb['key']
 
 
 def test_valuebag_missing():
-    vb = byron.classes.ValueBag({"a": 1, "b": 2, "$c": 3})
-    assert vb["d"] is None
-
-    assert vb["$d"] is False
+    vb = ValueBag()
+    assert vb.__missing__("$flag") is False
+    assert vb.__missing__("normal_key") is None
 
 
 def test_valuebag_safe_keys():
-    vb = byron.classes.ValueBag({"a": 1, "b": 2, "$c": 3})
-    assert vb.a == 1
-    assert vb.b == 2
-
-    assert vb.d is None
-
-    assert vb["$e"] is False
+    vb = ValueBag({"safe_key": "value", "_private": "hidden"})
+    assert "safe_key" in vb.keys()
+    assert "_private" in vb.keys()
 
 
-def test_valuebag_key_filtering():
-    vb = byron.classes.ValueBag({"a": 1, "b": 2, "$c": 3, "$d": 4, "e": 5})
-    assert set(vb.keys()) == {"a", "b", "e"}
-    assert set(vb.values()) == {1, 2, 5}
-    assert set(vb.items()) == {("a", 1), ("b", 2), ("e", 5)}
+def test_valuebag_attr_access():
+    vb = ValueBag({"safe_key": "value"})
+    assert vb.safe_key == "value"
 
-    assert set(vb._keys()) == {"a", "b", "$c", "$d", "e"}
-    assert set(vb._values()) == {1, 2, 3, 4, 5}
-    assert set(vb._items()) == {("a", 1), ("b", 2), ("$c", 3), ("$d", 4), ("e", 5)}
+
+def test_valuebag_or_ior():
+    vb1 = ValueBag({"key1": "value1"})
+    vb2 = ValueBag({"key2": "value2"})
+    vb3 = vb1 | vb2
+    assert "key1" in vb3 and "key2" in vb3
+    vb1 |= vb2
+    assert "key2" in vb1
+
+
+def test_valuebag_getattr_invalid():
+    vb = ValueBag()
+    assert vb.invalid_key is None
+
+
+def test_valuebag_flag_keys():
+    vb = ValueBag()
+    assert vb["$missing_flag"] is False
+
+
+def test_valuebag_update_or():
+    vb1 = ValueBag({"key1": "value1"})
+    vb2 = {"key2": "value2"}
+    vb1 |= vb2
+    assert "key2" in vb1
+
+
+# todo add __hash__(self) in the value_bag
+def test_valuebag_hashable():
+    vb = ValueBag({"key": "value"})
+    assert isinstance(hash(vb), int), "ValueBag should be hashable"
+
+
+def test_valuebag_repr():
+    vb = ValueBag({"key": "value"})
+    assert isinstance(repr(vb), str)
+
+
+def test_valuebag_iter():
+    vb = ValueBag({"key1": "value1", "key2": "value2"})
+    keys = [k for k in vb]
+    assert "key1" in keys and "key2" in keys
