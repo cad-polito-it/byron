@@ -85,6 +85,7 @@ class Age:
 
     def __iadd__(self, generations):
         self.apparent_age += generations
+        return self
 
     def __str__(self):
         return f'⚝ {self.birth}' + (f' (⌛ {self.apparent_age})' if self.apparent_age else '')
@@ -230,8 +231,8 @@ class Individual(Paranoid):
         return self._age
 
     @age.setter
-    def age(self, value: int):
-        assert value >= 0
+    def age(self, value: Age):
+        assert value is not None
         self._age = value
 
     @property
@@ -302,6 +303,9 @@ class Individual(Paranoid):
 
     #######################################################################
     # PUBLIC METHODS
+
+    def aging(self, step: int = 1):
+        self.age += step
 
     def run_paranoia_checks(self) -> bool:
         # ==[check genome (structural)]======================================

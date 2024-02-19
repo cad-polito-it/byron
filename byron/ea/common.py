@@ -25,4 +25,16 @@
 # =[ HISTORY ]===============================================================
 # v1 / April 2023 / Squillero (GX)
 
-__all__ = []
+__all__ = ["take_operators"]
+
+from typing import Callable
+
+from byron.sys import get_operators
+
+
+def take_operators(no_parents: bool, operators_list: list[Callable] = None) -> list[Callable]:
+    if operators_list is None or (flag := all((op.num_parents is not None) != no_parents for op in operators_list)):
+        ops = [op for op in get_operators() if (op.num_parents is None) == no_parents]
+    elif not flag:
+        ops = [op for op in operators_list if (op.num_parents is None) == no_parents]
+    return ops

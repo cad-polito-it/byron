@@ -159,7 +159,7 @@ def make_fitness(data: Any):
     elif isinstance(data, float):
         return Scalar(data)
     elif isinstance(data, Sequence):
-        logger.warning(f"{data}")
+        # logger.warning(f"{data}")
         return Lexicographic(data)
     else:
         assert (
