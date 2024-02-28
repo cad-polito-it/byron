@@ -25,7 +25,7 @@
 # =[ HISTORY ]===============================================================
 # v1 / July 2023 / Squillero (GX)
 
-__all__ = ["parametric_ea"]
+__all__ = ["adaptive_ea"]
 
 
 from typing import Callable
@@ -42,17 +42,15 @@ from .common import take_operators
 from .selection import *
 from .estimator import Estimator
 
-from math import sqrt, log
-
 
 def _new_best(population: Population, evaluator: EvaluatorABC):
     logger.info(
-        f"ParametricEA: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
+        f"AdaptiveEA: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
         + f" [🕓 gen: {population.generation:,} / fcalls: {evaluator.fitness_calls:,}]"
     )
 
 
-def parametric_ea(
+def adaptive_ea(
     top_frame: type[FrameABC],
     evaluator: EvaluatorABC,
     mu: int = 10,
@@ -68,7 +66,7 @@ def parametric_ea(
     entropy: bool = False,
     population_extra_parameters: dict = None,
 ) -> Population:
-    r"""A configurable evolutionary algorithm
+    r"""A configurable self-adaptive evolutionary algorithm
 
     Parameters
     ----------
@@ -162,7 +160,7 @@ def parametric_ea(
             best = population[0]
             _new_best(population, evaluator)
 
-    logger.info("ParametricEA: Genetic operators statistics:")
+    logger.info("AdaptiveEA: Genetic operators statistics:")
     for op in get_operators():
-        logger.info(f"ParametricEA: * {op.__qualname__}: {op.stats}")
+        logger.info(f"AdaptiveEA: * {op.__qualname__}: {op.stats}")
     return population

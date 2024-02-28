@@ -25,7 +25,7 @@
 # v1 / June 2023 / Squillero (GX)
 
 from .vanilla import *
-from .parametric import *
+from .adaptive import *
 from .selection import *
 from .check import *
 from .common import *

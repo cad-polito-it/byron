@@ -101,7 +101,7 @@ class Individual(Paranoid):
     All tree root nodes are connected to "Node Zero" -- thus, technically, it is not a forest, but a single tree :$
 
     Edges of `kind=FRAMEWORK` store the structure, while edges of `kind=LINK` store parameters and other references
-    -- thus, technically, the individual is not even a tree, but a weekly-connected multigraph that may contains
+    -- thus, technically, the individual is not even a tree, but a weakly-connected multigraph that may contains
     loops ://)
 
     Individuals are created by passing a reference to the top frame. Please note that frames are types, and their
