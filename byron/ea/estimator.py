@@ -153,7 +153,7 @@ class Estimator:
             else:
                 self._best = actual_fitness
                 self._exploit = True
-                print(self._temperature)
+               # print(self._temperature)
             return self._temperature
         else:
             return 1
