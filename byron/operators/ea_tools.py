@@ -71,20 +71,26 @@ def group_selements(
 
     partial_filters = list()
     if only_direct_targets:
+        # only nodes that are targets (ie. with fanin > 1)
         partial_filters.append(lambda G, n: _is_target(G, n))
     if only_heads:
+        # only nodes that are heads (ie. the first node of a macro)
         partial_filters.append(lambda G, n: _is_head(G, n))
     node_filter = lambda G, n: all(f(G, n) for f in partial_filters)
 
     if choosy:
+        # group based on type path
         make_index = lambda G, path: tuple(G.nodes[v]['_selement'].__class__ for v in path)
     else:
+        # group based on type
         make_index = lambda G, path: ind.genome.nodes[path[-1]]['_selement'].__class__
 
     groups = defaultdict(lambda: defaultdict(list))
     for ind in individuals:
         for node, path in nx.single_source_dijkstra_path(ind.genome, 0).items():
-            groups[make_index(ind.genome, path)][ind].append(node)
+            if node_filter(ind.genome, node):
+                # thanks dimitri!!!!
+                groups[make_index(ind.genome, path)][ind].append(node)
 
     # remove NodeZero
     for cleanup in {MacroZero, (MacroZero,)}:
