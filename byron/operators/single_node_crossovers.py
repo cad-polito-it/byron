@@ -54,8 +54,6 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
         if len(elements) < 2:
             continue
         for ind, nodes in elements.items():
-            if 664 in nodes:
-                pass
             plausible_nodes = [
                 n for n in nodes if link_type in set(t for u, v, t in ind.genome.in_edges(n, data='_type'))
             ]
@@ -82,12 +80,12 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
     #    [(u, v, k, d) for u, v, k, d in node2_fanin if d['_type'] == node1_parent_link[3]['_type']]
     # )
 
-    node_bunch = tuple(_connected_nodes(new_genome, node2))
-    for n in node_bunch:
-        for node, key in tuple(
-            (u, k) for u, v, k, d in new_genome.in_edges(node2, keys=True, data='_type') if d == LINK
-        ):
-            new_genome.remove_edge(node, node2, key)
+    # TODO: !!!
+    # 1. trovare i successori di node2
+    # 2. S = {node2, tutti i suoi successori} -- componente connessa che contiene node2?
+    # 3. rimuovere tutti i link entranti in S che non partono da S
+    for node, key in tuple((u, k) for u, v, k, d in new_genome.in_edges(node2, keys=True, data='_type') if d == LINK):
+        new_genome.remove_edge(node, node2, key)
 
     logger.debug(
         f"generic_node_crossover: "
@@ -126,14 +124,17 @@ def _generic_node_crossover(parent1: Individual, parent2: Individual, *, choosy:
 
 @genetic_operator(num_parents=2)
 def node_crossover_choosy(parent1: Individual, parent2: Individual):
+    # Swaps two node with exactly the same path-type (ie. parents must be of the same types)
     return _generic_node_crossover(parent1, parent2, choosy=True, link_type=LINK)
 
 
 @genetic_operator(num_parents=2)
 def node_crossover_unfussy(parent1: Individual, parent2: Individual):
+    # Swaps two target nodes of the same type
     return _generic_node_crossover(parent1, parent2, choosy=False, link_type=LINK)
 
 
 @genetic_operator(num_parents=2)
 def leaf_crossover_unfussy(parent1: Individual, parent2: Individual):
-    return _generic_node_crossover(parent1, parent2, choosy=True, link_type=FRAMEWORK)
+    # Swaps two generic nodes of the same type
+    return _generic_node_crossover(parent1, parent2, choosy=False, link_type=FRAMEWORK)
