@@ -111,10 +111,12 @@ def adaptive_ea(
         max_fitness = make_fitness(max_fitness)
         stopping_conditions.append(lambda: best.fitness == max_fitness or best.fitness >> max_fitness)
 
-    ext = Estimator(max_generation, rewards, operators, max_fitness, temperature)
 
     # initialize population
     population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
+    
+    ext = Estimator(population, max_generation, rewards, operators, max_fitness, temperature)
+    
     ops0 = take_operators(True, operators)
 
     gen0 = list()
@@ -132,7 +134,7 @@ def adaptive_ea(
     # begin evolution!
     while not any(s() for s in stopping_conditions):
         new_individuals = list()
-        sigma = ext.sigma(population, best.fitness, entropy)
+        sigma = ext.sigma(entropy)
         for _ in range(lambda_):
             op = ext.take()
             parents = list()
@@ -150,11 +152,11 @@ def adaptive_ea(
         evaluator(population)
         population.sort()
 
-        ext.update()
-
         all_individuals |= set(population)
 
         population.individuals[mu:] = []
+        
+        ext.update()
 
         if best.fitness << population[0].fitness:
             best = population[0]

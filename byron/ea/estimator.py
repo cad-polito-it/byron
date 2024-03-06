@@ -31,11 +31,13 @@ from math import sqrt, log, ceil
 
 from byron.fitness import make_fitness
 from byron.randy import rrandom
+from byron.classes import Population
 from byron.classes.fitness import FitnessABC
 from byron.ea.common import take_operators
 
 
 class Estimator:
+    _population: Population
     _time: int
     _horizon: int
     _operators: dict
@@ -59,12 +61,14 @@ class Estimator:
 
     def __init__(
         self,
+        population,
         time_horizon: int,
         rewards: list[float] = [0.7, 0.3],
         operators: list[Callable] = None,
         fitness: int | float | Sequence = None,
         temperature: float = 0.85,
     ):
+        self._population = population
         self._operators = dict([[o.__name__, self.I(o, 0, 0)] for o in take_operators(False, operators)])
         assert time_horizon > 0, f"time_horizon need to be positive integer"
         self._horizon = time_horizon
@@ -132,28 +136,27 @@ class Estimator:
         # every quarter of the run check again also discarded operators
         if self._time % (self._horizon // 4) == 0:
             self._probabilities = [(o, 1 / len(self._operators.keys())) for o in self._operators]
-
+        
     def take(self) -> Callable:
         return self._operators[
             rrandom.weighted_choice([p[0] for p in self._probabilities], [p[1] for p in self._probabilities])
         ].operator
 
-    def sigma(self, population, actual_fitness, use_entropy) -> float:
+    def sigma(self, use_entropy) -> float:
         # check fitness but also check entropy to avoid excessive reduction in diversity in the population
-        if self._near is not None and actual_fitness > self._near:
+        if self._near is not None and self._population[0].fitness > self._near:
             if self._best is None:
-                self._best = actual_fitness
-            if self._best >= actual_fitness:
+                self._best = self._population[0].fitness
+            if self._best >= self._population[0].fitness:
                 self._exploit = False
             elif use_entropy:
                 # if every individual in population is different, entropy == log(len(population)) -> with temperature it's possible to tweak how many individuals (in %) need to be different
-                if population.entropy >= log(len(population) * (1 - self._temperature)):
-                    self._best = actual_fitness
+                if self._population.entropy >= log(len(self._population) * (1 - self._temperature)):
+                    self._best = self._population[0].fitness
                     self._exploit = True
             else:
-                self._best = actual_fitness
+                self._best = self._population[0].fitness
                 self._exploit = True
-               # print(self._temperature)
             return self._temperature
         else:
             return 1
