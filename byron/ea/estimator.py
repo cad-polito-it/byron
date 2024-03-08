@@ -130,7 +130,7 @@ class Estimator:
             max_l = self._compute_confidence_interval(op, max_l)
         # check max LCB against every operator so that, if repeated failures happen between the chosen operators,
         # when LCB decrease, we automatically select also previously excluded operators
-        valid_operators = [i for i in self._operators if self._operators[i].UCB > max_l]
+        valid_operators = [i for i in self._operators if self._operators[i].UCB >= max_l]
         self._probabilities = [(o, 1 / len(valid_operators)) for o in valid_operators]
 
         # every quarter of the run check again also discarded operators
