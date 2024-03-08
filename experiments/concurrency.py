@@ -9,15 +9,15 @@
 # Copyright 2023-24 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
-JOB_SIZE = 200_000
-NUM_JOBS = 10
-
 import logging
 import time
 import subprocess
 import threading
 import multiprocessing
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
+
+JOB_SIZE = 200_000
+NUM_JOBS = 10
 
 
 def prime(num: int) -> bool:

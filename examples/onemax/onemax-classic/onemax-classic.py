@@ -17,7 +17,7 @@ import byron
 
 NUM_BITS = 50
 
-
+from icecream import ic
 @byron.fitness_function
 def fitness(genotype):
     """Vanilla 1-max"""
