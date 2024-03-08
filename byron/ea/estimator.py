@@ -134,7 +134,7 @@ class Estimator:
         self._probabilities = [(o, 1 / len(valid_operators)) for o in valid_operators]
 
         # every quarter of the run check again also discarded operators
-        if self._time % (self._horizon // 4) == 0:
+        if self._time % ceil(self._horizon / 4) == 0:
             self._probabilities = [(o, 1 / len(self._operators.keys())) for o in self._operators]
         
     def take(self) -> Callable:
