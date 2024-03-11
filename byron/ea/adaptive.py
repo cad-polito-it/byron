@@ -156,8 +156,6 @@ def adaptive_ea(
 
         population.individuals[mu:] = []
         
-        ext.update()
-
         if best.fitness << population[0].fitness:
             best = population[0]
             _new_best(population, evaluator)

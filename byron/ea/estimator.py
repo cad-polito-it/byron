@@ -115,27 +115,29 @@ class Estimator:
         else:
             return max_l
 
-    def update(self):
-        self._time += 1
+    def _update(self):
 
-        if self._exploit:
-            if self._temperature > self._max_t * 0.15:
-                self._temperature *= 0.95
-            else:
-                self._temperature *= 1.05
+        if self._time < self._population.generation:
+            self._time = self._population.generation
 
-        # Successive Elimination Algorithm
-        max_l = 0
-        for op, _ in self._probabilities:
-            max_l = self._compute_confidence_interval(op, max_l)
-        # check max LCB against every operator so that, if repeated failures happen between the chosen operators,
-        # when LCB decrease, we automatically select also previously excluded operators
-        valid_operators = [i for i in self._operators if self._operators[i].UCB >= max_l]
-        self._probabilities = [(o, 1 / len(valid_operators)) for o in valid_operators]
+            if self._exploit:
+                if self._temperature > self._max_t * 0.15:
+                    self._temperature *= 0.95
+                else:
+                    self._temperature *= 1.05
 
-        # every quarter of the run check again also discarded operators
-        if self._time % ceil(self._horizon / 4) == 0:
-            self._probabilities = [(o, 1 / len(self._operators.keys())) for o in self._operators]
+            # Successive Elimination Algorithm
+            max_l = 0
+            for op, _ in self._probabilities:
+                max_l = self._compute_confidence_interval(op, max_l)
+            # check max LCB against every operator so that, if repeated failures happen between the chosen operators,
+            # when LCB decrease, we automatically select also previously excluded operators
+            valid_operators = [i for i in self._operators if self._operators[i].UCB >= max_l]
+            self._probabilities = [(o, 1 / len(valid_operators)) for o in valid_operators]
+
+            # every quarter of the run check again also discarded operators
+            if self._time % ceil(self._horizon / 4) == 0:
+                self._probabilities = [(o, 1 / len(self._operators.keys())) for o in self._operators]
         
     def take(self) -> Callable:
         return self._operators[
@@ -143,6 +145,7 @@ class Estimator:
         ].operator
 
     def sigma(self, use_entropy) -> float:
+        self._update()
         # check fitness but also check entropy to avoid excessive reduction in diversity in the population
         if self._near is not None and self._population[0].fitness > self._near:
             if self._best is None:
