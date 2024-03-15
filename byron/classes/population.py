@@ -46,6 +46,7 @@ class Population:
     _fitness_function: Callable[[Any], FitnessABC]
     _individuals: list[Individual]
     _memory: set | None
+    _generation: int
 
     def __init__(self, top_frame: type[SElement], extra_parameters: dict | None = None, *, memory: bool = False):
         assert check_valid_types(top_frame, SElement, subclass=True)

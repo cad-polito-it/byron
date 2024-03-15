@@ -103,7 +103,7 @@ def add_macro_to_bunch(parent: Individual, strength=1.0) -> list['Individual']:
         # randomly select a macro. The less the strength, the less the variety of macros
         new_macro_type = rrandom.choice(macro_fo[: ceil(len(macro_fo) * strength)])
 
-    new_macro_type = rrandom.choice(G.nodes[node]["_selement"].POOL)
+   # new_macro_type = rrandom.choice(G.nodes[node]["_selement"].POOL)
 
     new_macro_reference = unroll_selement(new_macro_type, G)
     G.add_edge(node, new_macro_reference.node, _type=FRAMEWORK)

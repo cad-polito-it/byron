@@ -25,7 +25,7 @@
 # =[ HISTORY ]===============================================================
 # v1 / July 2023 / Squillero (GX)
 
-__all__ = ["parametric_ea"]
+__all__ = ["adaptive_ea"]
 
 
 from typing import Callable
@@ -42,17 +42,15 @@ from .common import take_operators
 from .selection import *
 from .estimator import Estimator
 
-from math import sqrt, log
-
 
 def _new_best(population: Population, evaluator: EvaluatorABC):
     logger.info(
-        f"ParametricEA: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
+        f"AdaptiveEA: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
         + f" [🕓 gen: {population.generation:,} / fcalls: {evaluator.fitness_calls:,}]"
     )
 
 
-def parametric_ea(
+def adaptive_ea(
     top_frame: type[FrameABC],
     evaluator: EvaluatorABC,
     mu: int = 10,
@@ -68,7 +66,7 @@ def parametric_ea(
     entropy: bool = False,
     population_extra_parameters: dict = None,
 ) -> Population:
-    r"""A configurable evolutionary algorithm
+    r"""A configurable self-adaptive evolutionary algorithm
 
     Parameters
     ----------
@@ -113,10 +111,12 @@ def parametric_ea(
         max_fitness = make_fitness(max_fitness)
         stopping_conditions.append(lambda: best.fitness == max_fitness or best.fitness >> max_fitness)
 
-    ext = Estimator(max_generation, rewards, operators, max_fitness, temperature)
 
     # initialize population
     population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
+    
+    ext = Estimator(population, max_generation, rewards, operators, max_fitness, temperature)
+    
     ops0 = take_operators(True, operators)
 
     gen0 = list()
@@ -134,7 +134,7 @@ def parametric_ea(
     # begin evolution!
     while not any(s() for s in stopping_conditions):
         new_individuals = list()
-        sigma = ext.sigma(population, best.fitness, entropy)
+        sigma = ext.sigma(entropy)
         for _ in range(lambda_):
             op = ext.take()
             parents = list()
@@ -152,17 +152,15 @@ def parametric_ea(
         evaluator(population)
         population.sort()
 
-        ext.update()
-
         all_individuals |= set(population)
 
         population.individuals[mu:] = []
-
+        
         if best.fitness << population[0].fitness:
             best = population[0]
             _new_best(population, evaluator)
 
-    logger.info("ParametricEA: Genetic operators statistics:")
+    logger.info("AdaptiveEA: Genetic operators statistics:")
     for op in get_operators():
-        logger.info(f"ParametricEA: * {op.__qualname__}: {op.stats}")
+        logger.info(f"AdaptiveEA: * {op.__qualname__}: {op.stats}")
     return population
