@@ -144,6 +144,7 @@ class Estimator:
             rrandom.weighted_choice([p[0] for p in self._probabilities], [p[1] for p in self._probabilities])
         ].operator
 
+    # TODO: Remove use_entropy when entropy will be fully implemented
     def sigma(self, use_entropy) -> float:
         self._update()
         # check fitness but also check entropy to avoid excessive reduction in diversity in the population
