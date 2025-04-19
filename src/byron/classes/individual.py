@@ -6,7 +6,7 @@
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -252,9 +252,9 @@ class Individual(Paranoid):
 
     def _check_fitness(self, value) -> bool:
         check_valid_types(value, FitnessABC)
-        assert (
-            not self.finalized
-        ), f"{PARANOIA_VALUE_ERROR}: Individual marked as final, fitness value already set to {self._fitness}"
+        assert not self.finalized, (
+            f"{PARANOIA_VALUE_ERROR}: Individual marked as final, fitness value already set to {self._fitness}"
+        )
         return True
 
     @fitness.setter
@@ -317,25 +317,25 @@ class Individual(Paranoid):
         assert self.genome == self._genome, f"{PARANOIA_VALUE_ERROR}: Panic!"
         assert self.genome == self.G, f"{PARANOIA_VALUE_ERROR}: Panic!"
 
-        assert all(
-            isinstance(n, Node) for n in self._genome.nodes
-        ), f"{PARANOIA_TYPE_ERROR}: Genome index not a Byron Node"
+        assert all(isinstance(n, Node) for n in self._genome.nodes), (
+            f"{PARANOIA_TYPE_ERROR}: Genome index not a Byron Node"
+        )
 
         assert self.genome == self._genome, f"{PARANOIA_VALUE_ERROR}: Panic: genome != _genome"
-        assert nx.is_weakly_connected(
-            self._genome
-        ), f"{PARANOIA_VALUE_ERROR}: Genome of {self!r} is not a connected graph"
+        assert nx.is_weakly_connected(self._genome), (
+            f"{PARANOIA_VALUE_ERROR}: Genome of {self!r} is not a connected graph"
+        )
 
         G = nx.MultiDiGraph()
         G.add_edges_from(self.G.edges)
         G.remove_node(NODE_ZERO)
-        assert (
-            sum(1 for _ in nx.weakly_connected_components(G)) == 1
-        ), f"{PARANOIA_TYPE_ERROR}: Individual is not a weakly connected graph"
+        assert sum(1 for _ in nx.weakly_connected_components(G)) == 1, (
+            f"{PARANOIA_TYPE_ERROR}: Individual is not a weakly connected graph"
+        )
 
-        assert nx.is_branching(self.structure_tree) and nx.is_weakly_connected(
-            self.structure_tree
-        ), f"{PARANOIA_VALUE_ERROR}: Structure_tree of {self!r} is not a tree"
+        assert nx.is_branching(self.structure_tree) and nx.is_weakly_connected(self.structure_tree), (
+            f"{PARANOIA_VALUE_ERROR}: Structure_tree of {self!r} is not a tree"
+        )
 
         assert set(self.genome.nodes) == set(self.structure_tree.nodes), (
             f"{PARANOIA_VALUE_ERROR}: Node mismatch with structure tree: "
@@ -343,23 +343,23 @@ class Individual(Paranoid):
         )
 
         # ==[check genome (fitness)]=========================================
-        assert (self._fitness is None and not self.finalized) or (
-            self._fitness is not None and self.finalized
-        ), "Value Error (paranoia check): Mismatch fitness and is_finalized"
+        assert (self._fitness is None and not self.finalized) or (self._fitness is not None and self.finalized), (
+            "Value Error (paranoia check): Mismatch fitness and is_finalized"
+        )
 
         # ==[check edges (semantic)]=========================================
         edges = self._genome.edges(keys=True, data=True)
         assert all('_type' in d for u, v, k, d in edges), "ValueError (paranoia check): missing '_type' attribute"
-        assert all(
-            d['_type'] != FRAMEWORK or len(d) == 1 for u, v, k, d in edges
-        ), "ValueError (paranoia check): unknown attribute in tree edge"
+        assert all(d['_type'] != FRAMEWORK or len(d) == 1 for u, v, k, d in edges), (
+            "ValueError (paranoia check): unknown attribute in tree edge"
+        )
         tree_edges = [(u, v) for u, v, k, d in edges if d['_type'] == FRAMEWORK]
         assert len(tree_edges) == len(set(tree_edges)), "ValueError (paranoia check): duplicated framework edge"
 
         # ==[check nodes (semantic)]=========================================
-        assert all(
-            '_selement' in d for n, d in self._genome.nodes(data=True)
-        ), f"{PARANOIA_VALUE_ERROR}: Missing '_selement'"
+        assert all('_selement' in d for n, d in self._genome.nodes(data=True)), (
+            f"{PARANOIA_VALUE_ERROR}: Missing '_selement'"
+        )
         assert all(
             (isinstance(d['_selement'], Macro) and d['_type'] == 'macro')
             or (isinstance(d['_selement'], FrameABC) and d['_type'] == 'frame')
@@ -407,9 +407,9 @@ class Individual(Paranoid):
             f"{PARANOIA_VALUE_ERROR}: Inconsistent number of structural edges: "
             + f"found {len(structural_edges)}, expecting {len(structural_parameters)}"
         )
-        assert set(k for u, v, k in structural_edges) == set(
-            p._key for p in structural_parameters
-        ), f"{PARANOIA_VALUE_ERROR}: Inconsistent keys in structural edges"
+        assert set(k for u, v, k in structural_edges) == set(p._key for p in structural_parameters), (
+            f"{PARANOIA_VALUE_ERROR}: Inconsistent keys in structural edges"
+        )
 
         return True
 

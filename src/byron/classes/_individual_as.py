@@ -6,7 +6,7 @@
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -321,8 +321,8 @@ def _draw_multipartite(self, zoom: int) -> None:
 
 
 def patch_pos(
-        G: nx.DiGraph,
-        pos: dict,
+    G: nx.DiGraph,
+    pos: dict,
 ):
     pos_order = [n for n in list(nx.dfs_preorder_nodes(G, NODE_ZERO)) if n in pos]
     swap_x, swap_y = 0, 0

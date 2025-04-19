@@ -5,7 +5,7 @@
 #  |____/ ___  |__| |_____|__|__|   ).(   Version 0.8a1 "Don Juan"         #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
 import byron
@@ -19,7 +19,7 @@ def framework():
     # 'version', 'system', 'machine', 'python', and 'networkx'
     # To get all information use the macro 'byron.f.Info'
 
-    int64 = byron.f.integer_parameter(0, 2 ** 64)
+    int64 = byron.f.integer_parameter(0, 2**64)
     math_op = byron.f.choice_parameter(['+', '-', '*', '/', '&', '^', '|'])
     variable = byron.f.macro('var {_node} uint64', _label='')
     # variable.force_parent('prologue')

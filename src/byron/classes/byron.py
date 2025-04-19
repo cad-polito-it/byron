@@ -6,7 +6,7 @@
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -56,7 +56,7 @@ class Byron:
             elif item == 'machine':
                 desc = f'{platform.machine()} ({platform.processor()})'
                 if psutil:
-                    desc += f'; {psutil.cpu_count(logical=False)} physical cores ({psutil.cpu_count(logical=True)} logical); {psutil.virtual_memory().total // 2 ** 20:,} MiB RAM'
+                    desc += f'; {psutil.cpu_count(logical=False)} physical cores ({psutil.cpu_count(logical=True)} logical); {psutil.virtual_memory().total // 2**20:,} MiB RAM'
                 return desc
             else:
                 raise SyntaxError

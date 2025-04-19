@@ -6,7 +6,7 @@
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,9 +39,9 @@ def reverse_fitness(fitness_class: type[FitnessABC]) -> type[FitnessABC]:
 
     class T(fitness_class):
         def is_fitter(self, other: FitnessABC) -> bool:
-            assert (
-                self.__class__ == other.__class__
-            ), f"TypeError: different types of fitness: '{self.__class__}' and '{other.__class__}'"
+            assert self.__class__ == other.__class__, (
+                f"TypeError: different types of fitness: '{self.__class__}' and '{other.__class__}'"
+            )
             return super(T, other).is_fitter(self)
 
         def _decorate(self) -> str:

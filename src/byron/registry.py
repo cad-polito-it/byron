@@ -6,7 +6,7 @@
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -150,12 +150,12 @@ def genetic_operator(*, num_parents: int | None = 1):
         @monitor.failure_rate
         @wraps(func)
         def wrapper(*args: Individual | FrameABC, **kwargs):
-            assert all(
-                i.__class__ == args[0].__class__ for i in args
-            ), f"{PARANOIA_VALUE_ERROR}: Can't mate different objects: {args}"
-            assert all(
-                not isinstance(i, Individual) or i.top_frame == args[0].top_frame for i in args
-            ), f"{PARANOIA_VALUE_ERROR}: Can't mate individuals with different top_frame: {args}"
+            assert all(i.__class__ == args[0].__class__ for i in args), (
+                f"{PARANOIA_VALUE_ERROR}: Can't mate different objects: {args}"
+            )
+            assert all(not isinstance(i, Individual) or i.top_frame == args[0].top_frame for i in args), (
+                f"{PARANOIA_VALUE_ERROR}: Can't mate individuals with different top_frame: {args}"
+            )
 
             wrapper.stats.calls += 1
 
@@ -167,9 +167,9 @@ def genetic_operator(*, num_parents: int | None = 1):
                 if offspring is None:
                     offspring = []
 
-            assert all(
-                isinstance(i, Individual) for i in offspring
-            ), f"TypeError: offspring {offspring!r}: expected list['Individual']"
+            assert all(isinstance(i, Individual) for i in offspring), (
+                f"TypeError: offspring {offspring!r}: expected list['Individual']"
+            )
             offspring = [i for i in offspring if i.valid]
             for i in offspring:
                 i._lineage = Lineage(wrapper, tuple(weakref.proxy(a) for a in args))

@@ -5,7 +5,7 @@
 #  |____/ ___  |__| |_____|__|__|   ).(   Version 0.8a1 "Don Juan"         #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
 import itertools
@@ -23,7 +23,7 @@ xovers = [op for op in byron.sys.get_operators() if op.num_parents == 2]
 
 def get_base_macros():
     macros = list()
-    macros.append(byron.f.macro('int 0x{num:X}', num=byron.f.integer_parameter(0, 2 ** 32)))
+    macros.append(byron.f.macro('int 0x{num:X}', num=byron.f.integer_parameter(0, 2**32)))
     macros.append(byron.f.macro('float 0x{num:X}', num=byron.f.float_parameter(-1, 1)))
     macros.append(byron.f.macro('array 0x{num:X}', num=byron.f.array_parameter('01-', 64)))
     macros.append(byron.f.macro('choice 0x{num:X}', num=byron.f.choice_parameter('ABCDEFG')))

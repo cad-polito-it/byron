@@ -5,7 +5,7 @@
 #  |____/ ___  |__| |_____|__|__|   ).(   Version 0.8a1 "Don Juan"         #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
 import logging
@@ -107,7 +107,7 @@ def timeit(func):
     start_w, start_p = time.time(), time.perf_counter()
     func()
     end_w, end_p = time.time(), time.perf_counter()
-    logging.info(f"timeit: {func.__qualname__} wall-clock: {end_w-start_w:.2f}s; time: {end_p-start_p:.2f}s")
+    logging.info(f"timeit: {func.__qualname__} wall-clock: {end_w - start_w:.2f}s; time: {end_p - start_p:.2f}s")
 
 
 if __name__ == "__main__":

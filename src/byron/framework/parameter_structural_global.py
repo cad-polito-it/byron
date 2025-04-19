@@ -6,7 +6,7 @@
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -46,11 +46,11 @@ __all__ = ["global_reference"]
 
 @cache
 def _global_reference(
-        *,
-        target_name: str | None = None,
-        target_frame: type[SElement] | None = None,
-        first_macro: bool = True,
-        creative_zeal: int | float = 0,
+    *,
+    target_name: str | None = None,
+    target_frame: type[SElement] | None = None,
+    first_macro: bool = True,
+    creative_zeal: int | float = 0,
 ) -> type[ParameterStructuralABC]:
     class T(ParameterStructuralABC):
         __slots__ = ["_target_frame"]  # Preventing the automatic creation of __dict__
@@ -80,10 +80,10 @@ def _global_reference(
                 (n, G.nodes[n]['_typepath'])
                 for n in T.nodes
                 if G.nodes[n]['_type'] == MACRO
-                   and target_frame in G.nodes[n]['_typepath']
-                   and not (
-                        '_invalid_target' in G.nodes[n]['_selement'].EXTRA_PARAMETERS
-                        and G.nodes[n]['_selement'].EXTRA_PARAMETERS['_invalid_target']
+                and target_frame in G.nodes[n]['_typepath']
+                and not (
+                    '_invalid_target' in G.nodes[n]['_selement'].EXTRA_PARAMETERS
+                    and G.nodes[n]['_selement'].EXTRA_PARAMETERS['_invalid_target']
                 )
             ]
             if first_macro:
@@ -130,8 +130,8 @@ def _global_reference(
                     (n, p)
                     for n, p in G.nodes(data='_typepath')
                     if self._target_frame in p
-                       and isinstance(G.nodes[n]['_selement'], MacroBunch)
-                       and G.nodes[n]['_selement'].SIZE[0] <= G.out_degree(n) < G.nodes[n]['_selement'].SIZE[1] - 1
+                    and isinstance(G.nodes[n]['_selement'], MacroBunch)
+                    and G.nodes[n]['_selement'].SIZE[0] <= G.out_degree(n) < G.nodes[n]['_selement'].SIZE[1] - 1
                 ]
                 if growable_nodes:
                     node = rrandom.choice(growable_nodes)[0]
@@ -182,9 +182,9 @@ def _global_reference(
 
 
 def global_reference(
-        target_frame: str | type[SElement], *, creative_zeal=0, first_macro: bool = False
+    target_frame: str | type[SElement], *, creative_zeal=0, first_macro: bool = False
 ) -> type[ParameterStructuralABC]:
-    assert (
-            isinstance(creative_zeal, int) or 0.0 <= creative_zeal <= 1.0
-    ), f"ValueError: creative zeal is integer or 0 <= float <= 1: found {creative_zeal}"
+    assert isinstance(creative_zeal, int) or 0.0 <= creative_zeal <= 1.0, (
+        f"ValueError: creative zeal is integer or 0 <= float <= 1: found {creative_zeal}"
+    )
     return _global_reference(target_frame=target_frame, first_macro=bool(first_macro), creative_zeal=creative_zeal)

@@ -6,7 +6,7 @@
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -73,9 +73,9 @@ class FitnessABC(ABC):
         return super().__ne__(other)
 
     def check_comparable(self, other: "FitnessABC"):
-        assert (
-            self.__class__ == other.__class__
-        ), f"{PARANOIA_TYPE_ERROR}: Different Fitness types: {self.__class__} and {other.__class__}."
+        assert self.__class__ == other.__class__, (
+            f"{PARANOIA_TYPE_ERROR}: Different Fitness types: {self.__class__} and {other.__class__}."
+        )
         return True
 
     def _decorate(self) -> str:

@@ -6,7 +6,7 @@
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -82,12 +82,12 @@ class Scalar(FitnessABC, float):
 
     def check_comparable(self, other: "Scalar"):
         assert super().check_comparable(other)
-        assert (
-            not isinstance(other, self.__class__) or self._abs_tol == other._abs_tol
-        ), f"{PARANOIA_VALUE_ERROR}: Different absolute tolerance: {float(self)}±{self._abs_tol} vs. {float(other)}±{other._abs_tol}"
-        assert (
-            not isinstance(other, self.__class__) or self._rel_tol == other._rel_tol
-        ), f"{PARANOIA_VALUE_ERROR}: Different relative tolerance: {float(self)}±{self._rel_tol}r vs. {float(other)}±{other._rel_tol}r"
+        assert not isinstance(other, self.__class__) or self._abs_tol == other._abs_tol, (
+            f"{PARANOIA_VALUE_ERROR}: Different absolute tolerance: {float(self)}±{self._abs_tol} vs. {float(other)}±{other._abs_tol}"
+        )
+        assert not isinstance(other, self.__class__) or self._rel_tol == other._rel_tol, (
+            f"{PARANOIA_VALUE_ERROR}: Different relative tolerance: {float(self)}±{self._rel_tol}r vs. {float(other)}±{other._rel_tol}r"
+        )
         return True
 
 
@@ -101,9 +101,9 @@ class Vector(FitnessABC):
         self._values = tuple(values)
 
     def cheeck_comparable(self, other: "Vector"):
-        assert len(self._values) == len(
-            other._values
-        ), f"Can't is_fitter Fitness Vectors of different size ({self} vs. {other})"
+        assert len(self._values) == len(other._values), (
+            f"Can't is_fitter Fitness Vectors of different size ({self} vs. {other})"
+        )
         assert all(v1.check_comparable(v2) for v1, v2 in zip(self, other))
         return True
 
@@ -159,6 +159,6 @@ def make_fitness(data: Any):
         # logger.warning(f"{data}")
         return Lexicographic(data)
     else:
-        assert (
-            isinstance(data, Sequence) or isinstance(data, int) or isinstance(data, float)
-        ), f"TypeError: Can't convert {data!r} ({type()}) to Fitness"
+        assert isinstance(data, Sequence) or isinstance(data, int) or isinstance(data, float), (
+            f"TypeError: Can't convert {data!r} ({type()}) to Fitness"
+        )

@@ -6,7 +6,7 @@
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -154,10 +154,10 @@ def hesitant_log(lapse: float, level: int, *args, **kwargs):
         LOG_LAPSES[level] = now
 
 
-assert (
-        getattr(logger, '__dict__') and 'hesitant_log' not in logger.__dict__
-), f"PANIC: {logger} has already the attribute 'hesitant_log'"
+assert getattr(logger, '__dict__') and 'hesitant_log' not in logger.__dict__, (
+    f"PANIC: {logger} has already the attribute 'hesitant_log'"
+)
 logger.hesitant_log = hesitant_log
-assert (
-        getattr(logger, '__dict__') and 'hesitant_log' in logger.__dict__
-), f"PANIC: cannot register attribute 'hesitant_log' in {logger}"
+assert getattr(logger, '__dict__') and 'hesitant_log' in logger.__dict__, (
+    f"PANIC: cannot register attribute 'hesitant_log' in {logger}"
+)

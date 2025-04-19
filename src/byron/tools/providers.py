@@ -6,7 +6,7 @@
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,9 +29,9 @@ __all__ = ['provide_tags']
 import networkx as nx
 
 from byron.classes.node import NODE_ZERO
-from byron.user_messages.checks import PARANOIA_VALUE_ERROR
 from byron.global_symbols import ATTRIBUTE_PROVIDERS
 from byron.tools.graph import get_structure
+from byron.user_messages.checks import PARANOIA_VALUE_ERROR
 
 
 def calculate_paths(G: nx.MultiDiGraph):
@@ -51,8 +51,7 @@ def provide_tags(G: nx.MultiDiGraph, *desired_tags: str, force: bool = False) ->
     result = True
 
     for tag in desired_tags:
-        assert tag in KNOWN_PROVIDERS, \
-            f"{PARANOIA_VALUE_ERROR}: No provider for tag '{tag}'"
+        assert tag in KNOWN_PROVIDERS, f"{PARANOIA_VALUE_ERROR}: No provider for tag '{tag}'"
         provider = KNOWN_PROVIDERS[tag]
         if force or provider not in G.graph[ATTRIBUTE_PROVIDERS]:
             provider(G)

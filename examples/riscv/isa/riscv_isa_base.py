@@ -5,7 +5,7 @@
 #  |____/ ___  |__| |_____|__|__|   ).(   Version 0.8a1 "Don Juan"         #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
 from __future__ import annotations

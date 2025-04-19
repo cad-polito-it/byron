@@ -5,7 +5,7 @@
 #  |____/ ___  |__| |_____|__|__|   ).(   Version 0.8a1 "Don Juan"         #
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 # SPDX-License-Identifier: Apache-2.0
 
 import byron
@@ -13,7 +13,7 @@ import byron
 # byron.rrandom.seed(42)
 
 register = byron.f.choice_parameter(["ah", "bh", "ch", "dh", "al", "bl", "cl", "dl"])
-word = byron.f.integer_parameter(0, 2 ** 16)
+word = byron.f.integer_parameter(0, 2**16)
 int_op = byron.f.choice_parameter(["add", "sub", "and", "or", "xor"])
 inst = byron.f.macro("{op} {r}, 0x{v:02x}", op=int_op, r=register, v=word)
 

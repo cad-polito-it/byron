@@ -6,7 +6,7 @@
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -142,9 +142,9 @@ class ParameterStructuralABC(ParameterABC):
 
     @property
     def value(self):
-        assert (
-            self.is_fastened
-        ), f"{PARANOIA_VALUE_ERROR}: Attempt to access the value of an unfastened structural parameter"
+        assert self.is_fastened, (
+            f"{PARANOIA_VALUE_ERROR}: Attempt to access the value of an unfastened structural parameter"
+        )
         if self._node_reference is None:
             return None
         return next(

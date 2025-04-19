@@ -6,7 +6,7 @@
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
-# Copyright 2023-24 Giovanni Squillero and Alberto Tonda
+# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -39,7 +39,6 @@ from byron.classes.value_bag import ValueBag
 from byron.global_symbols import *
 from byron.tools.graph import *
 from byron.user_messages import *
-
 
 # NOTE[GX]: Rewritten almost from scratch taking advantage of 'dataclasses' (py>=3.7) and
 # '@cached_property' (py>=3.8)
