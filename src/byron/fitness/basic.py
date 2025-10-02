@@ -128,6 +128,11 @@ class Vector(FitnessABC):
     def __hash__(self):
         return hash(self._values)
 
+    def __mul__(self, other: float|int) -> "Vector":
+        assert isinstance(other, (int, float)), f"TypeError: Can't multiply Vector by {type(other)}"
+        scaled_values = [v * other for v in self._values]
+        return scaled_values
+
 
 class Lexicographic(Vector):
     """A generic vector of Fitness values.
