@@ -472,7 +472,7 @@ class ScriptEvaluator(EvaluatorABC):
         *,
         filename_format: str = 'phenotype_{i:x}.txt',
         timeout: int | None = 60,
-        stdout_fitness_keyword: str,
+        stdout_fitness_keyword: str = None,
         **kwargs,
     ) -> None:
         r"""
