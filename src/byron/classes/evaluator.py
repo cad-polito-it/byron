@@ -518,6 +518,11 @@ class ScriptEvaluator(EvaluatorABC):
             capture_output=True,
         )
 
+        logger.debug(
+            f"ScriptEvaluator: script '{self._script_name}' returned results:\n" +
+            f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}\nreturncode: {result.returncode}"
+        )
+        
         if result is None:
             raise RuntimeError("Process failed (returned None)")
         elif not result.stdout:
