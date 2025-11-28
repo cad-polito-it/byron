@@ -127,3 +127,5 @@ venv.bak/
 # Writerside (temp)
 /Writerside
 
+# Pickle files
+*.pkl

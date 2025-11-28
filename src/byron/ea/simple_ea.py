@@ -29,6 +29,7 @@ __all__ = ['simple_ea', 'adaptive_ea']
 
 from datetime import timedelta
 from inspect import signature
+from pathlib import Path
 from time import perf_counter_ns, process_time_ns
 from typing import Callable
 
@@ -37,6 +38,7 @@ from byron.classes.frame import *
 from byron.fitness import make_fitness
 from byron.operators import *
 from byron.sys import *
+from byron.tools.checkpoint import save_population
 from byron.user_messages import *
 from byron.user_messages import logger as byron_logger
 
@@ -88,6 +90,10 @@ def simple_ea(
     entropy: bool = False,
     population_extra_parameters: dict = None,
     stopper: Callable | None = None,
+    checkpoint_every: int | None = None,
+    checkpoint_file: str | Path | None = None,
+    checkpoint_callback: Callable[[Population, int], None] | None = None,
+    checkpoint_on_improvement: bool = False,
 ) -> Population:
     r"""A configurable self-adaptive evolutionary algorithm
 
@@ -117,10 +123,40 @@ def simple_ea(
         A all round value to tune exploration vs exploitation
     entropy
         Use population entropy parameter to promote diversity in population. Set True only if you understand how population entropy is computed!
+    population_extra_parameters
+        Extra parameters for the population
+    stopper
+        Custom stopping condition function
+    checkpoint_every
+        Save checkpoint every N generations. None = no automatic checkpointing
+    checkpoint_file
+        Base filename for checkpoints. Can include {generation} placeholder.
+        Examples: 'checkpoint_gen{generation}.pkl' or 'checkpoint.pkl'
+    checkpoint_callback
+        Custom callback function(population, generation) called after each generation.
+        Useful for custom checkpoint logic, logging, or user-controlled saves.
+    checkpoint_on_improvement
+        If True, save checkpoint whenever a new best individual is found
     Returns
     -------
     Population
         The last population
+    
+    Examples
+    --------
+    >>> # Checkpoint every 10 generations
+    >>> population = simple_ea(
+    ...     top_frame, evaluator,
+    ...     max_generation=100,
+    ...     checkpoint_every=10,
+    ...     checkpoint_file='run_gen{generation}.pkl'
+    ... )
+    
+    >>> # Custom callback for user-controlled checkpointing
+    >>> def my_callback(pop, gen):
+    ...     if gen % 20 == 0:
+    ...         save_population(pop, f'checkpoint_{gen}.pkl')
+    >>> population = simple_ea(top_frame, evaluator, checkpoint_callback=my_callback)
     """
 
     start = perf_counter_ns(), process_time_ns()
@@ -128,6 +164,24 @@ def simple_ea(
     if notebook_mode:
         silent_pause = 5
     byron_logger.info("SimpleEA: 🧬 [b]SimpleEA started[/] ┈ %s", _elapsed(start, process=True))
+
+    # Checkpoint setup
+    if checkpoint_every is not None or checkpoint_on_improvement:
+        if checkpoint_file is None:
+            checkpoint_file = 'checkpoint_gen{generation}.pkl'
+        checkpoint_file = Path(checkpoint_file)
+    
+    def _save_checkpoint(pop: Population, reason: str = ""):
+        """Helper to save checkpoint with error handling"""
+        if checkpoint_file is None:
+            return
+        try:
+            filename = str(checkpoint_file).format(generation=pop.generation)
+            save_population(pop, Path(filename))
+            if reason:
+                byron_logger.info(f"SimpleEA: 💾 Checkpoint saved ({reason}) ➜ {filename}")
+        except Exception as e:
+            byron_logger.error(f"SimpleEA: Failed to save checkpoint: {e}")
 
     # initialize population
     population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
@@ -160,6 +214,17 @@ def simple_ea(
     population.sort()
     best = population[0]
     _new_best(population, evaluator)
+    
+    # Initial checkpoint after generation 0
+    if checkpoint_every is not None or checkpoint_on_improvement:
+        _save_checkpoint(population, "generation 0")
+    
+    # Custom callback
+    if checkpoint_callback:
+        try:
+            checkpoint_callback(population, population.generation)
+        except Exception as e:
+            byron_logger.error(f"SimpleEA: Checkpoint callback error: {e}")
 
     all_individuals = set()
 
@@ -195,6 +260,21 @@ def simple_ea(
         if best.fitness << population[0].fitness:
             best = population[0]
             _new_best(population, evaluator)
+            
+            # Checkpoint on improvement
+            if checkpoint_on_improvement:
+                _save_checkpoint(population, f"improvement at gen {population.generation}")
+        
+        # Periodic checkpoint
+        if checkpoint_every is not None and population.generation % checkpoint_every == 0:
+            _save_checkpoint(population, f"periodic (every {checkpoint_every} gen)")
+        
+        # Custom callback
+        if checkpoint_callback:
+            try:
+                checkpoint_callback(population, population.generation)
+            except Exception as e:
+                byron_logger.error(f"SimpleEA: Checkpoint callback error: {e}")
 
         byron_logger.hesitant_log(
             silent_pause,
@@ -203,6 +283,10 @@ def simple_ea(
             population.generation,
             _elapsed(start, steps=evaluator.fitness_calls),
         )
+    
+    # Final checkpoint at completion
+    if checkpoint_file is not None:
+        _save_checkpoint(population, "final")
 
     end = process_time_ns()
 
