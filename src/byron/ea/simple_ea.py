@@ -22,6 +22,7 @@
 # limitations under the License.
 
 # =[ HISTORY ]===============================================================
+# v2 / January 2026 / Franout (FA)
 # v1 / January 2024 / Sacchet (MS)
 
 __all__ = ['simple_ea', 'adaptive_ea']
@@ -94,6 +95,7 @@ def simple_ea(
     checkpoint_file: str | Path | None = None,
     checkpoint_callback: Callable[[Population, int], None] | None = None,
     checkpoint_on_improvement: bool = False,
+    tournament_cost_function : Callable[[Individual], float] | None = None,
 ) -> Population:
     r"""A configurable self-adaptive evolutionary algorithm
 
@@ -236,7 +238,8 @@ def simple_ea(
             op = ext.take()
             parents = list()
             for _ in range(op.num_parents):
-                parents.append(tournament_selection(population, 1))
+                byron_logger.info(f"SimpleEA: Selecting parent using tournament selection with tournament_size=1 and tournament_cost_function={tournament_cost_function} ┈ %s", _elapsed(start, process=True))
+                parents.append(tournament_selection(population, 1, tournament_cost_function))
             if 'strength' in signature(op).parameters:
                 new_individuals += op(*parents, strength=strength)
             else:
