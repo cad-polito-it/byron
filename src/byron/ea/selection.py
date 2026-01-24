@@ -25,17 +25,18 @@
 # HISTORY
 # v1 / July 2023 / Squillero (GX)
 
-from typing import Callable
+from typing import Callable, List
 from byron.classes.individual import Individual
 from byron.classes.population import Population
 from byron.randy import rrandom
 from byron.user_messages.checks import *
+from byron.user_messages import logger as byron_logger
 
 def top_k_tournament_selection(
     population: Population,
     tournament_size: int = 2,
     maxSelectable: int = 1,
-    tournament_cost_function: Callable[[Individual], float] | None = None,
+    tournament_cost_function: Callable[List[Individual], float] | None = None,
     with_replacement: bool = False
 ) -> list[Individual]:
     """
@@ -45,9 +46,10 @@ def top_k_tournament_selection(
     """
     assert check_value_range(tournament_size, min_=1)
     assert 1 <= maxSelectable <= tournament_size
+    if len(population.individuals) < tournament_size:
+        byron_logger.warning("Population size is smaller than tournament size.")
+    
     candidates = [rrandom.choice(population.individuals) for _ in range(tournament_size)]
-    if rrandom.boolean(p_true=tournament_size % 1):
-        candidates.append(rrandom.choice(population.individuals))
     if tournament_cost_function is not None:
         # Higher cost is better
         sorted_candidates = tournament_cost_function(candidates, maxSelectable)
