@@ -230,6 +230,7 @@ def topk_tournament_ea(
             op = ext.take()
             parents = list()
             for _ in range(op.num_parents):
+                byron_logger.info(f"TopK-TournamentEA: 🚀TopK-TournamentEA -Starting championship evaluation for {tournament_size} individuals")
                 selected = top_k_tournament_selection(
                     population,
                     tournament_size=tournament_size,
@@ -237,7 +238,7 @@ def topk_tournament_ea(
                     tournament_cost_function=tournament_cost_function,
                     with_replacement=with_replacement
                 )
-                byron_logger.info("TopK-TournamentEA: 🍦 [b]TopK-TournamentEA selection completed [/] ┈ %s", _elapsed(start, process=True))
+                byron_logger.info("TopK-TournamentEA: 🚀TopK-TournamentEA selection completed [/] ┈ %s", _elapsed(start, process=True))
                 parents.extend(selected)
             parents = parents[:op.num_parents]
             if 'strength' in signature(op).parameters:
