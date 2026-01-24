@@ -29,3 +29,4 @@ from .estimator import *
 from .selection import *
 from .simple_ea import *
 from .vanilla_ea import *
+from .topk_tournament_ea import *
