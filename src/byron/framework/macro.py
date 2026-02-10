@@ -39,12 +39,13 @@ from byron.user_messages import check_valid_type
 
 @cache
 def _macro(
-    text: str, macro_parameters: tuple[tuple[str, type[ParameterABC]]], extra_parameters: tuple[tuple[str, Any]]
+    text: str, macro_parameters: tuple[tuple[str, type[ParameterABC]]], extra_parameters: tuple[tuple[str, Any]], safe_format: bool = False
 ) -> type[Macro]:
     class M(Macro):
         TEXT = text
         PARAMETERS = dict(macro_parameters)
         EXTRA_PARAMETERS = dict(extra_parameters) if extra_parameters else dict()
+        SAFE_FORMAT = safe_format
 
         __slots__ = []  # Preventing the automatic creation of __dict__
 
@@ -58,7 +59,7 @@ def _macro(
     return M
 
 
-def macro(text: str, **parameters) -> type[Macro]:
+def macro(text: str, *, safe_format: bool = False, **parameters) -> type[Macro]:
     """Class factory: Returns the class for a specific macro.
 
     A macro is a fragment of text with variable elements, the `parameters`, appearing
@@ -73,6 +74,10 @@ def macro(text: str, **parameters) -> type[Macro]:
     ----------
     text :
         the text of the macro in f-string format.
+    safe_format :
+        if True, use safe substitution that ignores unknown {placeholders} in the text.
+        This is useful when the macro text contains literal braces (e.g., JSON content).
+        Default is False (standard str.format() behavior).
     parameters :
         parameters used in the macro.
 
@@ -86,6 +91,10 @@ def macro(text: str, **parameters) -> type[Macro]:
 
     >>> M = macro('Decimal {v} is {v:#x} in hexadecimal', v=integer_parameter(0, 256))
     >>> m = M()
+
+    Macro with JSON content using safe_format to avoid KeyError on literal braces
+
+    >>> M = macro('{"kind": "LITERAL", "value": {val}}', safe_format=True, val=integer_parameter(0, 100))
 
     References
     ----------
@@ -102,7 +111,7 @@ def macro(text: str, **parameters) -> type[Macro]:
         else:
             extra_parameters.append((n, p))
 
-    return _macro(text, tuple(sorted(macro_parameters)), tuple(sorted(extra_parameters)))
+    return _macro(text, tuple(sorted(macro_parameters)), tuple(sorted(extra_parameters)), safe_format)
 
 
 def _check_parameters(node_view: NodeView):

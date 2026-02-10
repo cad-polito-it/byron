@@ -172,6 +172,7 @@ def bunch(
     name: str | None = None,
     max_instances: int | None = None,
     weights: Sequence[int] | None = None,
+    separator: str | None = None,
     extra_parameters: dict = None,
     **kwargs,
 ) -> type[FrameABC]:
@@ -229,6 +230,7 @@ def bunch(
         POOL = tuple(sum(([m] * w for m, w in zip(pool, weights)), start=list()))
         EXTRA_PARAMETERS = dict(extra_parameters) if extra_parameters else dict()
         MAX_INSTANCES = max_instances
+        SEPARATOR = separator
 
         __slots__ = []  # Preventing the automatic creation of __dict__
 
