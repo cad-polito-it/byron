@@ -494,6 +494,22 @@ class Individual(Paranoid):
             NodeReference(self.genome, NODE_ZERO), tree, extra_parameters, tuple(), list()
         )
 
+        # =[Build a map of bunch parents to their children for separator logic]=
+        bunch_children: dict[int, list[int]] = {}  # parent_node -> [child_nodes in order]
+        for nr, path in frame_list:
+            if len(path) >= 2:
+                parent_selement = path[-2]  # The parent is second-to-last in path
+                if hasattr(parent_selement, 'SEPARATOR') and parent_selement.SEPARATOR is not None:
+                    # Find parent node
+                    parent_node = None
+                    for edge in tree.in_edges(nr.node):
+                        parent_node = edge[0]
+                        break
+                    if parent_node is not None:
+                        if parent_node not in bunch_children:
+                            bunch_children[parent_node] = []
+                        bunch_children[parent_node].append(nr.node)
+
         # =[Let's dump it]===================================================
         phenotype = ''
         for nr, path in frame_list:
@@ -503,6 +519,22 @@ class Individual(Paranoid):
             local_parameters |= {'_node': NodeView(nr)}
             local_parameters |= {'_byron': Individual.BYRON}
             local_parameters |= nr.graph.nodes[nr.node]
+
+            # --[separator for bunch children]-------------------------------
+            # Check if this node is a child of a bunch with a separator
+            # and if it's not the first child, prepend the separator
+            if len(path) >= 2:
+                parent_selement = path[-2]
+                if hasattr(parent_selement, 'SEPARATOR') and parent_selement.SEPARATOR is not None:
+                    # Find parent node
+                    parent_node = None
+                    for edge in tree.in_edges(nr.node):
+                        parent_node = edge[0]
+                        break
+                    if parent_node is not None and parent_node in bunch_children:
+                        children = bunch_children[parent_node]
+                        if nr.node in children and children.index(nr.node) > 0:
+                            phenotype += parent_selement.SEPARATOR
 
             # --[node]-------------------------------------------------------
             bag = ValueBag(local_parameters)
