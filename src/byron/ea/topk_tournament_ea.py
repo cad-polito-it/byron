@@ -238,7 +238,7 @@ def topk_tournament_ea(
                     tournament_cost_function=tournament_cost_function,
                     with_replacement=with_replacement
                 )
-                byron_logger.info("TopK-TournamentEA: 🚀TopK-TournamentEA selection completed [/] ┈ %s", _elapsed(start, process=True))
+                byron_logger.info("TopK-TournamentEA: 🚀TopK-TournamentEA selection completed ┈ %s", _elapsed(start, process=True))
                 parents.extend(selected)
             parents = parents[:op.num_parents]
             if 'strength' in signature(op).parameters:
