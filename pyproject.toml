@@ -38,6 +38,7 @@
     ]
 
     [tool.poetry.dependencies]
+        dill       = ">=0.3.7"
         joblib     = { version = ">=1.3", optional = true }
         matplotlib = { version = ">=3.9.1", optional = true }
         networkx   = ">=3.1"
