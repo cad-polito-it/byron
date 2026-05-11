@@ -90,7 +90,7 @@ def save_population(population: Population, filepath: str | Path) -> None:
         raise
 
 
-def load_population(filepath: str | Path) -> Population:
+def load_population(filepath: str | Path) -> tuple[Population, int]:
     """Load a population from a pickle file.
     
     This function deserializes a Population object that was previously saved
@@ -107,25 +107,31 @@ def load_population(filepath: str | Path) -> Population:
         
     Returns
     -------
-    Population
-        The reconstructed population object with all individuals and metadata
+    tuple[Population, int]
+        A tuple containing:
+        - population: The reconstructed population object with all individuals and metadata
+        - generation: The generation number at which the checkpoint was saved
         
     Examples
     --------
     >>> # Resume evolution from checkpoint
-    >>> population = byron.tools.load_population('checkpoint_gen100.pkl')
-    >>> print(f"Loaded generation {population.generation}")
+    >>> population, generation = byron.tools.load_population('checkpoint_gen100.pkl')
+    >>> print(f"Loaded generation {generation}")
     >>> print(f"Best fitness: {population[0].fitness}")
     >>> 
-    >>> # Continue evolution (requires manual integration with EA)
-    >>> # Note: You'll need to re-initialize evaluator and restart the EA
+    >>> # Continue evolution with simple_ea
+    >>> population = byron.ea.simple_ea(
+    ...     top_frame, evaluator,
+    ...     population=population,
+    ...     max_generation=200
+    ... )
     
     Notes
     -----
     The loaded population retains all state, but you'll need to:
     1. Re-create the evaluator (functions can't always be pickled)
     2. Re-create the top_frame definition
-    3. Manually integrate with the EA if continuing evolution
+    3. Pass the population to simple_ea() or topk_tournament_ea() to resume evolution
     
     Warnings
     --------
@@ -139,12 +145,14 @@ def load_population(filepath: str | Path) -> Population:
             
         if not isinstance(population, Population):
             raise TypeError(f"Loaded object is not a Population, got {type(population)}")
+        
+        generation = population.generation
             
         byron_logger.info(
-            f"Checkpoint: Loaded population (gen {population.generation}, "
+            f"Checkpoint: Loaded population (gen {generation}, "
             f"{len(population)} individuals) from {filepath}"
         )
-        return population
+        return population, generation
     except Exception as e:
         byron_logger.error(f"Checkpoint: Failed to load population from {filepath}: {e}")
         raise

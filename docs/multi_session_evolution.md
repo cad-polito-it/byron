@@ -95,9 +95,9 @@ evaluator = byron.evaluator.PythonEvaluator(fitness, strip_phenotypes=True)
 from byron.tools.checkpoint import load_population
 
 # Load the latest checkpoint
-population = load_population('experiment_gen30.pkl')
+population, generation = load_population('experiment_gen30.pkl')
 
-print(f"Loaded from generation {population.generation}")
+print(f"Loaded from generation {generation}")
 print(f"Best fitness: {population[0].fitness}")
 print(f"Population size: {len(population)}")
 
@@ -110,26 +110,28 @@ for i in range(5):
 ### Session 3: Continue Evolution (Day 3)
 
 ```python
-# ⚠️ IMPORTANT: Current limitation
-# You cannot directly resume the SAME evolution with simple_ea
-# It always starts a fresh population
+from byron.tools.checkpoint import load_population
 
-# WORKAROUND 1: Start a new run and compare with old results
-old_pop = load_population('experiment_gen30.pkl')
-print(f"Previous best: {old_pop[0].fitness}")
+# Load the checkpoint from Day 1
+population, starting_gen = load_population('experiment_gen30.pkl')
+print(f"Loaded from generation {starting_gen}")
+print(f"Best fitness at resume: {population[0].fitness}")
 
-# Run NEW evolution
-new_pop = byron.ea.simple_ea(
+# Resume evolution from generation 30 to generation 60
+population = byron.ea.simple_ea(
     top_frame,
     evaluator,
-    max_generation=30,
+    population=population,  # Pass the loaded population
+    max_generation=60,  # Continue to generation 60
+    mu=20,
+    lambda_=40,
+    checkpoint_every=10,
     checkpoint_file='experiment_session2_gen{generation}.pkl'
 )
 
-print(f"New run best: {new_pop[0].fitness}")
-
-# WORKAROUND 2: Save best individuals as "hall of fame"
-# Use them for analysis, comparison, or seeding future work
+print(f"Resumed evolution completed at gen {population.generation}")
+print(f"Best fitness after resumption: {population[0].fitness}")
+# Checkpoints saved: experiment_session2_gen40.pkl, experiment_session2_gen50.pkl, experiment_session2_gen60.pkl
 ```
 
 ## Checkpointing Strategies
@@ -406,16 +408,25 @@ current_population = byron.ea.simple_ea(
 
 ## Troubleshooting
 
-### "Cannot resume evolution"
-**Problem**: Loaded population doesn't continue where it left off
+### "How do I resume evolution from a checkpoint?"
+**Solution**: Use the `population` parameter in `simple_ea()` or `topk_tournament_ea()`:
 
-**Explanation**: `simple_ea()` and `simple_ea()` always create fresh populations. This is by design in the current Byron architecture.
+```python
+from byron.tools.checkpoint import load_population
 
-**Solution**: Use checkpoints for:
-- Analysis and inspection
-- Comparing multiple runs
-- Extracting best solutions
-- Hall of fame tracking
+# Load checkpoint - returns both population and generation
+population, generation = load_population('checkpoint_gen50.pkl')
+
+# Resume evolution
+population = byron.ea.simple_ea(
+    top_frame,
+    evaluator,
+    population=population,  # Pass the loaded population
+    max_generation=100  # Continue to generation 100
+)
+```
+
+The loaded population retains all individuals, fitness values, and generation counter. Evolution continues seamlessly from where it was saved.
 
 ### "Checkpoint files are too large"
 **Problem**: Each checkpoint is hundreds of MB
