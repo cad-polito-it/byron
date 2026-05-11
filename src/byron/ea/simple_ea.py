@@ -90,6 +90,7 @@ def simple_ea(
     temperature: float = 0.85,
     entropy: bool = False,
     population_extra_parameters: dict = None,
+    population: 'Population | None' = None,
     stopper: Callable | None = None,
     checkpoint_every: int | None = None,
     checkpoint_file: str | Path | None = None,
@@ -127,6 +128,9 @@ def simple_ea(
         Use population entropy parameter to promote diversity in population. Set True only if you understand how population entropy is computed!
     population_extra_parameters
         Extra parameters for the population
+    population
+        Pre-initialized Population object to resume evolution from. If None, creates a new population.
+        Use with load_population() to resume from a checkpoint.
     stopper
         Custom stopping condition function
     checkpoint_every
@@ -159,6 +163,15 @@ def simple_ea(
     ...     if gen % 20 == 0:
     ...         save_population(pop, f'checkpoint_{gen}.pkl')
     >>> population = simple_ea(top_frame, evaluator, checkpoint_callback=my_callback)
+    
+    >>> # Resume from a checkpoint
+    >>> from byron.tools.checkpoint import load_population
+    >>> loaded_pop = load_population('checkpoint_gen50.pkl')
+    >>> population = simple_ea(
+    ...     top_frame, evaluator,
+    ...     population=loaded_pop,
+    ...     max_generation=100  # Continue from gen 50 to gen 100
+    ... )
     """
 
     start = perf_counter_ns(), process_time_ns()
@@ -185,8 +198,13 @@ def simple_ea(
         except Exception as e:
             byron_logger.error(f"SimpleEA: Failed to save checkpoint: {e}")
 
-    # initialize population
-    population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
+    # initialize population or resume from checkpoint
+    if population is None:
+        population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
+        is_resuming = False
+    else:
+        is_resuming = True
+        byron_logger.info(f"SimpleEA: Resuming from checkpoint at generation {population.generation}")
 
     # stopping conditions
     stopping_conditions = list()
@@ -207,28 +225,32 @@ def simple_ea(
     population.operators = [op for op in operators if op.num_parents is not None]
     ext = Estimator(population, max_generation, rewards, population.operators, target_fitness, temperature)
 
-    gen0 = list()
-    while len(gen0) < mu:
-        o = rrandom.choice(population.operators_gen0)
-        gen0 += o(top_frame=top_frame)
-    population += gen0
-    evaluator(population)
-    population.sort()
-    best = population[0]
-    _new_best(population, evaluator)
-    
-    # Initial checkpoint after generation 0
-    if checkpoint_every is not None or checkpoint_on_improvement:
-        _save_checkpoint(population, "generation 0")
-    
-    # Custom callback
-    if checkpoint_callback:
-        try:
-            checkpoint_callback(population, population.generation)
-        except Exception as e:
-            byron_logger.error(f"SimpleEA: Checkpoint callback error: {e}")
-
-    all_individuals = set()
+    # Only initialize population if not resuming from checkpoint
+    if not is_resuming:
+        gen0 = list()
+        while len(gen0) < mu:
+            o = rrandom.choice(population.operators_gen0)
+            gen0 += o(top_frame=top_frame)
+        population += gen0
+        evaluator(population)
+        population.sort()
+        best = population[0]
+        _new_best(population, evaluator)
+        
+        # Initial checkpoint after generation 0
+        if checkpoint_every is not None or checkpoint_on_improvement:
+            _save_checkpoint(population, "generation 0")
+        
+        # Custom callback
+        if checkpoint_callback:
+            try:
+                checkpoint_callback(population, population.generation)
+            except Exception as e:
+                byron_logger.error(f"SimpleEA: Checkpoint callback error: {e}")
+    else:
+        # When resuming, best is already in population[0] after loading
+        best = population[0]
+        byron_logger.info(f"SimpleEA: Resumed with best fitness: {best.fitness}")
 
     # begin evolution!
     while not any(s() for s in stopping_conditions):
@@ -255,8 +277,6 @@ def simple_ea(
 
         evaluator(population)
         population.sort()
-
-        all_individuals |= set(population)
 
         population.individuals[mu:] = []
 

@@ -97,6 +97,7 @@ def topk_tournament_ea(
     temperature: float = 0.85,
     entropy: bool = False,
     population_extra_parameters: dict = None,
+    population: 'Population | None' = None,
     stopper: Callable | None = None,
     checkpoint_every: int | None = None,
     checkpoint_file: str | Path | None = None,
@@ -138,6 +139,9 @@ def topk_tournament_ea(
         Use population entropy for diversity (default: False).
     population_extra_parameters : dict, optional
         Extra parameters for population (default: None).
+    population : Population or None, optional
+        Pre-initialized Population object to resume evolution from. If None, creates a new population.
+        Use with load_population() to resume from a checkpoint (default: None).
     stopper : Callable or None, optional
         Custom stopping condition (default: None).
     checkpoint_every : int or None, optional
@@ -161,6 +165,19 @@ def topk_tournament_ea(
     -------
     Population
         The final population after evolution.
+    
+    Examples
+    --------
+    >>> # Resume from a checkpoint
+    >>> from byron.tools.checkpoint import load_population
+    >>> loaded_pop = load_population('checkpoint_gen50.pkl')
+    >>> population = topk_tournament_ea(
+    ...     top_frame, evaluator,
+    ...     population=loaded_pop,
+    ...     max_generation=100,  # Continue from gen 50 to gen 100
+    ...     tournament_size=3,
+    ...     maxSelectable=2
+    ... )
     """
     start = perf_counter_ns(), process_time_ns()
     silent_pause = 1
@@ -184,7 +201,13 @@ def topk_tournament_ea(
         except Exception as e:
             byron_logger.error(f"TopK-TournamentEA: Failed to save checkpoint: {e}")
 
-    population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
+    # initialize population or resume from checkpoint
+    if population is None:
+        population = Population(top_frame, extra_parameters=population_extra_parameters, memory=False)
+        is_resuming = False
+    else:
+        is_resuming = True
+        byron_logger.info(f"TopK-TournamentEA: Resuming from checkpoint at generation {population.generation}")
 
     stopping_conditions = list()
     if stopper:
@@ -203,25 +226,29 @@ def topk_tournament_ea(
     population.operators = [op for op in operators if op.num_parents is not None]
     ext = Estimator(population, max_generation, rewards, population.operators, target_fitness, temperature)
 
-    gen0 = list()
-    while len(gen0) < mu:
-        o = rrandom.choice(population.operators_gen0)
-        gen0 += o(top_frame=top_frame)
-    population += gen0
-    evaluator(population)
-    population.sort()
-    best = population[0]
-    _new_best(population, evaluator)
+    # Only initialize population if not resuming from checkpoint
+    if not is_resuming:
+        gen0 = list()
+        while len(gen0) < mu:
+            o = rrandom.choice(population.operators_gen0)
+            gen0 += o(top_frame=top_frame)
+        population += gen0
+        evaluator(population)
+        population.sort()
+        best = population[0]
+        _new_best(population, evaluator)
 
-    if checkpoint_every is not None or checkpoint_on_improvement:
-        _save_checkpoint(population, "generation 0")
-    if checkpoint_callback:
-        try:
-            checkpoint_callback(population, population.generation)
-        except Exception as e:
-            byron_logger.error(f"TopK-TournamentEA: Checkpoint callback error: {e}")
-
-    all_individuals = set()
+        if checkpoint_every is not None or checkpoint_on_improvement:
+            _save_checkpoint(population, "generation 0")
+        if checkpoint_callback:
+            try:
+                checkpoint_callback(population, population.generation)
+            except Exception as e:
+                byron_logger.error(f"TopK-TournamentEA: Checkpoint callback error: {e}")
+    else:
+        # When resuming, best is already in population[0] after loading
+        best = population[0]
+        byron_logger.info(f"TopK-TournamentEA: Resumed with best fitness: {best.fitness}")
 
     while not any(s() for s in stopping_conditions):
         new_individuals = list()
@@ -256,8 +283,6 @@ def topk_tournament_ea(
 
         evaluator(population)
         population.sort()
-
-        all_individuals |= set(population)
 
         population.individuals[mu:] = []
 
