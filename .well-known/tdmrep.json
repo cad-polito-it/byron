@@ -1,0 +1,9 @@
+{
+  "@context": "http://www.w3.org/ns/tdmrep#",
+  "type": "Reservation",
+  "policy": "http://www.w3.org/ns/tdmrep#all-rights-reserved",
+  "rightsHolder": {
+    "name": "Giovanni Squillero",
+    "email": "giovanni.squillero@polito.it"
+  }
+}
