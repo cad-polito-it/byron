@@ -26,6 +26,7 @@
 
 __all__ = ["Macro"]
 
+import re
 from typing import Any
 
 from byron.classes.parameter import ParameterABC
@@ -41,6 +42,7 @@ class Macro(SElement, Paranoid):
     TEXT: str
     PARAMETERS: dict[str, type[ParameterABC]]
     EXTRA_PARAMETERS: dict[str, Any]
+    SAFE_FORMAT: bool = False  # If True, use safe substitution that ignores unknown {placeholders}
 
     def __init__(self):
         super().__init__()
@@ -66,7 +68,23 @@ class Macro(SElement, Paranoid):
 
     def dump(self, parameters: ValueBag) -> str:
         assert check_valid_type(parameters, ValueBag)
-        return self.text.format(**parameters)
+        
+        if self.SAFE_FORMAT:
+            # Use regex-based substitution to only replace valid parameter placeholders
+            # This avoids KeyError when text contains literal braces (e.g., JSON content)
+            def replace_param(match):
+                key = match.group(1)
+                if key in parameters:
+                    return str(parameters[key])
+                # Not a known parameter, return the original brace expression unchanged
+                return match.group(0)
+            
+            # Match {identifier} patterns where identifier is a valid Python identifier
+            pattern = r'\{([a-zA-Z_][a-zA-Z0-9_]*)\}'
+            return re.sub(pattern, replace_param, self.text)
+        else:
+            # Standard Python str.format() - raises KeyError on unknown placeholders
+            return self.text.format(**parameters)
 
     @staticmethod
     def is_name_valid(name: str) -> bool:

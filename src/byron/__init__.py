@@ -51,6 +51,7 @@ from byron.registry import *  # noqa: F403
 from byron.sys import SYSINFO as sysinfo  # noqa: F401
 from byron.tools.graph import fasten_subtree_parameters  # noqa: F401
 from byron.tools.providers import *  # noqa: F403
+from byron.tools import checkpoint  # noqa: F401
 from byron.user_messages.messaging import logger  # noqa: F401
 
 #############################################################################

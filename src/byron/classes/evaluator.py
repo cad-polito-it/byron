@@ -444,6 +444,11 @@ class ScriptEvaluator(EvaluatorABC):
     *   `filename_format`: F-string [1]_ with the filenames of the phenotypes. Variable ``i`` is number of the
         individual. Default is "phenotype_{i:x}.txt"
     *   `timeout`: Maximum number of seconds to wait for the script. Use ``None`` to disable timeout.
+    *   `stdout_fitness_keyword`: Fitness values from which fitness values are extracted. The script must print
+        something on the standard output, that is captured and parsed. If ``None``, the whole output is
+        considered. If not ``None``, only the lines containing the keyword are considered. If multiple lines
+        contain the keyword, only the last one is considered. If the keyword is not found, an exception is raised.
+        The keyword is case-sensitive.
 
     Use option `strip_phenotypes` (see :py:class:`byron.classes.evaluator.EvaluatorABC`) to convert the phenotype into a
     single-line string.
@@ -467,6 +472,7 @@ class ScriptEvaluator(EvaluatorABC):
         *,
         filename_format: str = 'phenotype_{i:x}.txt',
         timeout: int | None = 60,
+        stdout_fitness_keyword: str = None,
         **kwargs,
     ) -> None:
         r"""
@@ -486,6 +492,7 @@ class ScriptEvaluator(EvaluatorABC):
         self._script_options = args if args else list()
         self._file_name = filename_format
         self._timeout = timeout
+        self._stdout_fitness_keyword = stdout_fitness_keyword
 
     def __str__(self):
         return f"{self.__class__.__name__}❬{self._script_name}❭"
@@ -511,12 +518,28 @@ class ScriptEvaluator(EvaluatorABC):
             capture_output=True,
         )
 
+        logger.debug(
+            f"ScriptEvaluator: script '{self._script_name}' returned results:\n" +
+            f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}\nreturncode: {result.returncode}"
+        )
+        
         if result is None:
             raise RuntimeError("Process failed (returned None)")
         elif not result.stdout:
             raise RuntimeError(f"Process returned empty stdout (stderr: '{result.stderr}')")
         else:
-            results = list(filter(lambda s: bool(s), result.stdout.split("\n")))
+            if self._stdout_fitness_keyword is not None:
+                results = [
+                    s.replace(self._stdout_fitness_keyword, "").strip()
+                    for s in result.stdout.split("\n")
+                    if self._stdout_fitness_keyword in s
+                ]
+                if not results:
+                    raise ValueError(
+                        f"{PARANOIA_VALUE_ERROR}: Keyword '{self._stdout_fitness_keyword}' not found in stdout:\n{result.stdout}"
+                    )
+            else:
+                results = list(filter(lambda s: bool(s), result.stdout.split("\n")))
             assert len(results) == len(individuals), (
                 f"{PARANOIA_VALUE_ERROR}: Number of results and number of individual mismatch: found {len(results)} expected {len(individuals)}"
             )

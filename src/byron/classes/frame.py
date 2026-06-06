@@ -94,6 +94,7 @@ class MacroBunch:
     `bunch` factory function
     """
 
+    SEPARATOR: str | None = None  # Separator string inserted between child elements
     pass
 
 
@@ -105,4 +106,5 @@ class FrameBunch:
     `bunch` factory function
     """
 
+    SEPARATOR: str | None = None  # Separator string inserted between child elements
     pass

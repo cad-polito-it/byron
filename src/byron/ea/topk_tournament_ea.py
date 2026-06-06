@@ -22,11 +22,14 @@
 # limitations under the License.
 
 # =[ HISTORY ]===============================================================
-# v2 / January 2026 / Franout (FA)
-# v1 / January 2024 / Sacchet (MS)
+# v1 / January 2026 / Franout (FA)
 
-__all__ = ['simple_ea', 'adaptive_ea']
+__all__ = ['topk_tournament_ea']
+"""
+Top-K Tournament Evolutionary Algorithm for Byron
 
+This module provides an evolutionary algorithm using top-k tournament selection for parent selection.
+"""
 
 from datetime import timedelta
 from inspect import signature
@@ -42,12 +45,22 @@ from byron.sys import *
 from byron.tools.checkpoint import save_population
 from byron.user_messages import *
 from byron.user_messages import logger as byron_logger
-
 from .estimator import Estimator
-from .selection import *
+from .selection import top_k_tournament_selection
 
 
 def _elapsed(start, *, process: bool = False, steps: int = 0):
+    """
+    Helper function to format elapsed time for logging.
+
+    Args:
+        start (tuple): Start times (process_time_ns, perf_counter_ns).
+        process (bool): Whether to include process time.
+        steps (int): Number of steps for average time per step.
+
+    Returns:
+        str: Formatted elapsed time string.
+    """
     data = list()
     end = [process_time_ns(), perf_counter_ns()][::-1]
     e = str(timedelta(microseconds=(end[0] - start[0]) // 1e3)) + '.0000000000'
@@ -63,20 +76,14 @@ def _elapsed(start, *, process: bool = False, steps: int = 0):
         data.append('🕙  ' + s)
     return ' / '.join(data)
 
-
-def adaptive_ea(*args, **kwargs):
-    deprecation_warning("adaptive_ea() is deprecated, use simple_ea() instead.")
-    return simple_ea(*args, **kwargs)
-
-
 def _new_best(population: Population, evaluator: EvaluatorABC):
     byron_logger.info(
-        f"SimpleEA: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
+        f"TopK-TournamentEA: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
         + f" [🕓 gen: {population.generation:,} / fcalls: {evaluator.fitness_calls:,}]"
     )
 
 
-def simple_ea(
+def topk_tournament_ea(
     top_frame: type[FrameABC],
     evaluator: EvaluatorABC,
     mu: int = 10,
@@ -96,107 +103,103 @@ def simple_ea(
     checkpoint_file: str | Path | None = None,
     checkpoint_callback: Callable[[Population, int], None] | None = None,
     checkpoint_on_improvement: bool = False,
-    tournament_cost_function : Callable[[Individual], float] | None = None,
+    tournament_size: int = 2,
+    maxSelectable: int = 2,
+    tournament_cost_function: Callable[[Individual], float] | None = None,
+    with_replacement: bool = False,
 ) -> Population:
-    r"""A configurable self-adaptive evolutionary algorithm
+    """
+    Evolutionary algorithm using top-k tournament selection for parent selection.
 
     Parameters
     ----------
-    top_frame
-        The top_frame of individuals
-    evaluator
-        The evaluator used to evaluate individuals
-    mu
-        The size of the population
-    lambda_
-        The size the offspring
-    max_generation
-        Maximum number of generation allowed
-    target_fitness
-        Fitness target
-    top_n
-        The size of champions population
-    lifespan
-        The number of generation an individual survive
-    operators
-        Which operators you want to use
-    rewards
-        List of rewards for creating an individual fitter than parents [0] and for a successfully created individual [1]
-    temperature
-        A all round value to tune exploration vs exploitation
-    entropy
-        Use population entropy parameter to promote diversity in population. Set True only if you understand how population entropy is computed!
-    population_extra_parameters
-        Extra parameters for the population
-    population
+    top_frame : type[FrameABC]
+        The top frame class for individuals.
+    evaluator : EvaluatorABC
+        Evaluator used to evaluate individuals.
+    mu : int, optional
+        Population size (default: 10).
+    lambda_ : int, optional
+        Offspring size per generation (default: 20).
+    max_generation : int, optional
+        Maximum number of generations (default: 100).
+    target_fitness : FitnessABC or None, optional
+        Target fitness to stop evolution (default: None).
+    top_n : int, optional
+        Number of champions in population (default: 0).
+    lifespan : int or None, optional
+        Number of generations an individual survives (default: None).
+    operators : list[Callable], optional
+        List of genetic operators (default: None).
+    rewards : list[float], optional
+        Rewards for creating fitter individuals (default: [0.7, 0.3]).
+    temperature : float, optional
+        Exploration/exploitation parameter (default: 0.85).
+    entropy : bool, optional
+        Use population entropy for diversity (default: False).
+    population_extra_parameters : dict, optional
+        Extra parameters for population (default: None).
+    population : Population or None, optional
         Pre-initialized Population object to resume evolution from. If None, creates a new population.
-        Use with load_population() to resume from a checkpoint.
-    stopper
-        Custom stopping condition function
-    checkpoint_every
-        Save checkpoint every N generations. None = no automatic checkpointing
-    checkpoint_file
-        Base filename for checkpoints. Can include {generation} placeholder.
-        Examples: 'checkpoint_gen{generation}.pkl' or 'checkpoint.pkl'
-    checkpoint_callback
-        Custom callback function(population, generation) called after each generation.
-        Useful for custom checkpoint logic, logging, or user-controlled saves.
-    checkpoint_on_improvement
-        If True, save checkpoint whenever a new best individual is found
+        Use with load_population() to resume from a checkpoint (default: None).
+    stopper : Callable or None, optional
+        Custom stopping condition (default: None).
+    checkpoint_every : int or None, optional
+        Save checkpoint every N generations (default: None).
+    checkpoint_file : str or Path or None, optional
+        Filename for checkpoints (default: None).
+    checkpoint_callback : Callable or None, optional
+        Custom callback after each generation (default: None).
+    checkpoint_on_improvement : bool, optional
+        Save checkpoint on improvement (default: False).
+    tournament_size : int, optional
+        Number of candidates in each tournament (default: 2).
+    maxSelectable : int, optional
+        Number of winners per tournament (default: 2).
+    tournament_cost_function : Callable or None, optional
+        Optional cost function for tournament selection (default: None).
+    with_replacement : bool, optional
+        Select winners with replacement (default: False).
+
     Returns
     -------
     Population
-        The last population
+        The final population after evolution.
     
     Examples
     --------
-    >>> # Checkpoint every 10 generations
-    >>> population = simple_ea(
-    ...     top_frame, evaluator,
-    ...     max_generation=100,
-    ...     checkpoint_every=10,
-    ...     checkpoint_file='run_gen{generation}.pkl'
-    ... )
-    
-    >>> # Custom callback for user-controlled checkpointing
-    >>> def my_callback(pop, gen):
-    ...     if gen % 20 == 0:
-    ...         save_population(pop, f'checkpoint_{gen}.pkl')
-    >>> population = simple_ea(top_frame, evaluator, checkpoint_callback=my_callback)
-    
     >>> # Resume from a checkpoint
     >>> from byron.tools.checkpoint import load_population
     >>> loaded_pop = load_population('checkpoint_gen50.pkl')
-    >>> population = simple_ea(
+    >>> population = topk_tournament_ea(
     ...     top_frame, evaluator,
     ...     population=loaded_pop,
-    ...     max_generation=100  # Continue from gen 50 to gen 100
+    ...     max_generation=100,  # Continue from gen 50 to gen 100
+    ...     tournament_size=3,
+    ...     maxSelectable=2
     ... )
     """
-
     start = perf_counter_ns(), process_time_ns()
     silent_pause = 1
     if notebook_mode:
         silent_pause = 5
-    byron_logger.info("SimpleEA: 🧬 [b]SimpleEA started[/] ┈ %s", _elapsed(start, process=True))
+    byron_logger.info("TopK-TournamentEA: 🧬 [b]TopK-TournamentEA started[/] ┈ %s", _elapsed(start, process=True))
 
     # Checkpoint setup
     if checkpoint_every is not None or checkpoint_on_improvement:
         if checkpoint_file is None:
             checkpoint_file = 'checkpoint_gen{generation}.pkl'
         checkpoint_file = Path(checkpoint_file)
-    
     def _save_checkpoint(pop: Population, reason: str = ""):
-        """Helper to save checkpoint with error handling"""
         if checkpoint_file is None:
             return
         try:
             filename = str(checkpoint_file).format(generation=pop.generation)
             save_population(pop, Path(filename))
             if reason:
-                byron_logger.info(f"SimpleEA: 💾 Checkpoint saved ({reason}) ➜ {filename}")
+                byron_logger.info(f"TopK-TournamentEA: 💾 Checkpoint saved ({reason}) ➜ {filename}")
         except Exception as e:
-            byron_logger.error(f"SimpleEA: Failed to save checkpoint: {e}")
+            byron_logger.error(f"TopK-TournamentEA: Failed to save checkpoint: {e}")
 
     # initialize population or resume from checkpoint
     if population is None:
@@ -204,15 +207,13 @@ def simple_ea(
         is_resuming = False
     else:
         is_resuming = True
-        byron_logger.info(f"SimpleEA: Resuming from checkpoint at generation {population.generation}")
+        byron_logger.info(f"TopK-TournamentEA: Resuming from checkpoint at generation {population.generation}")
 
-    # stopping conditions
     stopping_conditions = list()
     if stopper:
         stopping_conditions.append(lambda: stopper(population))
     if max_generation:
         stopping_conditions.append(lambda: population.generation >= max_generation)
-    # TODO: if max_fitness is alredy a fitness? if minimizing?
     if target_fitness is not None:
         if not isinstance(target_fitness, FitnessABC):
             target_fitness = make_fitness(target_fitness)
@@ -236,23 +237,19 @@ def simple_ea(
         population.sort()
         best = population[0]
         _new_best(population, evaluator)
-        
-        # Initial checkpoint after generation 0
+
         if checkpoint_every is not None or checkpoint_on_improvement:
             _save_checkpoint(population, "generation 0")
-        
-        # Custom callback
         if checkpoint_callback:
             try:
                 checkpoint_callback(population, population.generation)
             except Exception as e:
-                byron_logger.error(f"SimpleEA: Checkpoint callback error: {e}")
+                byron_logger.error(f"TopK-TournamentEA: Checkpoint callback error: {e}")
     else:
         # When resuming, best is already in population[0] after loading
         best = population[0]
-        byron_logger.info(f"SimpleEA: Resumed with best fitness: {best.fitness}")
+        byron_logger.info(f"TopK-TournamentEA: Resumed with best fitness: {best.fitness}")
 
-    # begin evolution!
     while not any(s() for s in stopping_conditions):
         new_individuals = list()
         strength = ext.strength(entropy)
@@ -260,15 +257,24 @@ def simple_ea(
             op = ext.take()
             parents = list()
             for _ in range(op.num_parents):
-                byron_logger.info(f"SimpleEA: Selecting parent using tournament selection with tournament_size=1 and tournament_cost_function={tournament_cost_function} ┈ %s", _elapsed(start, process=True))
-                parents.append(tournament_selection(population, 1, tournament_cost_function))
+                byron_logger.info(f"TopK-TournamentEA: 🚀TopK-TournamentEA -Starting championship evaluation for {tournament_size} individuals")
+                selected = top_k_tournament_selection(
+                    population,
+                    tournament_size=tournament_size,
+                    maxSelectable=maxSelectable,
+                    tournament_cost_function=tournament_cost_function,
+                    with_replacement=with_replacement
+                )
+                byron_logger.info("TopK-TournamentEA: 🚀TopK-TournamentEA selection completed ┈ %s", _elapsed(start, process=True))
+                parents.extend(selected)
+            parents = parents[:op.num_parents]
             if 'strength' in signature(op).parameters:
                 new_individuals += op(*parents, strength=strength)
             else:
                 new_individuals += op(*parents)
         if not new_individuals:
             byron_logger.warning(
-                "SimpleEA: empty offspring (no new individuals) ┈ %s", _elapsed(start, steps=evaluator.fitness_calls)
+                "TopK-TournamentEA: empty offspring (no new individuals) ┈ %s", _elapsed(start, steps=evaluator.fitness_calls)
             )
 
         if lifespan is not None:
@@ -283,41 +289,31 @@ def simple_ea(
         if best.fitness << population[0].fitness:
             best = population[0]
             _new_best(population, evaluator)
-            
-            # Checkpoint on improvement
             if checkpoint_on_improvement:
                 _save_checkpoint(population, f"improvement at gen {population.generation}")
-        
-        # Periodic checkpoint
         if checkpoint_every is not None and population.generation % checkpoint_every == 0:
             _save_checkpoint(population, f"periodic (every {checkpoint_every} gen)")
-        
-        # Custom callback
         if checkpoint_callback:
             try:
                 checkpoint_callback(population, population.generation)
             except Exception as e:
-                byron_logger.error(f"SimpleEA: Checkpoint callback error: {e}")
+                byron_logger.error(f"TopK-TournamentEA: Checkpoint callback error: {e}")
 
         byron_logger.hesitant_log(
             silent_pause,
             LOGGING_INFO,
-            f"SimpleEA: End of generation %s (𝐻: {population.entropy:.4f}) ┈ %s",
+            f"TopK-TournamentEA: End of generation %s (𝐻: {population.entropy:.4f}) ┈ %s",
             population.generation,
             _elapsed(start, steps=evaluator.fitness_calls),
         )
-    
-    # Final checkpoint at completion
     if checkpoint_file is not None:
         _save_checkpoint(population, "final")
-
     end = process_time_ns()
-
-    byron_logger.info("SimpleEA: 🍦 [b]SimpleEA completed[/] ┈ %s", _elapsed(start, process=True))
+    byron_logger.info("TopK-TournamentEA: 🍦 [b]TopK-TournamentEA completed[/] ┈ %s", _elapsed(start, process=True))
     byron_logger.info(
-        f"SimpleEA: 🏆 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True)}",
+        f"TopK-TournamentEA: 🏆 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True)}",
     )
-    byron_logger.info("SimpleEA: Genetic operators statistics:")
+    byron_logger.info("TopK-TournamentEA: Genetic operators statistics:")
     for op in get_operators():
-        byron_logger.info(f"SimpleEA: * {op.__qualname__}: {op.stats}")
+        byron_logger.info(f"TopK-TournamentEA: * {op.__qualname__}: {op.stats}")
     return population

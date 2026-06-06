@@ -99,11 +99,11 @@ class Statistics:
 
 
 def fitness_function(
-    func: Callable[..., FitnessABC] | None = None, /, *, type_: type[FitnessABC] = None, backend: str | None = 'list'
+    func: Callable[..., FitnessABC] | None = None, /, *, type_: type[FitnessABC] = None, backend: str | None = 'list', max_log_size: int | None = FitnessLog.DEFAULT_MAX_SIZE
 ):
     if type_ is None:
         type_ = lambda f: fitness.make_fitness(f)
-    log_ = FitnessLog(backend)
+    log_ = FitnessLog(backend, max_size=max_log_size)
 
     @wraps(func)
     def wrapper(*args, log=log_, **kwargs):
@@ -116,7 +116,7 @@ def fitness_function(
 
     if func is None:
         # called with args... let's roll again
-        return lambda f: fitness_function(f, type_=type_, backend=backend)
+        return lambda f: fitness_function(f, type_=type_, backend=backend, max_log_size=max_log_size)
     else:
         return wrapper
 
