@@ -220,9 +220,9 @@ class PythonEvaluator(EvaluatorABC):
         """
 
         super().__init__(**kwargs)
-        assert get_byron_type(fitness_function) == FITNESS_FUNCTION, (
-            f"TypeError: {fitness_function} has not be registered as a MicgroGP fitness function"
-        )
+        assert (
+            get_byron_type(fitness_function) == FITNESS_FUNCTION
+        ), f"TypeError: {fitness_function} has not be registered as a MicgroGP fitness function"
 
         if not backend or (self._max_workers is not None and self._max_workers < 2):
             backend = ''
@@ -380,9 +380,9 @@ class MakefileEvaluator(EvaluatorABC):
     def _evaluate(self, phenotype: str):
         with tempfile.TemporaryDirectory(prefix="byron_", ignore_cleanup_errors=True) as tmp_dir:
             for f in [self._makefile, *self._required_files]:
-                assert os.path.exists(f), (
-                    f"FileNotFoundError (paranoia check): No such file or directory: '{f}' (cwd was '{self._byron_base_dir}')"
-                )
+                assert os.path.exists(
+                    f
+                ), f"FileNotFoundError (paranoia check): No such file or directory: '{f}' (cwd was '{self._byron_base_dir}')"
                 os.symlink(os.path.join(self._byron_base_dir, f), os.path.join(tmp_dir, f))
             with open(os.path.join(tmp_dir, self._filename), "w") as dump:
                 dump.write(phenotype)
@@ -517,9 +517,9 @@ class ScriptEvaluator(EvaluatorABC):
             raise RuntimeError(f"Process returned empty stdout (stderr: '{result.stderr}')")
         else:
             results = list(filter(lambda s: bool(s), result.stdout.split("\n")))
-            assert len(results) == len(individuals), (
-                f"{PARANOIA_VALUE_ERROR}: Number of results and number of individual mismatch: found {len(results)} expected {len(individuals)}"
-            )
+            assert (
+                len(results) == len(individuals)
+            ), f"{PARANOIA_VALUE_ERROR}: Number of results and number of individual mismatch: found {len(results)} expected {len(individuals)}"
             for ind, line in zip_longest(individuals, results):
                 value = [float(r) for r in line.split()]
                 if len(value) == 1:
@@ -620,9 +620,9 @@ class ParallelScriptEvaluator(EvaluatorABC):
     def _evaluate(self, phenotype: str) -> DebugInfo:
         with tempfile.TemporaryDirectory(prefix="byron_", ignore_cleanup_errors=True) as tmp_dir:
             for f in [*self._other_required_files]:
-                assert os.path.exists(f), (
-                    f"FileNotFoundError (paranoia check): No such file or directory: '{f}' (cwd was '{self._byron_base_dir}')"
-                )
+                assert os.path.exists(
+                    f
+                ), f"FileNotFoundError (paranoia check): No such file or directory: '{f}' (cwd was '{self._byron_base_dir}')"
                 os.symlink(os.path.join(self._byron_base_dir, f), os.path.join(tmp_dir, f))
             with open(os.path.join(tmp_dir, self._filename), "w") as dump:
                 dump.write(phenotype)

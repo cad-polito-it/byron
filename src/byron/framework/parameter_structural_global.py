@@ -184,7 +184,7 @@ def _global_reference(
 def global_reference(
     target_frame: str | type[SElement], *, creative_zeal=0, first_macro: bool = False
 ) -> type[ParameterStructuralABC]:
-    assert isinstance(creative_zeal, int) or 0.0 <= creative_zeal <= 1.0, (
-        f"ValueError: creative zeal is integer or 0 <= float <= 1: found {creative_zeal}"
-    )
+    assert (
+        isinstance(creative_zeal, int) or 0.0 <= creative_zeal <= 1.0
+    ), f"ValueError: creative zeal is integer or 0 <= float <= 1: found {creative_zeal}"
     return _global_reference(target_frame=target_frame, first_macro=bool(first_macro), creative_zeal=creative_zeal)

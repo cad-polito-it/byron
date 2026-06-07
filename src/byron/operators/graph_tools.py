@@ -83,9 +83,9 @@ def unroll_selement(top: type[SElement], G: nx.classes.MultiDiGraph) -> NodeRefe
 
 def initialize_subtree(node_reference: NodeReference):
     for _, p in get_node_parameters(node_reference.graph, node_reference.node):
-        assert p.value is None or (isinstance(p, ParameterSharedABC) and not p.is_owner), (
-            f"{PARANOIA_VALUE_ERROR}: {p} already initialized"
-        )
+        assert p.value is None or (
+            isinstance(p, ParameterSharedABC) and not p.is_owner
+        ), f"{PARANOIA_VALUE_ERROR}: {p} already initialized"
         p.mutate(1)
 
     # parameters = get_all_parameters(node_reference.graph, node_reference.node, node_id=True)

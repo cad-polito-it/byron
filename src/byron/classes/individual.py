@@ -82,7 +82,7 @@ class Age:
         return self
 
     def __str__(self):
-        return f'⚝ {self.birth}' + (f' (⌛ {self.apparent_age})' if self.apparent_age else '')
+        return f'⚝{self.birth}' + (f' (⌛ {self.apparent_age})' if self.apparent_age else '')
 
 
 class Individual(Paranoid):
@@ -135,7 +135,7 @@ class Individual(Paranoid):
 
     def __str__(self):
         # return f"𝕚{self._id}" + " | " + str(hash(self.as_message)) + ' | ' + str(self.structure_tree)
-        return f"{'𝐢' if self.finalized else '𝕚'}{self._id}"
+        return f"{'𝐢' if self.finalized else '𝕚'}{self._id} ({self.fitness} / {self.age})"
 
     def __eq__(self, other) -> bool:
         return (

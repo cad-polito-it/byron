@@ -202,13 +202,13 @@ def bunch(
     if isinstance(size, int):
         size = (size, size + 1)
     else:
-        assert len(size) == 2 or len(size) == 3, (
-            f"{PARANOIA_VALUE_ERROR}: Not a half open range [min, max) with optional initial"
-        )
+        assert (
+            len(size) == 2 or len(size) == 3
+        ), f"{PARANOIA_VALUE_ERROR}: Not a half open range [min, max) with optional initial"
     assert 0 <= size[0] < size[1], f"{PARANOIA_VALUE_ERROR}: Min size is {size[0]} and max size is {size[1] - 1}"
-    assert len(size) != 3 or size[0] <= size[2] < size[1], (
-        f"{PARANOIA_VALUE_ERROR}: Initial size {size[2]} is not in [{size[0]}, {size[1]})"
-    )
+    assert (
+        len(size) != 3 or size[0] <= size[2] < size[1]
+    ), f"{PARANOIA_VALUE_ERROR}: Initial size {size[2]} is not in [{size[0]}, {size[1]})"
 
     assert _debug_hints()
 
