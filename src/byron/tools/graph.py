@@ -89,9 +89,9 @@ def set_successors_order(ref: NodeReference, new_order: Sequence[int]) -> None:
     G = ref.graph
     current = tuple((u, v, k) for u, v, k, d in G.out_edges(ref.node, keys=True, data='_type') if d == FRAMEWORK)
     assert all(k == 0 for u, v, k in current), "ValueError: Found a FRAMEWORK edge with key != 0."
-    assert {v for u, v, k in current} == set(new_order), (
-        f"{PARANOIA_VALUE_ERROR}: Mismatching new order: {[v for u, v, k in current]} vs. {new_order}."
-    )
+    assert {v for u, v, k in current} == set(
+        new_order
+    ), f"{PARANOIA_VALUE_ERROR}: Mismatching new order: {[v for u, v, k in current]} vs. {new_order}."
 
     attributes = dict()
     for u, v, k in current:
