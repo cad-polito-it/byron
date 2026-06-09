@@ -227,6 +227,10 @@ class PythonEvaluator(EvaluatorABC):
         if not backend or (self._max_workers is not None and self._max_workers < 2):
             backend = ''
             self._max_workers = 1
+        elif backend == 'joblib' and not joblib_available:
+            runtime_warning("No 'joblib': falling back to sequential evaluation.", stacklevel_offset=1)
+            backend = ''
+            self._max_workers = 1
 
         self._fitness_function = fitness_function
         self._backend = backend

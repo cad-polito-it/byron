@@ -11,11 +11,12 @@ def fitness(phenotype: str) -> int:
 
 def run_session(session_num):
     # Check starting point
+    population = None
     if CHECKPOINT.exists():
-        old_pop = load_population(CHECKPOINT)
-        starting_gen = old_pop.generation
+        population = load_population(CHECKPOINT)
+        starting_gen = population.generation
         print(f"\n📂 Session {session_num}: Continuing from generation {starting_gen}")
-        print(f"   Previous best: {old_pop[0].fitness}")
+        print(f"   Previous best: {population[0].fitness}")
     else:
         starting_gen = 0
         print(f"\n🆕 Session {session_num}: Starting fresh")
@@ -27,13 +28,14 @@ def run_session(session_num):
     
     pop = byron.ea.simple_ea(
         top_frame, evaluator, mu=10, lambda_=20,
-        max_generation=5,
+        max_generation=starting_gen + 5,
+        population=population,
         checkpoint_file=CHECKPOINT,
         checkpoint_every=5,
         target_fitness=byron.fitness.make_fitness(NUM_BITS)
     )
     
-    actual_gen = starting_gen + pop.generation
+    actual_gen = pop.generation
     print(f"✓ Session {session_num} complete: now at generation {actual_gen}, best = {pop[0].fitness}")
     return actual_gen
 

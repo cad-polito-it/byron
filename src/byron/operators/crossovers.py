@@ -178,18 +178,21 @@ def bunch_onepoint_crossover(parent1: Individual, parent2: Individual, strength:
     if len(children1) < 2 or len(children2) < 2:
         raise ByronOperatorFailure("Bunches too small for crossover")
     
-    # Choose crossover points
-    point1 = rrandom.random_int(1, len(children1))
-    point2 = rrandom.random_int(1, len(children2))
-    
     # Get size constraints
     size_min = G1.nodes[node1]['_selement'].SIZE[0]
     size_max = G1.nodes[node1]['_selement'].SIZE[1] - 1
-    
-    # Calculate new size
-    new_size = point1 + (len(children2) - point2)
-    if new_size < size_min or new_size > size_max:
+
+    feasible_points = [
+        (point1, point2)
+        for point1 in range(1, len(children1) + 1)
+        for point2 in range(1, len(children2) + 1)
+        if size_min <= point1 + (len(children2) - point2) <= size_max
+        and (point1 < len(children1) or point2 < len(children2))
+    ]
+    if not feasible_points:
         raise ByronOperatorFailure("Crossover would violate size constraints")
+
+    point1, point2 = rrandom.choice(feasible_points)
     
     # Remove children after crossover point from offspring
     for child in children1[point1:]:

@@ -90,7 +90,7 @@ def save_population(population: Population, filepath: str | Path) -> None:
         raise
 
 
-def load_population(filepath: str | Path) -> tuple[Population, int]:
+def load_population(filepath: str | Path) -> Population:
     """Load a population from a pickle file.
     
     This function deserializes a Population object that was previously saved
@@ -107,16 +107,15 @@ def load_population(filepath: str | Path) -> tuple[Population, int]:
         
     Returns
     -------
-    tuple[Population, int]
-        A tuple containing:
-        - population: The reconstructed population object with all individuals and metadata
-        - generation: The generation number at which the checkpoint was saved
+    Population
+        The reconstructed population object with all individuals and metadata.
+        The saved generation remains available as ``population.generation``.
         
     Examples
     --------
     >>> # Resume evolution from checkpoint
-    >>> population, generation = byron.tools.load_population('checkpoint_gen100.pkl')
-    >>> print(f"Loaded generation {generation}")
+    >>> population = byron.tools.load_population('checkpoint_gen100.pkl')
+    >>> print(f"Loaded generation {population.generation}")
     >>> print(f"Best fitness: {population[0].fitness}")
     >>> 
     >>> # Continue evolution with simple_ea
@@ -146,13 +145,11 @@ def load_population(filepath: str | Path) -> tuple[Population, int]:
         if not isinstance(population, Population):
             raise TypeError(f"Loaded object is not a Population, got {type(population)}")
         
-        generation = population.generation
-            
         byron_logger.info(
-            f"Checkpoint: Loaded population (gen {generation}, "
+            f"Checkpoint: Loaded population (gen {population.generation}, "
             f"{len(population)} individuals) from {filepath}"
         )
-        return population, generation
+        return population
     except Exception as e:
         byron_logger.error(f"Checkpoint: Failed to load population from {filepath}: {e}")
         raise

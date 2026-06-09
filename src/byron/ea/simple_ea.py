@@ -89,6 +89,7 @@ def simple_ea(
     rewards: list[float] = [0.7, 0.3],
     temperature: float = 0.85,
     entropy: bool = False,
+    tournament_cost_function: Callable[[Individual], float] | None = None,
     population_extra_parameters: dict = None,
     population: 'Population | None' = None,
     stopper: Callable | None = None,
@@ -125,6 +126,8 @@ def simple_ea(
         A all round value to tune exploration vs exploitation
     entropy
         Use population entropy parameter to promote diversity in population. Set True only if you understand how population entropy is computed!
+    tournament_cost_function
+        Optional cost function used during tournament selection. If None, parents are selected by fitness.
     population_extra_parameters
         Extra parameters for the population
     stopper
