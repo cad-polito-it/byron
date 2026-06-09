@@ -112,6 +112,7 @@ if notebook_mode:
     console_handler = logging.StreamHandler()
     console_formatter = logging.Formatter('%(levelname)s ▷ %(message)s')
 else:
+    from rich import console as rich_console
     from rich import highlighter as rich_highlighter
     from rich import logging as rich_logging
 
@@ -124,9 +125,15 @@ else:
         markup=True,
         highlighter=rich_highlighter.NullHighlighter(),
         keywords=['▷'],
-        # console=rich_console.Console(width=120) if debug_mode else None,
+        console=rich_console.Console(width=120) if debug_mode else None,
     )
     console_formatter = logging.Formatter('▷ %(message)s')
+
+    import os
+
+    from icecream import ic
+
+    ic(os.environ)
 
 console_handler.setFormatter(console_formatter)
 logger.handlers = [console_handler]

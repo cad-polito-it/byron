@@ -99,11 +99,11 @@ class Statistics:
 
 
 def fitness_function(
-    func: Callable[..., FitnessABC] | None = None, /, *, type_: type[FitnessABC] = None, backend: str | None = 'list'
+    func: Callable[..., FitnessABC] | None = None, /, *, type_: type[FitnessABC] = None, backend: str | None = 'list', max_log_size: int | None = FitnessLog.DEFAULT_MAX_SIZE
 ):
     if type_ is None:
         type_ = lambda f: fitness.make_fitness(f)
-    log_ = FitnessLog(backend)
+    log_ = FitnessLog(backend, max_size=max_log_size)
 
     @wraps(func)
     def wrapper(*args, log=log_, **kwargs):
@@ -116,7 +116,7 @@ def fitness_function(
 
     if func is None:
         # called with args... let's roll again
-        return lambda f: fitness_function(f, type_=type_, backend=backend)
+        return lambda f: fitness_function(f, type_=type_, backend=backend, max_log_size=max_log_size)
     else:
         return wrapper
 
@@ -150,12 +150,12 @@ def genetic_operator(*, num_parents: int | None = 1):
         @monitor.failure_rate
         @wraps(func)
         def wrapper(*args: Individual | FrameABC, **kwargs):
-            assert all(i.__class__ == args[0].__class__ for i in args), (
-                f"{PARANOIA_VALUE_ERROR}: Can't mate different objects: {args}"
-            )
-            assert all(not isinstance(i, Individual) or i.top_frame == args[0].top_frame for i in args), (
-                f"{PARANOIA_VALUE_ERROR}: Can't mate individuals with different top_frame: {args}"
-            )
+            assert all(
+                i.__class__ == args[0].__class__ for i in args
+            ), f"{PARANOIA_VALUE_ERROR}: Can't mate different objects: {args}"
+            assert all(
+                not isinstance(i, Individual) or i.top_frame == args[0].top_frame for i in args
+            ), f"{PARANOIA_VALUE_ERROR}: Can't mate individuals with different top_frame: {args}"
 
             wrapper.stats.calls += 1
 
@@ -167,9 +167,9 @@ def genetic_operator(*, num_parents: int | None = 1):
                 if offspring is None:
                     offspring = []
 
-            assert all(isinstance(i, Individual) for i in offspring), (
-                f"TypeError: offspring {offspring!r}: expected list['Individual']"
-            )
+            assert all(
+                isinstance(i, Individual) for i in offspring
+            ), f"TypeError: offspring {offspring!r}: expected list['Individual']"
             offspring = [i for i in offspring if i.valid]
             for i in offspring:
                 i._lineage = Lineage(wrapper, tuple(weakref.proxy(a) for a in args))

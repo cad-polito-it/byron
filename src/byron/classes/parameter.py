@@ -142,9 +142,9 @@ class ParameterStructuralABC(ParameterABC):
 
     @property
     def value(self):
-        assert self.is_fastened, (
-            f"{PARANOIA_VALUE_ERROR}: Attempt to access the value of an unfastened structural parameter"
-        )
+        assert (
+            self.is_fastened
+        ), f"{PARANOIA_VALUE_ERROR}: Attempt to access the value of an unfastened structural parameter"
         if self._node_reference is None:
             return None
         return next(

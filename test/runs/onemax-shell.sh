@@ -12,7 +12,10 @@
 
 if [[ $1 == -f ]]; then
     shift
-    genomes=$(tail -1 -q "$@")
+    genomes=""
+    for f in "$@"; do
+        genomes="$genomes $(tail -n 1 "$f")"
+    done
 else
     genomes="$*"
 fi

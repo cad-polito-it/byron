@@ -73,9 +73,9 @@ class FitnessABC(ABC):
         return super().__ne__(other)
 
     def check_comparable(self, other: "FitnessABC"):
-        assert self.__class__ == other.__class__, (
-            f"{PARANOIA_TYPE_ERROR}: Different Fitness types: {self.__class__} and {other.__class__}."
-        )
+        assert (
+            self.__class__ == other.__class__
+        ), f"{PARANOIA_TYPE_ERROR}: Different Fitness types: {self.__class__} and {other.__class__}."
         return True
 
     def _decorate(self) -> str:
