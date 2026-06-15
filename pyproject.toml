@@ -47,7 +47,7 @@
         mypy         = ">=1.11.1"
         pytest-emoji = "^0.2.0"
         ipykernel    = "^7.3.0"
-        pytest       = "^9.0.3"
+        pytest       = "^9.1.0"
         ruff         = "^0.15.16"
 
 [tool.pytest.ini_options]
