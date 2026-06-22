@@ -48,7 +48,7 @@
         pytest-emoji = "^0.2.0"
         ipykernel    = "^7.3.0"
         pytest       = "^9.0.3"
-        ruff         = "^0.15.16"
+        ruff         = "^0.15.18"
 
 [tool.pytest.ini_options]
     pythonpath     = ["."]
