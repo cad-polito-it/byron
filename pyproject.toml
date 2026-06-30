@@ -9,93 +9,89 @@
 # SPDX-License-Identifier: Apache-2.0
 
 [project]
-    name = "byron"
-    version = "0.8a1.dev66"
-    description = "An evolutionary source-code fuzzer"
-    authors = [
-        { name = "Giovanni Squillero", email = "giovanni.squillero@polito.it" },
-        { name = "Alberto Tonda", email = "alberto.tonda@inrae.fr" },
-    ]
-    readme = "README.md"
-    requires-python = ">=3.10,<4.0"
+name = "byron"
+version = "0.8a1.dev66"
+description = "An evolutionary source-code fuzzer"
+authors = [
+    { name = "Giovanni Squillero", email = "giovanni.squillero@polito.it" },
+    { name = "Alberto Tonda", email = "alberto.tonda@inrae.fr" },
+]
+readme = "README.md"
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "networkx>=3.4.2",
+    "numpy>=2.2.6",
+    "rich>=15.0.0",
+    "scipy>=1.15.3",
+    "tqdm>=4.68.3",
+]
 
-[tool.poetry]
+[project.optional-dependencies]
+features = [
+    "joblib>=1.5.3",
+    "matplotlib>=3.10.9",
+    "psutil>=7.2.2",
+]
 
-    [tool.poetry.dependencies]
-        networkx    = "^3.4.2"
-        numpy       = "^2.2.5"
-        rich        = "^15.0.0"
-        scipy       = "^1.15.2"
-        tqdm        = "^4.67.1"
-        joblib      = { version = ">=1.3", optional = true }
-        matplotlib  = { version = ">=3.9.1", optional = true }
-        psutil      = { version = ">=6.0", optional = true }
-        poetry-core = ">=2.0.0,<3.0.0"
+[dependency-groups]
+dev = [
+    "bumpver>=2026.1132",
+    "coverage>=7.14.3",
+    "icecream>=2.2.0",
+    "jupyter>=1.1.1",
+    "mypy>=2.1.0",
+    "pytest>=9.1.1",
+    "pytest-emoji>=0.2.0",
+    "ruff>=0.15.20",
+]
 
-    [tool.poetry.extras]
-        # Use: poetry install --all-extras
-        full      = ["joblib", "matplotlib", "psutil"]
-        info      = ["psutil"]
-        multitask = ["joblib"]
-        plot      = ["matplotlib"]
-
-    [tool.poetry.group.dev.dependencies]
-        bumpver      = "^2026.1132"
-        coverage     = "^7.6"
-        icecream     = "^2.1.3"
-        jupyter      = "^1.0.0"
-        mypy         = ">=1.11.1"
-        pytest-emoji = "^0.2.0"
-        ipykernel    = "^7.3.0"
-        pytest       = "^9.0.3"
-        ruff         = "^0.15.16"
+[tool.uv]
+# Tells uv to find the package inside the src/ folder
+package = true
 
 [tool.pytest.ini_options]
-    pythonpath     = ["."]
-    filterwarnings = ["ignore::DeprecationWarning"]
+pythonpath = ["."]
+filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.coverage.run]
-    branch = true
+branch = true
 
 [tool.coverage.report]
-    include = ['src/*', 'test/*']
-    omit    = ['.*/*', 'venv/*']
+include = ['src/*', 'test/*']
+omit = ['.*/*', 'venv/*']
 
 [tool.mypy]
-    modules                = ['byron']
-    ignore_missing_imports = true
+modules = ['byron']
+ignore_missing_imports = true
 
 [tool.ruff]
-    target-version = "py312"
-    line-length    = 120
-    extend-include = ["*.ipynb"]
+target-version = "py314"
+line-length = 120
+extend-include = ["*.ipynb"]
 
-    [tool.ruff.lint]
-        extend-select = ["I"]
+[tool.ruff.lint]
+extend-select = ["I"]
 
-    [tool.ruff.format]
-        # Prefer single quotes over double quotes.
-        quote-style = "preserve"
-        line-ending = "native"
+[tool.ruff.format]
+# Prefer single quotes over double quotes.
+quote-style = "preserve"
+line-ending = "native"
 
 [tool.bumpver]
-    current_version = "0.8a1.dev66"
-    version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
-    commit_message  = "style(bumpver): Bump version to {new_version}"
-    commit          = true
-    push            = false
+current_version = "0.8a1.dev66"
+version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
+commit_message = "style(bumpver): Bump version to {new_version}"
+commit = true
+push = false
 
-    [tool.bumpver.file_patterns]
-        "pyproject.toml" = [
-            'current_version = "{pep440_version}"',
-            'version = "{pep440_version}"$',
-        ]
-        "docs/index.md" = [" v{pep440_version}"]
-        "src/byron/global_symbols.py" = [
-            '__date__ = "0D-0M-YYYY"',
-            '__version__ = "{pep440_version}"',
-        ]
+[tool.bumpver.file_patterns]
+"pyproject.toml" = [
+    'current_version = "{pep440_version}"',
+    'version = "{pep440_version}"$',
+]
+"docs/index.md" = [" v{pep440_version}"]
+"src/byron/global_symbols.py" = [
+    '__date__ = "0D-0M-YYYY"',
+    '__version__ = "{pep440_version}"',
+]
 
-[build-system]
-    requires      = ["poetry-core>=2.0.0,<3.0.0"]
-    build-backend = "poetry.core.masonry.api"
