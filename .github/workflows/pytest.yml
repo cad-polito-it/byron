@@ -9,10 +9,6 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.10", "3.14"]
-        include:
-          # Test the upcoming Python 3.15 but don't let it block the PR
-          - python-version: "3.15-dev"
-            experimental: true
 
     steps:
       - name: Set system timezone
@@ -31,8 +27,6 @@ jobs:
           enable-cache: true
 
       - name: Running PyTest on Python ${{ matrix.python-version }}
-        # Fallback to false if the experimental key is missing
-        continue-on-error: ${{ matrix.experimental || false }}
         run: |
           uv sync --all-extras
           uv run pytest
