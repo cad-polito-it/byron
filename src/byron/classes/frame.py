@@ -54,11 +54,6 @@ class FrameABC(SElement, Paranoid):
     def run_paranoia_checks(self) -> bool:
         return super().run_paranoia_checks()
 
-    @classmethod
-    @property
-    def name(cls):
-        return cls.__name__
-
     @property
     def shannon(self) -> list[int]:
         return [hash(self.__class__)]

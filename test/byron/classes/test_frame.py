@@ -51,6 +51,7 @@ def test_frame_run_paranoia_checks():
 
 
 def test_frame_name_class_method():
+    print(TestFrame.name)
     assert TestFrame.name == "TestFrame"
 
 

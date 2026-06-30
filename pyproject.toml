@@ -50,7 +50,7 @@ dev = [
 package = true
 
 [tool.pytest.ini_options]
-pythonpath = ["."]
+testpaths = ["test"]
 filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.coverage.run]

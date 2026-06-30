@@ -129,11 +129,11 @@ else:
     )
     console_formatter = logging.Formatter('▷ %(message)s')
 
-    import os
-
-    from icecream import ic
-
-    ic(os.environ)
+    # import os
+    #
+    # from icecream import ic
+    #
+    # ic(os.environ)
 
 console_handler.setFormatter(console_formatter)
 logger.handlers = [console_handler]

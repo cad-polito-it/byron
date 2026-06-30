@@ -46,6 +46,11 @@ class SElementMeta(type):
     _counters = defaultdict(int)
     _directory = set()
 
+    # Chaining @classmethod and @property was deprecated in Python 3.11 and completely removed in Python 3.13.
+    @property
+    def name(cls):
+        return cls.__name__
+
     def __new__(cls, name, *args, **kwargs):
         # new_cls = super(SElementMeta, cls).__new__(cls, name, *args, **kwargs)
         new_cls = super().__new__(cls, name, *args, **kwargs)
