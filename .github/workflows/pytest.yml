@@ -15,26 +15,24 @@ jobs:
             experimental: true
 
     steps:
-      # check-out repo and set-up python
-      - uses: szenius/set-timezone@v2.0
+      - name: Set system timezone
+        uses: szenius/set-timezone@v2.0
         with:
           timezoneLinux: "Europe/Berlin"
+
       - name: Check out repository
         uses: actions/checkout@v4
-      - name: Set up python ${{ matrix.python-version }}
-        id: setup-python
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
 
-      - name: Set up uv
+      # Combined UV and Python setup into a single optimized step
+      - name: Set up uv and Python ${{ matrix.python-version }}
         uses: astral-sh/setup-uv@v5
         with:
-          # Optional: enables automatic caching of your uv cache directory
+          python-version: ${{ matrix.python-version }}
           enable-cache: true
 
       - name: Running PyTest on Python ${{ matrix.python-version }}
-        continue-on-error: ${{ matrix.experimental == true }}
+        # Fallback to false if the experimental key is missing
+        continue-on-error: ${{ matrix.experimental || false }}
         run: |
           uv sync --all-extras
-          uv pip pytest
+          uv run pytest
