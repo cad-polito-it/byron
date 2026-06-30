@@ -8,7 +8,11 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.14"]
+        include:
+          # Test the upcoming Python 3.15 but don't let it block the PR
+          - python-version: "3.15-dev"
+            experimental: true
 
     steps:
       # check-out repo and set-up python
@@ -22,13 +26,15 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      # install & configure poetry
-      - name: Poetry & environment setup
-        uses: snok/install-poetry@v1.3.4
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
         with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-      - run: poetry install --no-interaction --all-extras
-      # test!
+          # Optional: enables automatic caching of your uv cache directory
+          enable-cache: true
+
       - name: Running PyTest on Python ${{ matrix.python-version }}
-        run: poetry run --no-interaction pytest --verbose --emoji
+        continue-on-error: ${{ matrix.experimental == true }}
+        run: |
+          uv sync --all-extras
+          uv pip pytest
