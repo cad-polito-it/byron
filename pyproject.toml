@@ -10,7 +10,7 @@
 
 [project]
 name = "byron"
-version = "0.8a1.dev66"
+version = "0.8a1.dev67"
 description = "An evolutionary source-code fuzzer"
 authors = [
     { name = "Giovanni Squillero", email = "giovanni.squillero@polito.it" },
@@ -78,7 +78,7 @@ quote-style = "preserve"
 line-ending = "native"
 
 [tool.bumpver]
-current_version = "0.8a1.dev66"
+current_version = "0.8a1.dev67"
 version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
 commit_message = "style(bumpver): Bump version to {new_version}"
 commit = true

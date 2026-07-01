@@ -1,4 +1,4 @@
-# Byron v0.8a1.dev66 *"Don Juan"*
+# Byron v0.8a1.dev67 *"Don Juan"*
 
 Byron is a source code [fuzzer](https://en.wikipedia.org/wiki/Fuzzing) designed to support assembly or higher level languages. It starts by generating a set of random programs, which are then iteratively improved by an [evolutionary algorithm](https://cad-polito-it.github.io/byron/evolution). Internally, it encodes candidate solutions as [typed](https://rcor.me/papers/typed-graph-theory.pdf), [directed](https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)#Directed_graph) [multigraphs](https://en.wikipedia.org/wiki/Multigraph), and can effectively handle complex, realistic structures containing local and global variables, conditional and looping statements, and subroutines.
 
