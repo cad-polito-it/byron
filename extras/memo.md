@@ -19,9 +19,9 @@ poetry publish
 uvx keyring set https://upload.pypi.org/legacy/ __token__
 
 
-bumpver update
-rm dist/*
-uv build
+uvx bumpver update
+rm dist/*; uv build
+uvx twine upload dist/*
 UV_PUBLISH_TOKEN=$(security find-generic-password -s "pypi-token" -w) uv publish 
 ```
 
