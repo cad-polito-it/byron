@@ -6,7 +6,7 @@
 #        |_____|                    \|/                                    #
 #################################### ' #####################################
 
-# Copyright 2023-25 Giovanni Squillero and Alberto Tonda
+# Copyright 2023 Giovanni Squillero and Alberto Tonda
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ try:
 except ModuleNotFoundError:
     pass
 
-from byron import classes, ea, framework, operators, sys, user_messages  # noqa: F401
 from byron import classes as C  # noqa: F401
+from byron import classes, ea, framework, operators, sys, user_messages  # noqa: F401
 from byron import evaluator_ as evaluator  # noqa: F401
 from byron import fitness_ as fit  # noqa: F401
 from byron import fitness_ as fitness  # noqa: F401
@@ -49,9 +49,9 @@ from byron.global_symbols import *  # noqa: F403
 from byron.randy import rrandom  # noqa: F401
 from byron.registry import *  # noqa: F403
 from byron.sys import SYSINFO as sysinfo  # noqa: F401
+from byron.tools import checkpoint  # noqa: F401
 from byron.tools.graph import fasten_subtree_parameters  # noqa: F401
 from byron.tools.providers import *  # noqa: F403
-from byron.tools import checkpoint  # noqa: F401
 from byron.user_messages.messaging import logger  # noqa: F401
 
 #############################################################################
