@@ -27,7 +27,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-features = [
+all = [
     "joblib>=1.5.3",
     "matplotlib>=3.10.9",
     "psutil>=7.2.2",
@@ -35,19 +35,19 @@ features = [
 
 [dependency-groups]
 dev = [
-    "bumpver>=2026.1132",
+    "byron[all]",
     "coverage>=7.14.3",
     "icecream>=2.2.0",
     "jupyter>=1.1.1",
-    "mypy>=2.1.0",
     "pytest>=9.1.1",
     "pytest-emoji>=0.2.0",
-    "ruff>=0.15.20",
+    # use uvx for coverage, ruff, mypy, and bumpver
 ]
 
 [tool.uv]
-# Tells uv to find the package inside the src/ folder
-package = true
+package = true # Tells uv to find the package inside the src/ folder
+default-groups = ["dev"] # while developping...
+keyring-provider = "subprocess"
 
 [tool.pytest.ini_options]
 testpaths = ["test"]

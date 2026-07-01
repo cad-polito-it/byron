@@ -9,27 +9,39 @@
 > ┃━┏━━━━━━┛┃━━━━━━━━━━━━━┃  
 > ┗━┗━━━━━━━┛━━━━━━━━━━━━━┛  
 
-## Publish
+## Publish (old)
 
 ```shell
 bumpver update
 poetry build
 poetry publish
+```
 
-uvx keyring set https://upload.pypi.org/legacy/ __token__
+## Publish (new)
 
+```shell
+uv tool install keyring
 
 uvx bumpver update
 rm dist/*; uv build
 uvx twine upload dist/*
-UV_PUBLISH_TOKEN=$(security find-generic-password -s "pypi-token" -w) uv publish 
+```
+
+## Publish (uv)
+
+```shell
+# prerequisite
+security add-generic-password -a "$USER" -s "pypi-token" -w "pypi-XXX"
+
+uvx bumpver update
+rm dist/*; uv build
+UV_PUBLISH_TOKEN=$(security find-generic-password -a "$USER" -s "pypi-token" -w) uv publish
 ```
 
 ## Coverage
 
 ```
-coverage run --branch -m pytest
-coverage html
+uv run coverage run --branch -m pytest; uv run coverage html
 ```
 
 ## Conventional Commits
