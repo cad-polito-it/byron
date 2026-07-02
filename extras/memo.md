@@ -21,9 +21,10 @@ poetry publish
 
 ```shell
 uv tool install keyring
+keyring set https://upload.pypi.org/legacy/ __token__
 
 uvx bumpver update
-rm dist/*; uv build
+uv build
 uvx twine upload dist/*
 ```
 
