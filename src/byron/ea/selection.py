@@ -102,4 +102,4 @@ def tournament_selection_with_cost(population: Population, tournament_size: floa
     candidates = [rrandom.choice(population.individuals) for _ in range(tournament_size)]
     if rrandom.boolean(p_true=tournament_size % 1):
         candidates.append(rrandom.choice(population.individuals))
-        return max(candidates, key=lambda i: (cost_fn(i), -i.fitness))
+    return max(candidates, key=lambda i: (cost_fn(i), -i.fitness))

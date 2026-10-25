@@ -683,7 +683,8 @@ class ParallelScriptEvaluator(EvaluatorABC):
                         result.stderr,
                     )
                     raise ValueError(
-                        "ParallelScriptEvaluator: {population[i]}: ParallelScriptEvaluator: script returned non-zero exit status"
+                        f"ValueError: script returned non-zero exit status {result.returncode} for {population[i]}"
+                        + ": expected 0 — set 'default_result' to tolerate failing evaluations"
                     )
                 value = [float(r) for r in result.stdout.split()]
                 if len(value) == 1:
