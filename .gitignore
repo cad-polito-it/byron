@@ -129,3 +129,6 @@ venv.bak/
 
 # Pickle files
 *.pkl
+
+# Claude Code
+.claude/
