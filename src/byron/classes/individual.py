@@ -30,6 +30,7 @@ __all__ = ['Individual', 'Lineage', 'Age']
 
 import operator
 import sys
+from collections import Counter
 from copy import copy, deepcopy
 from dataclasses import dataclass
 from itertools import chain
@@ -400,7 +401,7 @@ class Individual(Paranoid):
         structural_edges = [(u, v, k) for u, v, k, d in self._genome.edges(data='_type', keys=True) if d == LINK]
         assert len(structural_edges) == len(set(k for u, v, k in structural_edges)), (
             f"{PARANOIA_VALUE_ERROR}: Found duplicated keys in structural edges: "
-            + f"{set(x for i, x in enumerate(list(k for u, v, k in structural_edges)) if i != list(k for u, v, k in structural_edges).index(x))}"
+            + f"{set(k for k, n in Counter(k for u, v, k in structural_edges).items() if n > 1)}"
         )
         structural_parameters = [p for p in self.parameters if isinstance(p, ParameterStructuralABC)]
         assert len(structural_edges) == len(structural_parameters), (

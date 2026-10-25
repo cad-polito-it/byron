@@ -96,7 +96,7 @@ def simple_ea(
     checkpoint_file: str | Path | None = None,
     checkpoint_callback: Callable[[Population, int], None] | None = None,
     checkpoint_on_improvement: bool = False,
-    tournament_cost_function : Callable[[Individual], float] | None = None,
+    tournament_cost_function: Callable[[Individual], float] | None = None,
 ) -> Population:
     r"""A configurable self-adaptive evolutionary algorithm
 
@@ -147,7 +147,7 @@ def simple_ea(
     -------
     Population
         The last population
-    
+
     Examples
     --------
     >>> # Checkpoint every 10 generations
@@ -157,13 +157,13 @@ def simple_ea(
     ...     checkpoint_every=10,
     ...     checkpoint_file='run_gen{generation}.pkl'
     ... )
-    
+
     >>> # Custom callback for user-controlled checkpointing
     >>> def my_callback(pop, gen):
     ...     if gen % 20 == 0:
     ...         save_population(pop, f'checkpoint_{gen}.pkl')
     >>> population = simple_ea(top_frame, evaluator, checkpoint_callback=my_callback)
-    
+
     >>> # Resume from a checkpoint
     >>> from byron.tools.checkpoint import load_population
     >>> loaded_pop = load_population('checkpoint_gen50.pkl')
@@ -185,7 +185,7 @@ def simple_ea(
         if checkpoint_file is None:
             checkpoint_file = 'checkpoint_gen{generation}.pkl'
         checkpoint_file = Path(checkpoint_file)
-    
+
     def _save_checkpoint(pop: Population, reason: str = ""):
         """Helper to save checkpoint with error handling"""
         if checkpoint_file is None:
@@ -236,11 +236,11 @@ def simple_ea(
         population.sort()
         best = population[0]
         _new_best(population, evaluator)
-        
+
         # Initial checkpoint after generation 0
         if checkpoint_every is not None or checkpoint_on_improvement:
             _save_checkpoint(population, "generation 0")
-        
+
         # Custom callback
         if checkpoint_callback:
             try:
@@ -260,7 +260,10 @@ def simple_ea(
             op = ext.take()
             parents = list()
             for _ in range(op.num_parents):
-                byron_logger.info(f"SimpleEA: Selecting parent using tournament selection with tournament_size=1 and tournament_cost_function={tournament_cost_function} ┈ %s", _elapsed(start, process=True))
+                byron_logger.info(
+                    f"SimpleEA: Selecting parent using tournament selection with tournament_size=1 and tournament_cost_function={tournament_cost_function} ┈ %s",
+                    _elapsed(start, process=True),
+                )
                 parents.append(tournament_selection(population, 1, tournament_cost_function))
             if 'strength' in signature(op).parameters:
                 new_individuals += op(*parents, strength=strength)
@@ -283,15 +286,15 @@ def simple_ea(
         if best.fitness << population[0].fitness:
             best = population[0]
             _new_best(population, evaluator)
-            
+
             # Checkpoint on improvement
             if checkpoint_on_improvement:
                 _save_checkpoint(population, f"improvement at gen {population.generation}")
-        
+
         # Periodic checkpoint
         if checkpoint_every is not None and population.generation % checkpoint_every == 0:
             _save_checkpoint(population, f"periodic (every {checkpoint_every} gen)")
-        
+
         # Custom callback
         if checkpoint_callback:
             try:
@@ -306,7 +309,7 @@ def simple_ea(
             population.generation,
             _elapsed(start, steps=evaluator.fitness_calls),
         )
-    
+
     # Final checkpoint at completion
     if checkpoint_file is not None:
         _save_checkpoint(population, "final")

@@ -39,7 +39,10 @@ from byron.user_messages import check_valid_type
 
 @cache
 def _macro(
-    text: str, macro_parameters: tuple[tuple[str, type[ParameterABC]]], extra_parameters: tuple[tuple[str, Any]], safe_format: bool = False
+    text: str,
+    macro_parameters: tuple[tuple[str, type[ParameterABC]]],
+    extra_parameters: tuple[tuple[str, Any]],
+    safe_format: bool = False,
 ) -> type[Macro]:
     class M(Macro):
         TEXT = text

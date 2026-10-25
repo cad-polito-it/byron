@@ -39,7 +39,8 @@ class Float(FitnessABC, float):
 
     def __new__(cls, *args, **kw):
         syntax_warning_hint(
-            "'Float' fitness values suffer from Floating Point Arithmetic issues and limitations (eg. .1+.1+.1 != .3) — consider using 'Scalar'"
+            "'Float' fitness values suffer from Floating Point Arithmetic issues and limitations"
+            + " (eg. .1+.1+.1 != .3) — consider using 'Scalar'"
         )
         return float.__new__(cls, *args, **kw)
 
@@ -82,12 +83,14 @@ class Scalar(FitnessABC, float):
 
     def check_comparable(self, other: "Scalar"):
         assert super().check_comparable(other)
-        assert (
-            not isinstance(other, self.__class__) or self._abs_tol == other._abs_tol
-        ), f"{PARANOIA_VALUE_ERROR}: Different absolute tolerance: {float(self)}±{self._abs_tol} vs. {float(other)}±{other._abs_tol}"
-        assert (
-            not isinstance(other, self.__class__) or self._rel_tol == other._rel_tol
-        ), f"{PARANOIA_VALUE_ERROR}: Different relative tolerance: {float(self)}±{self._rel_tol}r vs. {float(other)}±{other._rel_tol}r"
+        assert not isinstance(other, self.__class__) or self._abs_tol == other._abs_tol, (
+            f"{PARANOIA_VALUE_ERROR}: Different absolute tolerance:"
+            + f" {float(self)}±{self._abs_tol} vs. {float(other)}±{other._abs_tol}"
+        )
+        assert not isinstance(other, self.__class__) or self._rel_tol == other._rel_tol, (
+            f"{PARANOIA_VALUE_ERROR}: Different relative tolerance:"
+            + f" {float(self)}±{self._rel_tol}r vs. {float(other)}±{other._rel_tol}r"
+        )
         return True
 
 
@@ -101,9 +104,9 @@ class Vector(FitnessABC):
         self._values = tuple(values)
 
     def cheeck_comparable(self, other: "Vector"):
-        assert len(self._values) == len(
-            other._values
-        ), f"Can't is_fitter Fitness Vectors of different size ({self} vs. {other})"
+        assert len(self._values) == len(other._values), (
+            f"Can't is_fitter Fitness Vectors of different size ({self} vs. {other})"
+        )
         assert all(v1.check_comparable(v2) for v1, v2 in zip(self, other))
         return True
 
@@ -128,7 +131,7 @@ class Vector(FitnessABC):
     def __hash__(self):
         return hash(self._values)
 
-    def __mul__(self, other: float|int) -> "Vector":
+    def __mul__(self, other: float | int) -> "Vector":
         assert isinstance(other, (int, float)), f"TypeError: Can't multiply Vector by {type(other)}"
         scaled_values = [v * other for v in self._values]
         return scaled_values
@@ -164,6 +167,6 @@ def make_fitness(data: Any):
         # logger.warning(f"{data}")
         return Lexicographic(data)
     else:
-        assert (
-            isinstance(data, Sequence) or isinstance(data, int) or isinstance(data, float)
-        ), f"TypeError: Can't convert {data!r} ({type()}) to Fitness"
+        assert isinstance(data, Sequence) or isinstance(data, int) or isinstance(data, float), (
+            f"TypeError: Can't convert {data!r} ({type()}) to Fitness"
+        )

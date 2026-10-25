@@ -179,7 +179,8 @@ def bunch(
     def _debug_hints():
         if not isinstance(original_size, int) and size[0] + 1 == size[1]:
             syntax_warning_hint(
-                f"Ranges are half open: the size of this macro bunch is always {size[0]} — did you mean 'size={size[0]}'?",
+                f"Ranges are half open: the size of this macro bunch is always {size[0]}"
+                + f" — did you mean 'size={size[0]}'?",
                 stacklevel_offset=1,
             )
         if len(pool) > len(set(pool)):
@@ -203,13 +204,13 @@ def bunch(
     if isinstance(size, int):
         size = (size, size + 1)
     else:
-        assert (
-            len(size) == 2 or len(size) == 3
-        ), f"{PARANOIA_VALUE_ERROR}: Not a half open range [min, max) with optional initial"
+        assert len(size) == 2 or len(size) == 3, (
+            f"{PARANOIA_VALUE_ERROR}: Not a half open range [min, max) with optional initial"
+        )
     assert 0 <= size[0] < size[1], f"{PARANOIA_VALUE_ERROR}: Min size is {size[0]} and max size is {size[1] - 1}"
-    assert (
-        len(size) != 3 or size[0] <= size[2] < size[1]
-    ), f"{PARANOIA_VALUE_ERROR}: Initial size {size[2]} is not in [{size[0]}, {size[1]})"
+    assert len(size) != 3 or size[0] <= size[2] < size[1], (
+        f"{PARANOIA_VALUE_ERROR}: Initial size {size[2]} is not in [{size[0]}, {size[1]})"
+    )
 
     assert _debug_hints()
 

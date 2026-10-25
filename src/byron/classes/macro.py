@@ -68,7 +68,7 @@ class Macro(SElement, Paranoid):
 
     def dump(self, parameters: ValueBag) -> str:
         assert check_valid_type(parameters, ValueBag)
-        
+
         if self.SAFE_FORMAT:
             # Use regex-based substitution to only replace valid parameter placeholders
             # This avoids KeyError when text contains literal braces (e.g., JSON content)
@@ -78,7 +78,7 @@ class Macro(SElement, Paranoid):
                     return str(parameters[key])
                 # Not a known parameter, return the original brace expression unchanged
                 return match.group(0)
-            
+
             # Match {identifier} patterns where identifier is a valid Python identifier
             pattern = r'\{([a-zA-Z_][a-zA-Z0-9_]*)\}'
             return re.sub(pattern, replace_param, self.text)

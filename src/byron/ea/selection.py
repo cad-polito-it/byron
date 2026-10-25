@@ -26,18 +26,20 @@
 # v1 / July 2023 / Squillero (GX)
 
 from typing import Callable, List
+
 from byron.classes.individual import Individual
 from byron.classes.population import Population
 from byron.randy import rrandom
-from byron.user_messages.checks import *
 from byron.user_messages import logger as byron_logger
+from byron.user_messages.checks import *
+
 
 def top_k_tournament_selection(
     population: Population,
     tournament_size: int = 2,
     maxSelectable: int = 1,
     tournament_cost_function: Callable[List[Individual], float] | None = None,
-    with_replacement: bool = False
+    with_replacement: bool = False,
 ) -> list[Individual]:
     """
     Select the top-k individuals from a tournament.
@@ -48,7 +50,7 @@ def top_k_tournament_selection(
     assert 1 <= maxSelectable <= tournament_size
     if len(population.individuals) < tournament_size:
         byron_logger.warning("Population size is smaller than tournament size.")
-    
+
     candidates = [rrandom.choice(population.individuals) for _ in range(tournament_size)]
     if tournament_cost_function is not None:
         # Higher cost is better
@@ -61,7 +63,12 @@ def top_k_tournament_selection(
     else:
         return sorted_candidates[:maxSelectable]
 
-def tournament_selection(population: Population, tournament_size: float = 2, tournament_cost_function : Callable[[Individual], float] | None = None) -> Individual:
+
+def tournament_selection(
+    population: Population,
+    tournament_size: float = 2,
+    tournament_cost_function: Callable[[Individual], float] | None = None,
+) -> Individual:
     """
 
     Args:
@@ -80,7 +87,7 @@ def tournament_selection(population: Population, tournament_size: float = 2, tou
         return max(candidates, key=lambda i: tournament_cost_function(i))
     if tournament_cost_function is not None:
         return tournament_selection_with_cost(population, tournament_size, tournament_cost_function)
-    else :
+    else:
         candidates = [rrandom.choice(population.individuals) for _ in range(tournament_size)]
         if rrandom.boolean(p_true=tournament_size % 1):
             candidates.append(rrandom.choice(population.individuals))

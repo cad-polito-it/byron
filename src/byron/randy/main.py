@@ -81,9 +81,9 @@ class Randy:
     @staticmethod
     def _check_parameters(a, b, *, loc: float | None = None, strength: float | None = None):
         assert a <= b, f"ValueError (paranoia check): 'a' must precede 'b': found ({a}, {b})"
-        assert (
-            strength is None or 0 <= strength <= 1
-        ), f"ValueError (paranoia check): strength (σ) should be in [0, 1]. Found {strength}"
+        assert strength is None or 0 <= strength <= 1, (
+            f"ValueError (paranoia check): strength (σ) should be in [0, 1]. Found {strength}"
+        )
         assert loc is None or a <= loc <= b, f"ValueError (paranoia check): 'loc' ({loc}) not in [{a}, {b}]"
         if strength is None:
             strength = 1.0
@@ -106,9 +106,9 @@ class Randy:
         strength: float = 1.0,
     ) -> float:
         """A value from between [a, b) by permutating 'loc' with a give 'strength'."""
-        assert (
-            self.__check_saved_state()
-        ), "SystemError (paranoia check): Randy the Random internal state has been modified"
+        assert self.__check_saved_state(), (
+            "SystemError (paranoia check): Randy the Random internal state has been modified"
+        )
         assert Randy._check_parameters(a, b, loc=loc, strength=strength)
         self._calls += 1
         if loc is None or strength == 1.0:
@@ -131,9 +131,9 @@ class Randy:
         strength: float = 1.0,
     ) -> int:
         """A value from between [a, b) by permutating 'loc' with a give 'strength'."""
-        assert (
-            self.__check_saved_state()
-        ), "SystemError (paranoia check): Randy the Random internal state has been modified"
+        assert self.__check_saved_state(), (
+            "SystemError (paranoia check): Randy the Random internal state has been modified"
+        )
         assert Randy._check_parameters(a, b, loc=loc, strength=strength)
         self._calls += 1
         if loc is None or strength == 1.0:
@@ -150,9 +150,9 @@ class Randy:
 
     def choice(self, seq: Sequence[Any], loc: int | None = None, strength: float | None = None) -> Any:
         """Returns a random element from seq by perturbing index loc with a given strength."""
-        assert (
-            loc is None or strength == 1 or 0 <= loc < len(seq)
-        ), f"ValueError (paranoia check): loc ({loc}) out of range"
+        assert loc is None or strength == 1 or 0 <= loc < len(seq), (
+            f"ValueError (paranoia check): loc ({loc}) out of range"
+        )
         index = self.random_int(0, len(seq), loc=loc, strength=strength)
         return seq[index]
 
@@ -172,9 +172,9 @@ class Randy:
 
     def shuffle(self, seq: MutableSequence) -> None:
         """Shuffle list x in place, and return None."""
-        assert (
-            self.__check_saved_state()
-        ), "SystemError (paranoia check): Randy the Random internal state has been modified"
+        assert self.__check_saved_state(), (
+            "SystemError (paranoia check): Randy the Random internal state has been modified"
+        )
         self._generator.shuffle(seq)
         assert self.__save_state()
 

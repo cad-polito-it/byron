@@ -56,7 +56,11 @@ class Byron:
             elif item == 'machine':
                 desc = f'{platform.machine()} ({platform.processor()})'
                 if psutil:
-                    desc += f'; {psutil.cpu_count(logical=False)} physical cores ({psutil.cpu_count(logical=True)} logical); {psutil.virtual_memory().total // 2**20:,} MiB RAM'
+                    desc += (
+                        f'; {psutil.cpu_count(logical=False)} physical cores'
+                        + f' ({psutil.cpu_count(logical=True)} logical)'
+                        + f'; {psutil.virtual_memory().total // 2**20:,} MiB RAM'
+                    )
                 return desc
             else:
                 raise SyntaxError

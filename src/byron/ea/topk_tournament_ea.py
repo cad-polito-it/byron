@@ -45,6 +45,7 @@ from byron.sys import *
 from byron.tools.checkpoint import save_population
 from byron.user_messages import *
 from byron.user_messages import logger as byron_logger
+
 from .estimator import Estimator
 from .selection import top_k_tournament_selection
 
@@ -75,6 +76,7 @@ def _elapsed(start, *, process: bool = False, steps: int = 0):
         s = e[: e.index('.') + 3] + ' [byron]'
         data.append('🕙  ' + s)
     return ' / '.join(data)
+
 
 def _new_best(population: Population, evaluator: EvaluatorABC):
     byron_logger.info(
@@ -165,7 +167,7 @@ def topk_tournament_ea(
     -------
     Population
         The final population after evolution.
-    
+
     Examples
     --------
     >>> # Resume from a checkpoint
@@ -190,6 +192,7 @@ def topk_tournament_ea(
         if checkpoint_file is None:
             checkpoint_file = 'checkpoint_gen{generation}.pkl'
         checkpoint_file = Path(checkpoint_file)
+
     def _save_checkpoint(pop: Population, reason: str = ""):
         if checkpoint_file is None:
             return
@@ -257,24 +260,29 @@ def topk_tournament_ea(
             op = ext.take()
             parents = list()
             for _ in range(op.num_parents):
-                byron_logger.info(f"TopK-TournamentEA: 🚀TopK-TournamentEA -Starting championship evaluation for {tournament_size} individuals")
+                byron_logger.info(
+                    f"TopK-TournamentEA: 🚀TopK-TournamentEA -Starting championship evaluation for {tournament_size} individuals"
+                )
                 selected = top_k_tournament_selection(
                     population,
                     tournament_size=tournament_size,
                     maxSelectable=maxSelectable,
                     tournament_cost_function=tournament_cost_function,
-                    with_replacement=with_replacement
+                    with_replacement=with_replacement,
                 )
-                byron_logger.info("TopK-TournamentEA: 🚀TopK-TournamentEA selection completed ┈ %s", _elapsed(start, process=True))
+                byron_logger.info(
+                    "TopK-TournamentEA: 🚀TopK-TournamentEA selection completed ┈ %s", _elapsed(start, process=True)
+                )
                 parents.extend(selected)
-            parents = parents[:op.num_parents]
+            parents = parents[: op.num_parents]
             if 'strength' in signature(op).parameters:
                 new_individuals += op(*parents, strength=strength)
             else:
                 new_individuals += op(*parents)
         if not new_individuals:
             byron_logger.warning(
-                "TopK-TournamentEA: empty offspring (no new individuals) ┈ %s", _elapsed(start, steps=evaluator.fitness_calls)
+                "TopK-TournamentEA: empty offspring (no new individuals) ┈ %s",
+                _elapsed(start, steps=evaluator.fitness_calls),
             )
 
         if lifespan is not None:

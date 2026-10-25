@@ -36,8 +36,8 @@ try:
 except ModuleNotFoundError:
     pass
 
-from byron import classes as C  # noqa: F401
 from byron import classes, ea, framework, operators, sys, user_messages  # noqa: F401
+from byron import classes as C  # noqa: F401
 from byron import evaluator_ as evaluator  # noqa: F401
 from byron import fitness_ as fit  # noqa: F401
 from byron import fitness_ as fitness  # noqa: F401

@@ -157,7 +157,8 @@ def choice_parameter(alternatives: Collection[Hashable]) -> type[ParameterABC]:
     def check_size():
         if len(alternatives) > 999:
             syntax_warning_hint(
-                f"Choice parameters with many alternatives impair performances — why not using an integer parameter [0-{len(alternatives):})?",
+                "Choice parameters with many alternatives impair performances"
+                + f" — why not using an integer parameter [0-{len(alternatives):})?",
                 stacklevel_offset=1,
             )
         return True
