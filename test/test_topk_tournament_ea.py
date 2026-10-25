@@ -68,7 +68,7 @@ def test_topk_tournament_ea_runs(dummy_evaluator):
         lambda_=5,
         max_generation=3,
         tournament_size=3,
-        maxSelectable=2,
+        max_selectable=2,
         target_fitness=make_fitness(0.0),
     )
     assert isinstance(pop, Population)
@@ -84,7 +84,7 @@ def test_topk_tournament_ea_improves(dummy_evaluator):
         lambda_=5,
         max_generation=5,
         tournament_size=4,
-        maxSelectable=2,
+        max_selectable=2,
         target_fitness=make_fitness(0.0),
     )
     # Access individuals properly from the population and extract numeric values
@@ -104,7 +104,7 @@ def test_topk_tournament_ea_with_cost_function(dummy_evaluator):
         lambda_=5,
         max_generation=3,
         tournament_size=3,
-        maxSelectable=2,
+        max_selectable=2,
         tournament_cost_function=cost_fn,
         target_fitness=make_fitness(0.0),
     )

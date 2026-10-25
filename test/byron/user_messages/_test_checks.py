@@ -27,13 +27,13 @@ def test_check_valid_type():
     except byron.user_messages.exception.ByronError as e:
         assert str(e) == PARANOIA_TYPE_ERROR
 
-    class someClass:
+    class SomeClass:
         pass
 
-    class someSubClass(someClass):
+    class SomeSubClass(SomeClass):
         pass
 
-    assert byron.user_messages.check_valid_type(someClass, object, False) == True
+    assert byron.user_messages.check_valid_type(SomeClass, object, False) == True
 
 
 def test_check_valid_types():

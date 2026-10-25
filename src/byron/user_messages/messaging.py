@@ -88,11 +88,9 @@ def syntax_warning_hint(message: str, stacklevel_offset: int = 0) -> bool:
             ByronFriendlyWarning,
             stacklevel=BASE_STACKLEVEL + stacklevel_offset,
         )
-        DEBUG_FRIENDLY_SUGGESTIONS = (
-            "\n  Friendly suggestions are only shown if code is not optimized and logging level is DEBUG"
-        )
+        debug_hint = "\n  Friendly suggestions are only shown if code is not optimized and logging level is DEBUG"
         if not notebook_mode:
-            warnings.warn(DEBUG_FRIENDLY_SUGGESTIONS, ByronFriendlyWarning)
+            warnings.warn(debug_hint, ByronFriendlyWarning)
     return True
 
 

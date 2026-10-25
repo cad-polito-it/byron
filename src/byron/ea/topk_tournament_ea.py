@@ -106,7 +106,7 @@ def topk_tournament_ea(
     checkpoint_callback: Callable[[Population, int], None] | None = None,
     checkpoint_on_improvement: bool = False,
     tournament_size: int = 2,
-    maxSelectable: int = 2,
+    max_selectable: int = 2,
     tournament_cost_function: Callable[[Individual], float] | None = None,
     with_replacement: bool = False,
 ) -> Population:
@@ -156,7 +156,7 @@ def topk_tournament_ea(
         Save checkpoint on improvement (default: False).
     tournament_size : int, optional
         Number of candidates in each tournament (default: 2).
-    maxSelectable : int, optional
+    max_selectable : int, optional
         Number of winners per tournament (default: 2).
     tournament_cost_function : Callable or None, optional
         Optional cost function for tournament selection (default: None).
@@ -178,7 +178,7 @@ def topk_tournament_ea(
     ...     population=loaded_pop,
     ...     max_generation=100,  # Continue from gen 50 to gen 100
     ...     tournament_size=3,
-    ...     maxSelectable=2
+    ...     max_selectable=2
     ... )
     """
     start = perf_counter_ns(), process_time_ns()
@@ -267,7 +267,7 @@ def topk_tournament_ea(
                 selected = top_k_tournament_selection(
                     population,
                     tournament_size=tournament_size,
-                    maxSelectable=maxSelectable,
+                    max_selectable=max_selectable,
                     tournament_cost_function=tournament_cost_function,
                     with_replacement=with_replacement,
                 )

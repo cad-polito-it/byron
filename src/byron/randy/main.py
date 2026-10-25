@@ -40,7 +40,7 @@ class Randy:
         self._calls = 0
         # with open(Randy.LOG_FILENAME, 'a') as fout:
         #    fout.write(f"Created new Randy: {self}\n")
-        assert self.__save_state()
+        assert self._save_state()
 
     def __str__(self) -> str:
         return f"Randy @ {hex(id(self))} (state={self.state})"
@@ -56,13 +56,13 @@ class Randy:
     def state(self, state):
         self._generator.setstate(state[0])
         self._calls = state[1]
-        assert self.__save_state()
+        assert self._save_state()
 
-    def __save_state(self) -> bool:
+    def _save_state(self) -> bool:
         self._saved_state = self.state
         return True
 
-    def __check_saved_state(self) -> bool:
+    def _check_saved_state(self) -> bool:
         return self._saved_state == self.state
 
     def seed(self, seed: Any = None) -> None:
@@ -76,7 +76,7 @@ class Randy:
         self._generator = random.Random(seed)
         # with open(Randy.LOG_FILENAME, 'a') as fout:
         #    fout.write(f"New seed: {self}\n")
-        assert self.__save_state()
+        assert self._save_state()
 
     @staticmethod
     def _check_parameters(a, b, *, loc: float | None = None, strength: float | None = None):
@@ -106,7 +106,7 @@ class Randy:
         strength: float = 1.0,
     ) -> float:
         """A value from between [a, b) by permutating 'loc' with a give 'strength'."""
-        assert self.__check_saved_state(), (
+        assert self._check_saved_state(), (
             "SystemError (paranoia check): Randy the Random internal state has been modified"
         )
         assert Randy._check_parameters(a, b, loc=loc, strength=strength)
@@ -119,7 +119,7 @@ class Randy:
             val = loc + offset
             if not a <= val < b:
                 val = self._generator.random() * (b - a) + a
-        assert self.__save_state()
+        assert self._save_state()
         return val
 
     def random_int(
@@ -131,7 +131,7 @@ class Randy:
         strength: float = 1.0,
     ) -> int:
         """A value from between [a, b) by permutating 'loc' with a give 'strength'."""
-        assert self.__check_saved_state(), (
+        assert self._check_saved_state(), (
             "SystemError (paranoia check): Randy the Random internal state has been modified"
         )
         assert Randy._check_parameters(a, b, loc=loc, strength=strength)
@@ -145,7 +145,7 @@ class Randy:
             val = loc + offset
             if not a <= val < b:
                 val = self._generator.randint(a, b - 1)
-        assert self.__save_state()
+        assert self._save_state()
         return val
 
     def choice(self, seq: Sequence[Any], loc: int | None = None, strength: float | None = None) -> Any:
@@ -172,11 +172,11 @@ class Randy:
 
     def shuffle(self, seq: MutableSequence) -> None:
         """Shuffle list x in place, and return None."""
-        assert self.__check_saved_state(), (
+        assert self._check_saved_state(), (
             "SystemError (paranoia check): Randy the Random internal state has been modified"
         )
         self._generator.shuffle(seq)
-        assert self.__save_state()
+        assert self._save_state()
 
     def weighted_choice(self, seq: Sequence[Any], p: Sequence[float]) -> Any:
         """Returns a random element from seq using the probabilities in p."""

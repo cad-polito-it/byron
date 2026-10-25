@@ -60,11 +60,11 @@ class SElementMeta(type):
         new_cls.FORCED_PARENT = None
         return new_cls
 
-    def __eq__(self, other):
-        # print(f"SElementMeta.__eq__:: self: {self} ({self!r}) =?= other: {other} ({other!r})")
+    def __eq__(cls, other):
+        # print(f"SElementMeta.__eq__:: cls: {cls} ({cls!r}) =?= other: {other} ({other!r})")
         if isinstance(other, str):
             # other is a string, let's do the magic
-            return self.BYRON_CLASS_ID == other
+            return cls.BYRON_CLASS_ID == other
         elif not isinstance(other, type):
             # other is an object
             return False
@@ -72,13 +72,13 @@ class SElementMeta(type):
             # other is a class, but not an SElement
             return False
         else:
-            return self.BYRON_CLASS_ID == other.BYRON_CLASS_ID
+            return cls.BYRON_CLASS_ID == other.BYRON_CLASS_ID
 
-    def __hash__(self):
-        return hash(self.BYRON_CLASS_ID)
+    def __hash__(cls):
+        return hash(cls.BYRON_CLASS_ID)
 
-    def __repr__(self):
-        return self.BYRON_CLASS_NAME
+    def __repr__(cls):
+        return cls.BYRON_CLASS_NAME
 
     def baptize(cls, name):
         cls._patch_info(custom_class_id=name)

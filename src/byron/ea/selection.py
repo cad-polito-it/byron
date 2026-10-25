@@ -37,7 +37,7 @@ from byron.user_messages.checks import *
 def top_k_tournament_selection(
     population: Population,
     tournament_size: int = 2,
-    maxSelectable: int = 1,
+    max_selectable: int = 1,
     tournament_cost_function: Callable[List[Individual], float] | None = None,
     with_replacement: bool = False,
 ) -> list[Individual]:
@@ -47,21 +47,21 @@ def top_k_tournament_selection(
     If tournament_cost_function is provided, higher cost is better; otherwise, higher fitness is better.
     """
     assert check_value_range(tournament_size, min_=1)
-    assert 1 <= maxSelectable <= tournament_size
+    assert 1 <= max_selectable <= tournament_size
     if len(population.individuals) < tournament_size:
         byron_logger.warning("Population size is smaller than tournament size.")
 
     candidates = [rrandom.choice(population.individuals) for _ in range(tournament_size)]
     if tournament_cost_function is not None:
         # Higher cost is better
-        sorted_candidates = tournament_cost_function(candidates, maxSelectable)
+        sorted_candidates = tournament_cost_function(candidates, max_selectable)
     else:
         sorted_candidates = sorted(candidates, key=lambda i: i.fitness, reverse=True)
     if with_replacement:
         # Allow repeated selection of top individuals
-        return [sorted_candidates[i % len(sorted_candidates)] for i in range(maxSelectable)]
+        return [sorted_candidates[i % len(sorted_candidates)] for i in range(max_selectable)]
     else:
-        return sorted_candidates[:maxSelectable]
+        return sorted_candidates[:max_selectable]
 
 
 def tournament_selection(
