@@ -6,7 +6,7 @@ Byron is an evolutionary source-code fuzzer (successor of MicroGP): it generates
 
 ## Commands
 
-Dependencies are managed with `uv` (Python ≥3.10; CI tests 3.10 and 3.14). Ruff, mypy, coverage and bumpver are run via `uvx`/`uv run`, not installed as deps.
+Dependencies are managed with `uv` (Python ≥3.14, developed on 3.15; CI tests 3.14 and 3.15). Ruff, mypy, coverage and bumpver are run via `uvx`/`uv run`, not installed as deps.
 
 ```shell
 uv sync --all-extras                      # install (dev group is default)

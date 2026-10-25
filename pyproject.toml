@@ -17,26 +17,26 @@ authors = [
     { name = "Alberto Tonda", email = "alberto.tonda@inrae.fr" },
 ]
 readme = "README.md"
-requires-python = ">=3.10,<4.0"
+requires-python = ">=3.14,<4.0"
 dependencies = [
-    "networkx>=3.4.2",
-    "numpy>=2.2.6",
+    "networkx>=3.7",
+    "numpy>=2.5.4",
     "rich>=15.0.0",
-    "scipy>=1.15.3",
-    "tqdm>=4.68.3",
+    "scipy>=1.18.1",
+    "tqdm>=4.70.1",
 ]
 
 [project.optional-dependencies]
 all = [
-    "joblib>=1.5.3",
-    "matplotlib>=3.10.9",
+    "joblib>=1.6.0",
+    "matplotlib>=3.11.2",
     "psutil>=7.2.2",
 ]
 
 [dependency-groups]
 dev = [
     "byron[all]",
-    "coverage>=7.14.3",
+    "coverage>=7.17.0",
     "icecream>=2.2.0",
     "jupyter>=1.1.1",
     "pytest>=9.1.1",
@@ -96,5 +96,5 @@ push = false
 ]
 
 [build-system]
-requires = ["uv_build>=0.11.26,<0.12"]
+requires = ["uv_build>=0.13.5,<0.14"]
 build-backend = "uv_build"
