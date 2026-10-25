@@ -24,6 +24,8 @@
 # HISTORY
 # v1 / June 2023 / Squillero (GX)
 
+__all__ = ['add_macro_to_bunch', 'array_parameter_mutation', 'generic_parameter_mutation', 'remove_macro_from_bunch']
+
 from collections import Counter
 from copy import deepcopy
 from math import floor
@@ -31,6 +33,7 @@ from math import floor
 from networkx import dfs_preorder_nodes
 
 from byron.classes import *
+from byron.global_symbols import *
 from byron.operators.graph_tools import *
 from byron.randy import rrandom
 from byron.registry import *

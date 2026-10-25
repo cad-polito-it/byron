@@ -27,6 +27,8 @@
 # NOTE[GX]: This file contains code that some programmer may find upsetting
 
 
+__all__ = ['as_forest', 'as_lgp']
+
 import networkx as nx
 
 from byron.classes.node import NODE_ZERO

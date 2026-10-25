@@ -37,6 +37,7 @@ from networkx import dfs_preorder_nodes
 
 from byron.classes import *
 from byron.classes.frame import FrameBunch, MacroBunch
+from byron.global_symbols import *
 from byron.operators.graph_tools import *
 from byron.randy import rrandom
 from byron.registry import *

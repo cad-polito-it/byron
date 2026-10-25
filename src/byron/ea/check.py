@@ -24,6 +24,8 @@
 # HISTORY
 # v1 / July 2023 / Squillero (GX)
 
+__all__ = ['check']
+
 from byron.operators import *
 from byron.sys import *
 

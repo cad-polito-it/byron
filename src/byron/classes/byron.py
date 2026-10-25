@@ -24,6 +24,8 @@
 # =[ HISTORY ]===============================================================
 # v1 / August 2023 / Squillero (GX)
 
+__all__ = ['Byron']
+
 import platform
 import sys
 

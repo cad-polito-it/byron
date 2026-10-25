@@ -35,9 +35,14 @@ from time import perf_counter_ns, process_time_ns
 from typing import Callable
 
 from byron.classes.evaluator import *
+from byron.classes.fitness import FitnessABC
 from byron.classes.frame import *
+from byron.classes.individual import Individual
+from byron.classes.population import Population
 from byron.fitness import make_fitness
+from byron.global_symbols import *
 from byron.operators import *
+from byron.randy import rrandom
 from byron.sys import *
 from byron.tools.checkpoint import save_population
 from byron.user_messages import *

@@ -25,6 +25,8 @@
 # HISTORY
 # v1 / July 2023 / Squillero (GX)
 
+__all__ = ['top_k_tournament_selection', 'tournament_selection', 'tournament_selection_with_cost']
+
 from typing import Callable, List
 
 from byron.classes.individual import Individual

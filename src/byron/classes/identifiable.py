@@ -24,6 +24,8 @@
 # =[ HISTORY ]===============================================================
 # v1 / April 2023 / Squillero (GX)
 
+__all__ = ['IdentifiableABC']
+
 from abc import ABC, abstractmethod
 
 

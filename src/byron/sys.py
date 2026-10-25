@@ -33,7 +33,10 @@ __all__ = ['get_operators', 'log_operators', 'SYSINFO']
 import inspect
 from pprint import pformat
 
+# NOTE: get_operators() scans this module globals, star-imports are deliberate
+from byron.global_symbols import *
 from byron.operators import *
+from byron.user_messages import logger
 
 
 class View:

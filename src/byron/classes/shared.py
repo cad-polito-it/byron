@@ -25,5 +25,8 @@
 # v1 / May 2023 / Squillero (GX)
 
 
+__all__ = ['SharedParameter']
+
+
 class SharedParameter:
     pass
