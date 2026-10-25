@@ -9,92 +9,92 @@
 # SPDX-License-Identifier: Apache-2.0
 
 [project]
-name = "byron"
-version = "0.8a1.dev67"
-description = "An evolutionary source-code fuzzer"
-authors = [
-    { name = "Giovanni Squillero", email = "giovanni.squillero@polito.it" },
-    { name = "Alberto Tonda", email = "alberto.tonda@inrae.fr" },
-]
-readme = "README.md"
-requires-python = ">=3.14,<4.0"
-dependencies = [
-    "networkx>=3.7",
-    "numpy>=2.5.4",
-    "rich>=15.0.0",
-    "scipy>=1.18.1",
-    "tqdm>=4.70.1",
-]
+    name = "byron"
+    version = "0.8a1.dev67"
+    description = "An evolutionary source-code fuzzer"
+    authors = [
+        { name = "Giovanni Squillero", email = "giovanni.squillero@polito.it" },
+        { name = "Alberto Tonda", email = "alberto.tonda@inrae.fr" },
+    ]
+    readme = "README.md"
+    requires-python = ">=3.14,<4.0"
+    dependencies = [
+        "networkx>=3.7",
+        "numpy>=2.5.4",
+        "rich>=15.0.0",
+        "scipy>=1.18.1",
+        "tqdm>=4.70.1",
+    ]
 
-[project.optional-dependencies]
-all = [
-    "joblib>=1.6.0",
-    "matplotlib>=3.11.2",
-    "psutil>=7.2.2",
-]
+    [project.optional-dependencies]
+        all = ["joblib>=1.6.0", "matplotlib>=3.11.2", "psutil>=7.2.2"]
 
 [dependency-groups]
-dev = [
-    "byron[all]",
-    "coverage>=7.17.0",
-    "icecream>=2.2.0",
-    "jupyter>=1.1.1",
-    "pytest>=9.1.1",
-    "pytest-emoji>=0.2.0",
-    # use uvx for coverage, ruff, mypy, and bumpver
-]
+    dev = [
+        "byron[all]",
+        "coverage>=7.17.0",
+        "icecream>=2.2.0",
+        "jupyter>=1.1.1",
+        "pytest>=9.1.1",
+        "pytest-emoji>=0.2.0",
+        # use uvx for coverage, ruff, mypy, and bumpver
+    ]
 
 [tool.uv]
-package = true # Tells uv to find the package inside the src/ folder
-default-groups = ["dev"] # while developping...
-keyring-provider = "subprocess"
+    package          = true         # Tells uv to find the package inside the src/ folder
+    default-groups   = ["dev"]      # while developping...
+    keyring-provider = "subprocess"
 
 [tool.pytest.ini_options]
-testpaths = ["test"]
-filterwarnings = ["ignore::DeprecationWarning"]
+    testpaths      = ["test"]
+    filterwarnings = ["ignore::DeprecationWarning"]
 
 [tool.coverage.run]
-branch = true
+    branch = true
 
 [tool.coverage.report]
-include = ['src/*', 'test/*']
-omit = ['.*/*', 'venv/*']
+    include = ['src/*', 'test/*']
+    omit    = ['.*/*', 'venv/*']
 
 [tool.mypy]
-modules = ['byron']
-ignore_missing_imports = true
+    modules                = ['byron']
+    ignore_missing_imports = true
 
 [tool.ruff]
-target-version = "py314"
-line-length = 120
-extend-include = ["*.ipynb"]
+    target-version = "py314"
+    line-length    = 120
+    extend-include = ["*.ipynb"]
 
-[tool.ruff.lint]
-extend-select = ["I"]
+    [tool.ruff.lint]
+        extend-select = ["I", "W505"]
 
-[tool.ruff.format]
-# Prefer single quotes over double quotes.
-quote-style = "preserve"
-line-ending = "native"
+    [tool.ruff.lint.pycodestyle]
+        # Comments and docstrings are wrapped at 80, code at 120 (see line-length)
+        max-doc-length = 80
+
+    [tool.ruff.format]
+        # Prefer single quotes over double quotes.
+        quote-style = "preserve"
+        line-ending = "native"
 
 [tool.bumpver]
-current_version = "0.8a1.dev67"
-version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
-commit_message = "style(bumpver): Bump version to {new_version}"
-commit = true
-push = false
+    current_version = "0.8a1.dev67"
+    version_pattern = "MAJOR.MINOR[PYTAGNUM].devINC0"
+    commit_message  = "style(bumpver): Bump version to {new_version}"
+    commit          = true
+    push            = false
 
-[tool.bumpver.file_patterns]
-"pyproject.toml" = [
-    'current_version = "{pep440_version}"',
-    'version = "{pep440_version}"$',
-]
-"docs/index.md" = [" v{pep440_version}"]
-"src/byron/global_symbols.py" = [
-    '__date__ = "0D-0M-YYYY"',
-    '__version__ = "{pep440_version}"',
-]
+    [tool.bumpver.file_patterns]
+        "pyproject.toml" = [
+            'current_version = "{pep440_version}"',
+            'version = "{pep440_version}"$',
+        ]
+        "docs/index.md" = [" v{pep440_version}"]
+        "src/byron/global_symbols.py" = [
+            '__date__ = "0D-0M-YYYY"',
+            '__version__ = "{pep440_version}"',
+        ]
 
 [build-system]
-requires = ["uv_build>=0.13.5,<0.14"]
-build-backend = "uv_build"
+    requires      = ["uv_build>=0.13.5,<0.14"]
+    build-backend = "uv_build"
