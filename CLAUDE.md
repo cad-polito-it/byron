@@ -71,7 +71,7 @@ Follow the [programmer-zendo Python style guide](https://github.com/squillero/pr
 - **`assert`:** use it only for internal consistency and correct API usage, never for runtime events that can really happen. This matches the paranoia-mode convention above.
 - **Annotations:** annotate every function; mypy is the checker. Avoid multiple statements on one line.
 - **Classes:** use properties, not getters and setters, but use a method when the computation is expensive. Don't override `__repr__`. Use `ABC` and `@abstractmethod` for abstract classes. Define `__slots__` only when sure, and then also define `__getstate__`/`__setstate__` at the top of the class, before `__init__` (see `Randy`).
-- **Line length:** comments and docstrings can be at most **80** characters per line, and code at most **120**. Ruff checks both limits: `line-length = 120`, plus `W505` with `max-doc-length = 80`.
+- **Line length:** in `.py` files, comments and docstrings can be at most **80** characters per line, and code at most **120**. Ruff checks both limits: `line-length = 120`, plus `W505` with `max-doc-length = 80`. These limits apply only to Python source: never hard-wrap Markdown (`.md`) files, and write each paragraph or list item on a single line.
 - **Docstrings and comments:** write them in formal American English. Use the NumPy docstring style. Write descriptions in the descriptive mood (`"""Calculates the next Mersenne prime."""`). The first line is always a concise summary. Be terse on methods and verbose on classes, with examples and an `Attributes` section for public attributes and properties. Document `__init__` only if its parameters aren't obvious, and don't document `__str__` and similar methods.
 - **Versions:** follow PEP 440 (handled by bumpver).
 
