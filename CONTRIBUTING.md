@@ -24,7 +24,7 @@ Let us know if you have published a paper using any version of byron or MicroGP 
 
 ##### * Fail to use the tool and [submit a bug report](#report)
 
-We plan to use [GitHub's issues](https://github.com/cad-polito-it/byron/issues) for bug reporting. 
+We plan to use [GitHub's issues](https://github.com/cad-polito-it/byron/issues) for bug reporting.
 
 ##### * [Fix a bug](#coding)
 
