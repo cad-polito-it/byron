@@ -119,7 +119,7 @@ def log_operators():
     logger.info("[b]GENETIC OPERATORS[/b]")
     for op in all_ops:
         name = f'{op.__name__} ({descr[op.num_parents]})'
-        logger.info(f"[blue]*[/blue] {name:.<50s}: {op.stats}")
+        logger.info("[blue]*[/blue] %s: %s", format(name, '.<50s'), op.stats)
 
 
 assert "SYSINFO" not in globals(), f"{PARANOIA_SYSTEM_ERROR}: SYSINFO already initialized."

@@ -200,9 +200,9 @@ def topk_tournament_ea(
             filename = str(checkpoint_file).format(generation=pop.generation)
             save_population(pop, Path(filename))
             if reason:
-                byron_logger.info(f"TopK-TournamentEA: 💾 Checkpoint saved ({reason}) ➜ {filename}")
+                byron_logger.info("TopK-TournamentEA: 💾 Checkpoint saved (%s) ➜ %s", reason, filename)
         except Exception as e:
-            byron_logger.error(f"TopK-TournamentEA: Failed to save checkpoint: {e}")
+            byron_logger.error("TopK-TournamentEA: Failed to save checkpoint: %s", e)
 
     # initialize population or resume from checkpoint
     if population is None:
@@ -210,7 +210,7 @@ def topk_tournament_ea(
         is_resuming = False
     else:
         is_resuming = True
-        byron_logger.info(f"TopK-TournamentEA: Resuming from checkpoint at generation {population.generation}")
+        byron_logger.info("TopK-TournamentEA: Resuming from checkpoint at generation %s", population.generation)
 
     stopping_conditions = list()
     if stopper:
@@ -247,11 +247,11 @@ def topk_tournament_ea(
             try:
                 checkpoint_callback(population, population.generation)
             except Exception as e:
-                byron_logger.error(f"TopK-TournamentEA: Checkpoint callback error: {e}")
+                byron_logger.error("TopK-TournamentEA: Checkpoint callback error: %s", e)
     else:
         # When resuming, best is already in population[0] after loading
         best = population[0]
-        byron_logger.info(f"TopK-TournamentEA: Resumed with best fitness: {best.fitness}")
+        byron_logger.info("TopK-TournamentEA: Resumed with best fitness: %s", best.fitness)
 
     while not any(s() for s in stopping_conditions):
         new_individuals = list()
@@ -261,7 +261,8 @@ def topk_tournament_ea(
             parents = list()
             for _ in range(op.num_parents):
                 byron_logger.info(
-                    f"TopK-TournamentEA: 🚀TopK-TournamentEA -Starting championship evaluation for {tournament_size} individuals"
+                    "TopK-TournamentEA: 🚀TopK-TournamentEA -Starting championship evaluation for %s individuals",
+                    tournament_size,
                 )
                 selected = top_k_tournament_selection(
                     population,
@@ -305,13 +306,14 @@ def topk_tournament_ea(
             try:
                 checkpoint_callback(population, population.generation)
             except Exception as e:
-                byron_logger.error(f"TopK-TournamentEA: Checkpoint callback error: {e}")
+                byron_logger.error("TopK-TournamentEA: Checkpoint callback error: %s", e)
 
         byron_logger.hesitant_log(
             silent_pause,
             LOGGING_INFO,
-            f"TopK-TournamentEA: End of generation %s (𝐻: {population.entropy:.4f}) ┈ %s",
+            "TopK-TournamentEA: End of generation %s (𝐻: %.4f) ┈ %s",
             population.generation,
+            population.entropy,
             _elapsed(start, steps=evaluator.fitness_calls),
         )
     if checkpoint_file is not None:
@@ -319,9 +321,10 @@ def topk_tournament_ea(
     end = process_time_ns()
     byron_logger.info("TopK-TournamentEA: 🍦 [b]TopK-TournamentEA completed[/] ┈ %s", _elapsed(start, process=True))
     byron_logger.info(
-        f"TopK-TournamentEA: 🏆 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True)}",
+        "TopK-TournamentEA: 🏆 %s",
+        population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True),
     )
     byron_logger.info("TopK-TournamentEA: Genetic operators statistics:")
     for op in get_operators():
-        byron_logger.info(f"TopK-TournamentEA: * {op.__qualname__}: {op.stats}")
+        byron_logger.info("TopK-TournamentEA: * %s: %s", op.__qualname__, op.stats)
     return population

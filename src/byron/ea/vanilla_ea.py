@@ -60,7 +60,8 @@ def _elapsed(start, *, process: bool = False, steps: int = 0):
 
 def _new_best(population: Population, evaluator: EvaluatorABC):
     byron_logger.info(
-        f"VanillaEA: 🍀 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False)}"
+        "VanillaEA: 🍀 %s",
+        population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=False),
     )
 
 
@@ -158,8 +159,9 @@ def vanilla_ea(
         byron_logger.hesitant_log(
             silent_pause,
             LOGGING_INFO,
-            f"VanillaEA: End of generation %s (𝐻: {population.entropy:.4f}) ┈ %s",
+            "VanillaEA: End of generation %s (𝐻: %.4f) ┈ %s",
             population.generation,
+            population.entropy,
             _elapsed(start, steps=evaluator.fitness_calls),
         )
 
@@ -167,7 +169,8 @@ def vanilla_ea(
 
     byron_logger.info("VanillaEA: 🍦 [b]VanillaEA completed[/] ┈ %s", _elapsed(start, process=True))
     byron_logger.info(
-        f"VanillaEA: 🏆 {population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True)}",
+        "VanillaEA: 🏆 %s",
+        population[0].describe(include_fitness=True, include_structure=False, include_age=True, include_lineage=True),
     )
 
     return population

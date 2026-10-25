@@ -663,18 +663,24 @@ class ParallelScriptEvaluator(EvaluatorABC):
                 self._fitness_calls += 1
                 if result.returncode and self._default_result:
                     logger.info(
-                        f"ParallelScriptEvaluator: failed to evaluate {population[i]} (exit status: [red]{result.returncode}[/red])"
+                        "ParallelScriptEvaluator: failed to evaluate %s (exit status: [red]%s[/red])",
+                        population[i],
+                        result.returncode,
                     )
                     logger.debug(
-                        f"ParallelScriptEvaluator: command \"{result.cmdline}\" exit status: {result.returncode}"
-                        + f"\n[red]---[/red]\n{result.stderr}\n[red]---[/red]"
+                        "ParallelScriptEvaluator: command \"%s\" exit status: %s\n[red]---[/red]\n%s\n[red]---[/red]",
+                        result.cmdline,
+                        result.returncode,
+                        result.stderr,
                     )
                     result.stdout = self._default_result + '\n'
                 elif result.returncode and not self._default_result:
-                    logger.error(f"ParallelScriptEvaluator: failed to evaluate {population[i]}")
+                    logger.error("ParallelScriptEvaluator: failed to evaluate %s", population[i])
                     logger.error(
-                        f"command \"{result.cmdline}\" exit status: {result.returncode}"
-                        + f"\n[red]---[/red]\n{result.stderr}\n[red]---[/red]"
+                        "command \"%s\" exit status: %s\n[red]---[/red]\n%s\n[red]---[/red]",
+                        result.cmdline,
+                        result.returncode,
+                        result.stderr,
                     )
                     raise ValueError(
                         "ParallelScriptEvaluator: {population[i]}: ParallelScriptEvaluator: script returned non-zero exit status"

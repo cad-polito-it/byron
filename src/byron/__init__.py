@@ -84,7 +84,7 @@ def welcome(level=logging.INFO) -> bool:
         for m in lines:
             # stars: ⚝ ⭐// feathers: 🖋
             # user_messages.logger.log(level, f"🖋: {m}")
-            user_messages.logger.log(level, f"{m}")
+            user_messages.logger.log(level, "%s", m)
         stderr.flush()
         stdout.flush()
         return True

@@ -47,7 +47,7 @@ def main():
         I.as_forest(f'final-individual_{I.id}-structure.png')
         with open(f'final-individual_{I.id}.go', 'w') as out:
             out.write(final_population.dump_individual(i))
-        byron.logger.info(f"OneMaxGo: {I.describe(max_recursion=None)}")
+        byron.logger.info("OneMaxGo: %s", I.describe(max_recursion=None))
 
     byron.sys.log_operators()
 

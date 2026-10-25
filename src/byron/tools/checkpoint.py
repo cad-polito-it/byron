@@ -83,10 +83,13 @@ def save_population(population: Population, filepath: str | Path) -> None:
             _pickle_module.dump(population, f, protocol=pickle.HIGHEST_PROTOCOL)
 
         byron_logger.info(
-            f"Checkpoint: Saved population (gen {population.generation}, {len(population)} individuals) to {filepath}"
+            "Checkpoint: Saved population (gen %s, %s individuals) to %s",
+            population.generation,
+            len(population),
+            filepath,
         )
     except Exception as e:
-        byron_logger.error(f"Checkpoint: Failed to save population to {filepath}: {e}")
+        byron_logger.error("Checkpoint: Failed to save population to %s: %s", filepath, e)
         raise
 
 
@@ -149,11 +152,11 @@ def load_population(filepath: str | Path) -> tuple[Population, int]:
         generation = population.generation
 
         byron_logger.info(
-            f"Checkpoint: Loaded population (gen {generation}, {len(population)} individuals) from {filepath}"
+            "Checkpoint: Loaded population (gen %s, %s individuals) from %s", generation, len(population), filepath
         )
         return population, generation
     except Exception as e:
-        byron_logger.error(f"Checkpoint: Failed to load population from {filepath}: {e}")
+        byron_logger.error("Checkpoint: Failed to load population from %s: %s", filepath, e)
         raise
 
 
@@ -227,11 +230,13 @@ def save_individuals(
             _pickle_module.dump(checkpoint_data, f, protocol=pickle.HIGHEST_PROTOCOL)
 
         byron_logger.info(
-            f"Checkpoint: Saved {len(individuals_to_save)} individuals "
-            f"from generation {population.generation} to {filepath}"
+            "Checkpoint: Saved %s individuals from generation %s to %s",
+            len(individuals_to_save),
+            population.generation,
+            filepath,
         )
     except Exception as e:
-        byron_logger.error(f"Checkpoint: Failed to save individuals to {filepath}: {e}")
+        byron_logger.error("Checkpoint: Failed to save individuals to %s: %s", filepath, e)
         raise
 
 
@@ -288,9 +293,12 @@ def load_individuals(filepath: str | Path) -> dict:
             raise ValueError(f"Invalid checkpoint format in {filepath}")
 
         byron_logger.info(
-            f"Checkpoint: Loaded {data['num_saved']} individuals (from generation {data['generation']}) from {filepath}"
+            "Checkpoint: Loaded %s individuals (from generation %s) from %s",
+            data['num_saved'],
+            data['generation'],
+            filepath,
         )
         return data
     except Exception as e:
-        byron_logger.error(f"Checkpoint: Failed to load individuals from {filepath}: {e}")
+        byron_logger.error("Checkpoint: Failed to load individuals from %s: %s", filepath, e)
         raise

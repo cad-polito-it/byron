@@ -178,7 +178,7 @@ class Population(Iterable):
         result = self._evaluator._evaluate(whole_pop)
         if logger.level <= logging.DEBUG:
             for i, f in enumerate(result):
-                logger.debug(f"evaluate: Individual {i:2d}: {f}")
+                logger.debug("evaluate: Individual %2d: %s", i, f)
         for i, f in zip(self.individuals, result):
             i.fitness = f
 
