@@ -79,8 +79,11 @@ class Estimator:
         self._max_t = temperature
         self._best = None
 
-        fitness_class = fitness.__class__
-        self._near = fitness_class(fitness * temperature)
+        if fitness is not None:
+            fitness_class = fitness.__class__
+            self._near = fitness_class(fitness * temperature)
+        else:
+            self._near = None
 
     def _compute_confidence_interval(self, op, max_l) -> float:
         if self._operators[op].operator.stats.calls == 0:
