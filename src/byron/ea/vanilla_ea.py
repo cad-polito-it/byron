@@ -26,9 +26,9 @@
 
 __all__ = ["vanilla_ea"]
 
+from collections.abc import Sequence
 from datetime import timedelta
 from time import perf_counter_ns, process_time_ns
-from typing import Optional
 
 from byron.classes.evaluator import *
 from byron.classes.fitness import FitnessABC
@@ -76,8 +76,8 @@ def vanilla_ea(
     mu: int = 10,
     lambda_: int = 20,
     max_generation: int = 100,
-    max_fitness: Optional = None,
-    population_extra_parameters: dict = None,
+    max_fitness: FitnessABC | int | float | Sequence[float] | None = None,
+    population_extra_parameters: dict | None = None,
 ) -> Population:
     r"""A simple evolutionary algorithm
 
@@ -169,8 +169,6 @@ def vanilla_ea(
             population.entropy,
             _elapsed(start, steps=evaluator.fitness_calls),
         )
-
-    end = process_time_ns()
 
     byron_logger.info("VanillaEA: 🍦 [b]VanillaEA completed[/] ┈ %s", _elapsed(start, process=True))
     byron_logger.info(
